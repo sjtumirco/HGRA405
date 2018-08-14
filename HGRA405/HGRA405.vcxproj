@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,6 +116,85 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddressMapping.cpp" />
+    <ClCompile Include="Bank.cpp" />
+    <ClCompile Include="BankState.cpp" />
+    <ClCompile Include="BusPacket.cpp" />
+    <ClCompile Include="Cache.cpp" />
+    <ClCompile Include="ClockDomain.cpp" />
+    <ClCompile Include="CommandQueue.cpp" />
+    <ClCompile Include="configParse.cpp" />
+    <ClCompile Include="fineGrain.cpp" />
+    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="IniReader.cpp" />
+    <ClCompile Include="load.cpp" />
+    <ClCompile Include="Localmem.cpp" />
+    <ClCompile Include="LSUnit.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MemoryController.cpp" />
+    <ClCompile Include="memoryInt.cpp" />
+    <ClCompile Include="MemorySystem.cpp" />
+    <ClCompile Include="MultiChannelMemorySystem.cpp" />
+    <ClCompile Include="paraParse.cpp" />
+    <ClCompile Include="peModule.cpp" />
+    <ClCompile Include="PrintMacros.cpp" />
+    <ClCompile Include="processingElement.cpp" />
+    <ClCompile Include="Rank.cpp" />
+    <ClCompile Include="SimulatorObject.cpp" />
+    <ClCompile Include="store.cpp" />
+    <ClCompile Include="TagIssue.cpp" />
+    <ClCompile Include="Transaction.cpp" />
+    <ClCompile Include="unitSimFunc.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AddressMapping.h" />
+    <ClInclude Include="Bank.h" />
+    <ClInclude Include="BankState.h" />
+    <ClInclude Include="BusPacket.h" />
+    <ClInclude Include="Cache.h" />
+    <ClInclude Include="Callback.h" />
+    <ClInclude Include="ClockDomain.h" />
+    <ClInclude Include="CommandQueue.h" />
+    <ClInclude Include="configParse.h" />
+    <ClInclude Include="CSVWriter.h" />
+    <ClInclude Include="define.h" />
+    <ClInclude Include="fineGrain.h" />
+    <ClInclude Include="graph.h" />
+    <ClInclude Include="IniReader.h" />
+    <ClInclude Include="load.h" />
+    <ClInclude Include="Localmem.h" />
+    <ClInclude Include="LSUnit.h" />
+    <ClInclude Include="MemoryController.h" />
+    <ClInclude Include="memoryInt.h" />
+    <ClInclude Include="MemorySystem.h" />
+    <ClInclude Include="MultiChannelMemorySystem.h" />
+    <ClInclude Include="paraParse.h" />
+    <ClInclude Include="peModule.h" />
+    <ClInclude Include="PrintMacros.h" />
+    <ClInclude Include="processingElement.h" />
+    <ClInclude Include="Rank.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SimulatorObject.h" />
+    <ClInclude Include="store.h" />
+    <ClInclude Include="SystemConfiguration.h" />
+    <ClInclude Include="TagIssue.h" />
+    <ClInclude Include="Transaction.h" />
+    <ClInclude Include="typedef.h" />
+    <ClInclude Include="unistd.h" />
+    <ClInclude Include="unitSimFunc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="config_8x8.txt" />
+    <Text Include="config_ori.txt" />
+    <Text Include="config_ori_s.txt" />
+    <Text Include="DEBUG.txt" />
+    <Text Include="DEBUG2.txt" />
+    <Text Include="memoryInFile.txt" />
+    <Text Include="memoryOutFile.txt" />
+    <Text Include="notification.txt" />
+    <Text Include="parameter_8x8.txt" />
+    <Text Include="parameter_file.txt" />
+    <Text Include="parameter_file_s.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

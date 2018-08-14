@@ -1,0 +1,34 @@
+lbegin0 begin lend1.1 nop
+pe0 mux pe5.1 fin2 lbegin0.1 flr ib1 lr alu fob2 nop cal nop inport nop inport ob nop
+pe5 add pe0.1 fin2 fin3 lr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe1 comb pe0.1 fin2 fin3 flr ib1 lr fob1 fob2 nop cal nop inport nop nop ob nop
+lbegin1 pe0.1 lend0.1 nop
+pe2 mux pe6.1 fin2 lbegin1.1 flr ib1 lr alu fob2 nop cal nop inport nop inport ob nop
+pe6 add pe2.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe3 comb pe2.1 fin2 fin3 flr ib1 lr fob1 fob2 nop cal nop inport nop nop ob nop
+pe4 dor pe0.1 fin2 pe2.1 in1 fin fin lr fob2 nop trans nop nop nop inport ob nop
+pe7 mul pe4.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe8 add pe7.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe9 add pe2.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe10 mul pe4.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe11 add pe10.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe12 add pe2.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe13 mul pe4.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe14 add pe13.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe15 add pe2.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe16 mul pe4.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
+pe17 add pe16.1 pe2.1 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+le0 pe8.1 nop
+le1 pe9.1 nop
+le2 pe11.1 nop
+le3 pe12.1 nop
+le4 pe14.1 nop
+le5 pe15.1 nop
+pe18 mul le0 le1 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+pe19 mul le2 le3 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+pe20 mul le4 le5 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+pe21 add pe18.1 pe19.1 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+pe22 add pe21.1 pe20.1 fin3 flr ib1 ib2 alu fob2 nop cal nop inport inport nop ob nop
+se0 pe17.1 pe22.1 nop
+lend0 pe3.3 se0 nop
+lend1 pe1.3 lend0.2 nop

@@ -13,5 +13,239 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Memory-Sys">
+      <UniqueIdentifier>{7fdba901-4b6e-407a-8ce9-bc7c198f98f7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AddressMapping.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="Bank.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="BankState.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="BusPacket.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="Cache.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockDomain.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandQueue.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="IniReader.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryController.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="MemorySystem.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiChannelMemorySystem.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintMacros.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="Rank.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorObject.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="Transaction.cpp">
+      <Filter>Memory-Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="configParse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="fineGrain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="load.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LSUnit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="memoryInt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="paraParse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="peModule.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="processingElement.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="store.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TagIssue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="unitSimFunc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Localmem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AddressMapping.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Bank.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="BankState.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="BusPacket.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Cache.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Callback.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="ClockDomain.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="CSVWriter.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="IniReader.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryController.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="MemorySystem.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiChannelMemorySystem.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintMacros.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Rank.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorObject.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemConfiguration.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Transaction.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="unistd.h">
+      <Filter>Memory-Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="configParse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fineGrain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="load.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LSUnit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memoryInt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="paraParse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="peModule.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="processingElement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="store.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TagIssue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unitSimFunc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Localmem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="config_ori.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="config_ori_s.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="DEBUG.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="DEBUG2.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="memoryInFile.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="memoryOutFile.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="notification.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_file.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_file_s.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="config_8x8.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_8x8.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>
