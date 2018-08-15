@@ -184,12 +184,13 @@
     <ClInclude Include="unitSimFunc.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="config_8x8.txt" />
+    <Text Include="config8x8.txt" />
     <Text Include="config_ori.txt" />
     <Text Include="config_ori_s.txt" />
     <Text Include="DEBUG.txt" />
     <Text Include="DEBUG2.txt" />
     <Text Include="memoryInFile.txt" />
+    <Text Include="MemoryInFile8x8.txt" />
     <Text Include="memoryOutFile.txt" />
     <Text Include="notification.txt" />
     <Text Include="parameter_8x8.txt" />

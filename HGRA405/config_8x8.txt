@@ -1,4 +1,0 @@
-lbegin0 begin lend0.1 nop
-pe0 mux pe2.1 fin2 lbegin0.1 flr ib1 lr alu fob2 nop cal nop inport nop inport ob nop
-pe2 add pe0.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
-pe1 comb pe0.1 fin2 fin3 flr ib1 lr fob1 fob2 nop cal nop inport nop nop 

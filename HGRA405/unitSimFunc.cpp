@@ -534,7 +534,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 				pe_current->tableBuffer_fifo2.pop();
 			}
 
-			outfile2 << "PE[" << pe_index_current << "]FIFO输入值" << endl;
+			outfile2 << "PE[" << pe_index_current << "]FIFO输出值" << endl;
 			outfile2 << setw(15) << "ob1_in_t" << setw(15) << "ob1_in_v" << setw(15) << "ob1_in" << endl;
 			outfile2 << setw(15) << pe_current->outbuffer1_in_tag << setw(15) << pe_current->outbuffer1_in_v
 				<< setw(15) << pe_current->outbuffer1_in << endl;

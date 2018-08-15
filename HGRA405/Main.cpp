@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
 	
 	//memory 
 	ifstream memoryInFile;
-	memoryInFile.open("memoryInFile.txt");
+	memoryInFile.open("MemoryInFIle8x8.txt");
 	memory.readFromFile(memoryInFile);
 
 	//GET DRAM INSTANCE
@@ -438,8 +438,8 @@ int main(int argc,char* argv[])
 
 		if (end)
 			break;
-		if (cnt == 200)
-			break;
+		/*if (cnt == 300)
+			break;*/
 
 		cnt++;
 	}
