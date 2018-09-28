@@ -241,13 +241,28 @@
     <Text Include="parameter_file_s.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="parameter_8x8.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="config8x8.txt">
-      <Filter>资源文件</Filter>
-    </Text>
     <Text Include="MemoryInFile8x8.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="config8x8_1.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_8x8_1.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="config8x8_2.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_8x8_2.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="config8+8.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="parameter_8+8.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="input8x8_ori.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>

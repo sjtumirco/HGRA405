@@ -57,6 +57,10 @@ void ProcessingElement::ALU(int opcode, int in1, int in2 ,bool for_mux)//ALU×÷Îª
 		case 9://MAC
 			alu_out = in1 * in2 + loc_reg;
 			alu_out_v = 1;
+			break;
+		/*case 10:*/
+
+
 		}
 	}
 	

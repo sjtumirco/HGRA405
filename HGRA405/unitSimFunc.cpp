@@ -440,14 +440,37 @@ void PeSimProcess(ProcessingElement* pe_current)
 		}
 		else if (mode == 2)//calculate
 		{
-			if (pe_current->config_reg.front()[24] == 1)//顺序仿真各个stage
-			{				
-				pe_sim_step3_no_tag(pe_current);
-				pe_sim_step_connect(pe_current);
-				pe_sim_step1_no_tag(pe_current);
 
-				pe_sim_step2_no_tag(pe_current);
+			//if (pe_current->config_reg.front()[24] == 1)//顺序仿真各个stage
+			//{				
+			//	pe_sim_step3_no_tag(pe_current);
+			//	pe_sim_step_connect(pe_current);
+			//	pe_sim_step1_no_tag(pe_current);
 
+			//	pe_sim_step2_no_tag(pe_current);
+
+			//}
+			if (pe_current->config_reg.front()[1] == 2)//pe2开始的组合路径
+			{
+				//pe2->pe3->lb1
+				pe_sim_step3_no_tag(pe[3]);
+				pe_sim_step_connect(pe[3]);
+				pe_sim_step1_no_tag(pe[3]);
+
+				pe_sim_step2_no_tag(pe[3]);
+
+				LbeginSimProcess(lbegin[1]);
+
+				pe_sim_step3_no_tag(pe[2]);
+				pe_sim_step_connect(pe[2]);
+				pe_sim_step1_no_tag(pe[2]);
+
+				pe_sim_step2_no_tag(pe[2]);
+				//pe18
+				pe_sim_step3_no_tag(pe[18]);
+				pe_sim_step_connect(pe[18]);
+				pe_sim_step1_no_tag(pe[18]);
+				pe_sim_step2_no_tag(pe[18]);
 			}
 			else
 			{
@@ -1373,26 +1396,26 @@ void pe_sim_step1(ProcessingElement* pe_current)
 
 	
 	//在动态数据流下，PE的输出端口的置0操作要分两种情况。1，该PE某一输出端口的扇出为1，那么在数据存入下一个PE的tableBuffer之后就可以执行上一个PE输出端口的置0操作
-												//  2，该PE某一输出端口的扇出不是1，那么在数据存入tableBuffer之后由相应的joinbp执行置0操作
-	//获取from PE 1,2,3端口的扇出,并进行清空相应端口的数据
-	if (1)
+												//  2，该PE某一输出端口的扇出>1，那么在数据存入tableBuffer之后由相应的joinbp执行置0操作
+	//获取来源PE 1,2,3端口的扇出,并进行清空相应端口的数据
+	if (1)                                        //清前级输入
 	{
-		int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--这三个变量是该PE的上一级PE输出端口的扇出
-		for (int i = 0; i < (int)pe_port_fanout.size(); i++)
+		int port1_fanout_num = 0, port2_fanout_num = 0, port3_fanout_num = 0;//--这三个变量是该PE的上一级PE输出端口的扇出
+		for (int i = 0; i < (int)port_fanout.size(); i++)
 		{
-			if (din1_from_index == pe_port_fanout[i][0])
+			if (din1_from_index == port_fanout[i][1] && ((din1_from_flag == 2 && port_fanout[i][0] == 0) || (din1_from_flag == 1 && port_fanout[i][0] == 1)))
 			{
 				if (din1_from_port == 0)//port1
 				{
-					port1_fanout_num = pe_port_fanout[i][1];
+					port1_fanout_num = port_fanout[i][2];
 				}
 				else if (din1_from_port == 1)//port2
 				{
-					port2_fanout_num = pe_port_fanout[i][2];
+					port2_fanout_num = port_fanout[i][3];
 				}
 				else if (din1_from_port == 2)//port3
 				{
-					port3_fanout_num = pe_port_fanout[i][3];
+					port3_fanout_num = port_fanout[i][4];
 				}
 
 			}
@@ -1401,7 +1424,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 		//数据进入tableBuffer之后才开始清数据
 		if (din1_from_port == 0)//port1
 		{
-			if (port1_fanout_num <= 1)//没有一对多的情况
+			if (port1_fanout_num <= 1)//一对一的情况
 			{
 				if (pe_current->ack2in1port)
 				{
@@ -1456,21 +1479,21 @@ void pe_sim_step1(ProcessingElement* pe_current)
 		}
 		//in2 from的端口清零
 		//
-		for (int i = 0; i < (int)pe_port_fanout.size(); i++)
+		for (int i = 0; i < (int)port_fanout.size(); i++)
 		{
-			if (din2_from_index == pe_port_fanout[i][0])
+			if (din2_from_index == port_fanout[i][1] && ((din1_from_flag == 2 && port_fanout[i][0] == 0) || (din1_from_flag == 1 && port_fanout[i][0] == 1)))
 			{
 				if (din2_from_port == 0)//port1
 				{
-					port1_fanout_num = pe_port_fanout[i][1];
+					port1_fanout_num = port_fanout[i][2];
 				}
 				else if (din2_from_port == 1)//port2
 				{
-					port2_fanout_num = pe_port_fanout[i][2];
+					port2_fanout_num = port_fanout[i][3];
 				}
 				else if (din2_from_port == 2)//port3
 				{
-					port3_fanout_num = pe_port_fanout[i][3];
+					port3_fanout_num = port_fanout[i][4];
 				}
 
 			}
@@ -1525,21 +1548,21 @@ void pe_sim_step1(ProcessingElement* pe_current)
 		}
 		//in3 from的端口清零
 		//in3 from各端口的扇出
-		for (int i = 0; i < (int)pe_port_fanout.size(); i++)
+		for (int i = 0; i < (int)port_fanout.size(); i++)
 		{
-			if (bin_from_index == pe_port_fanout[i][0])
+			if (bin_from_index == port_fanout[i][1] && ((din1_from_flag == 2 && port_fanout[i][0] == 0) || (din1_from_flag == 1 && port_fanout[i][0] == 1)))
 			{
 				if (bin_from_port == 0)//port1
 				{
-					port1_fanout_num = pe_port_fanout[i][1];
+					port1_fanout_num = port_fanout[i][2];
 				}
 				else if (bin_from_port == 1)//port2
 				{
-					port2_fanout_num = pe_port_fanout[i][2];
+					port2_fanout_num = port_fanout[i][3];
 				}
 				else if (bin_from_port == 2)//port3
 				{
-					port3_fanout_num = pe_port_fanout[i][3];
+					port3_fanout_num = port_fanout[i][4];
 				}
 
 			}
@@ -1910,10 +1933,11 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	{
 		if (pe_current->config_reg.front()[18] == 0 | pe_current->config_reg.front()[18] == 1)
 		{
-			//旁路模式不需要再额外的ob出数
+			//旁路模式不需要再额外执行ob出数操作
 		}
 		else
 		{
+			//不需要区分上一个PE是出于静态还是动态，tag绑定的PE虽然处于静态数据流但是绑定的数剧是输入到outTableBuffer中去的
 			pe_outbuffer_out(pe[din1_from_index], din1_from_port);
 		}
 		
@@ -2353,11 +2377,62 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		if (le_current->addr_in_v)//线上数据有效，进行入table操作
 		{
 			le_current->addrInTableBuffer();
-			
-			if (le_current->ack2addrgen)
+			//PE->LE情况下LE清空PE的ob，只针对一对一情况，一对多joinbp节点负责
+			if (1)
 			{
-				pe[le_infrom_index]->outTableBuffer1.buffer_clear();
-				pe[le_infrom_index]->dout1_v = 0;
+				int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--这三个变量是该节点的上一级节点输出端口的扇出
+				for (int i = 0; i < (int)port_fanout.size(); i++)
+				{
+					if (le_infrom_index == port_fanout[i][1] && port_fanout[i][0] == 0)
+					{
+						if (le_infrom_port == 0)//port1
+						{
+							port1_fanout_num = port_fanout[i][2];
+						}
+						else if (le_infrom_port == 1)//port2
+						{
+							port2_fanout_num = port_fanout[i][3];
+						}
+						else if (le_infrom_port == 2)//port3
+						{
+							port3_fanout_num = port_fanout[i][4];
+						}
+
+					}
+				}
+				//开始清空相应的端口数据
+				if (le_infrom_port == 0)//port1
+				{
+					if (port1_fanout_num <= 1)//一对一的情况
+					{
+						if (le_current->ack2addrgen)
+						{
+							pe[le_infrom_index]->outTableBuffer1.buffer_clear();
+							pe[le_infrom_index]->dout1_v = 0;
+						}
+					}
+				}
+				else if (le_infrom_port == 1)//port2
+				{
+					if (port2_fanout_num <= 1)//一对一的情况
+					{
+						if (le_current->ack2addrgen)
+						{
+							pe[le_infrom_index]->outTableBuffer2.buffer_clear();
+							pe[le_infrom_index]->dout2_v = 0;
+						}
+					}
+				}
+				else if (le_infrom_port == 2)//port3
+				{
+					if (port3_fanout_num <= 1)//一对一的情况
+					{
+						if (le_current->ack2addrgen)
+						{
+							pe[le_infrom_index]->bout_v = 0;
+						}
+					}
+				}
 			}
 		}	
 		//addr_out_v置位
@@ -2657,38 +2732,99 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 		}
 		
 		//数据入表成功，清零
-		if (se_current->ack2addr_source_node)
-		{
-			//当前SE
-			se_current->addr_v = 0;
-			//last PE
-			if (addr_in_port == 0)//port1
+		//SE中使用统计数据
+		if (1)                     //SE的din可能来自于LE和PE
 			{
-				pe[addr_in_from]->outTableBuffer1.buffer_clear();
-				pe[addr_in_from]->dout1_v = 0;
+				int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--这三个变量是该PE的上一级PE输出端口的扇出
+				for (int i = 0; i < (int)port_fanout.size(); i++)
+				{
+					if (addr_in_from == port_fanout[i][1] && addr_in_flag == port_fanout[i][0])     //来自PE或LE
+					{
+						if (addr_in_port == 0)//port1
+						{
+							port1_fanout_num = port_fanout[i][2];
+						}
+						else if (addr_in_port == 1)//port2
+						{
+							port2_fanout_num = port_fanout[i][3];
+						}
+						else if (addr_in_port == 2)//port3
+						{
+							port3_fanout_num = port_fanout[i][4];
+						}
+					}
+				}
+				//开始清空相应的端口数据
+				if (addr_in_port == 0)//port1
+				{
+					if (port1_fanout_num <= 1)//一对一的情况
+					{
+						if (se_current->ack2addr_source_node)
+						{
+							se_current->addr_v = 0;
+							pe[addr_in_from]->outTableBuffer1.buffer_clear();
+							pe[addr_in_from]->dout1_v = 0;
+						}
+					}
+				}
+				else if (addr_in_port == 1)//port2
+				{
+					if (port2_fanout_num <= 1)//一对一的情况
+					{
+						if (se_current->ack2addr_source_node)
+						{
+							se_current->addr_v = 0;
+							pe[addr_in_from]->outTableBuffer2.buffer_clear();
+							pe[addr_in_from]->dout2_v = 0;
+						}
+					}
+				}
+
+				for (int i = 0; i < (int)port_fanout.size(); i++)
+				{
+					if (data_in_from == port_fanout[i][1] && data_in_flag == port_fanout[i][0])     //来自PE或LE
+					{
+						if (data_in_port == 0)//port1
+						{
+							port1_fanout_num = port_fanout[i][2];
+						}
+						else if (data_in_port == 1)//port2
+						{
+							port2_fanout_num = port_fanout[i][3];
+						}
+						else if (data_in_port == 2)//port3
+						{
+							port3_fanout_num = port_fanout[i][4];
+						}
+					}
+				}
+				//开始清空相应的端口数据
+				if (data_in_port == 0)//port1
+				{
+					if (port1_fanout_num <= 1)//一对一的情况
+					{
+						if (se_current->ack2data_source_node)
+						{
+							se_current->data_in_v = 0;
+							pe[data_in_from]->outTableBuffer1.buffer_clear();
+							pe[data_in_from]->dout1_v = 0;
+						}
+					}
+				}
+				else if (data_in_port == 1)//port2
+				{
+					if (port2_fanout_num <= 1)//一对一的情况
+					{
+						if (se_current->ack2data_source_node)
+						{
+							se_current->data_in_v = 0;
+							pe[data_in_from]->outTableBuffer2.buffer_clear();
+							pe[data_in_from]->dout2_v = 0;
+						}
+					}
+				}
+
 			}
-			else if (addr_in_port == 1)//port2
-			{
-				pe[addr_in_from]->outTableBuffer2.buffer_clear();
-				pe[addr_in_from]->dout2_v = 0;
-			}			
-		}
-		if (se_current->ack2data_source_node)
-		{
-			//当前SE
-			se_current->data_in_v = 0;
-			//last PE
-			if (data_in_port == 0)//port1
-			{
-				pe[data_in_from]->outTableBuffer1.buffer_clear();
-				pe[data_in_from]->dout1_v = 0;
-			}
-			else if (data_in_port == 1)//port2
-			{
-				pe[data_in_from]->outTableBuffer2.buffer_clear();
-				pe[data_in_from]->dout2_v = 0;
-			}
-		}
 
 		se_current->dataOut();
 		outfile2 << "SE[" << se_index_current << "]输出值" << endl;
@@ -3372,10 +3508,13 @@ void TiSimProcess()
 	ti->tag_issue();
 }
 
-void pe_port_fanout_collect()
+//扇出统计函数
+void port_fanout_collect()
 {
 	vector<int> tmp;
 	int pe_size = 0;
+	int le_size = 0;
+	int se_size = 0;
 	int index = 0;
 	auto config_size = vec_config_parsed_tmp.size();
 	for (int i = 0; i < (int)config_size; i++)
@@ -3383,100 +3522,322 @@ void pe_port_fanout_collect()
 		if (vec_config_parsed_tmp[i][0] == 8)//pe
 		{
 			pe_size++;
+			//port_fanout.resize(pe_size);
 		}
+		else if (vec_config_parsed_tmp[i][0] == 9)
+		{
+			le_size++;
+			//port_fanout.resize(pe_size);
+		}
+		/*
+		else if (vec_config_parsed_tmp[i][0] == 0)
+		{
+		se_size++;
+
+		}
+		*/
 	}
 	//resize
-	pe_port_fanout.resize(pe_size);
-	for (int i = 0; i < pe_size; i++)
+	port_fanout.resize(pe_size + le_size);
+	for (int i = 0; i < (pe_size + le_size); i++)
 	{
-		pe_port_fanout[i].resize(4);
+		port_fanout[i].resize(5);
 	}
 
 	for (int i = 0; i < (int)config_size; i++)
 	{
-		if (vec_config_parsed_tmp[i][0] == 8)//pe
+		if (vec_config_parsed_tmp[i][0] == 8)//记录所有pe、le、se的index
 		{
-			pe_port_fanout[index][0] = vec_config_parsed_tmp[i][1];
+			port_fanout[index][1] = vec_config_parsed_tmp[i][1];
+			port_fanout[index][0] = 0;                                       //0-pe 1-le
+			index++;
+		}
+		else if (vec_config_parsed_tmp[i][0] == 9)
+		{
+			port_fanout[index][1] = vec_config_parsed_tmp[i][1];
+			port_fanout[index][0] = 1;                                       //0-pe 1-le
 			index++;
 		}
 	}
 
-	for (int i = 0; i < (int)config_size; i++)
+	for (int i = 0; i < (int)config_size; i++)                            //i表示扇入端，j表示扇出端
 	{
 		if (vec_config_parsed_tmp[i][0] == 8)//pe
 		{
 			if (vec_config_parsed_tmp[i][5] == 2)//in1 from pe
 			{
-				for (int j = 0; j < (int)pe_port_fanout.size(); j++)
+				for (int j = 0; j < (int)port_fanout.size(); j++)
 				{
-					if (pe_port_fanout[j][0] == vec_config_parsed_tmp[i][3])
+					if (port_fanout[j][0] == 0)                                  //pe
 					{
-						if (vec_config_parsed_tmp[i][4] == 0)//port1
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][3])
 						{
-							pe_port_fanout[j][1]++;
-						}
-						else if (vec_config_parsed_tmp[i][4] == 1)
-						{
-							pe_port_fanout[j][2]++;
-						}
-						else if (vec_config_parsed_tmp[i][4] == 2)
-						{
-							pe_port_fanout[j][3]++;
+							if (vec_config_parsed_tmp[i][4] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][4] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][4] == 2)
+							{
+								port_fanout[j][4]++;
+							}
 						}
 					}
 				}
-				
+			}
+			else if (vec_config_parsed_tmp[i][5] == 1)//in1 from le
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 1)
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][3])
+						{
+							if (vec_config_parsed_tmp[i][4] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else
+							{
+								cout << "error occurs!" << endl;
+							}
+						}
+					}
+				}
 			}
 			//in2 from pe
 			if (vec_config_parsed_tmp[i][8] == 2)
 			{
-				for (int j = 0; j < (int)pe_port_fanout.size(); j++)
+				for (int j = 0; j < (int)port_fanout.size(); j++)
 				{
-					if (pe_port_fanout[j][0] == vec_config_parsed_tmp[i][6])
+					if (port_fanout[j][0] == 0)
 					{
-						if (vec_config_parsed_tmp[i][7] == 0)//port1
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][6])
 						{
-							pe_port_fanout[j][1]++;
-						}
-						else if (vec_config_parsed_tmp[i][7] == 1)
-						{
-							pe_port_fanout[j][2]++;
-						}
-						else if (vec_config_parsed_tmp[i][7] == 2)
-						{
-							pe_port_fanout[j][3]++;
+							if (vec_config_parsed_tmp[i][7] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][7] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][7] == 2)
+							{
+								port_fanout[j][4]++;
+							}
 						}
 					}
 				}
-
+			}
+			else if (vec_config_parsed_tmp[i][8] == 1)//in2 from le
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 1)
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][6])
+						{
+							if (vec_config_parsed_tmp[i][7] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else
+							{
+								cout << "error occurs!" << endl;
+							}
+						}
+					}
+				}
 			}
 			//in3 from pe
 			if (vec_config_parsed_tmp[i][11] == 2)
 			{
-				for (int j = 0; j < (int)pe_port_fanout.size(); j++)
+				for (int j = 0; j < (int)port_fanout.size(); j++)
 				{
-					if (pe_port_fanout[j][0] == vec_config_parsed_tmp[i][9])
+					if (port_fanout[j][0] == 0)
 					{
-						if (vec_config_parsed_tmp[i][10] == 0)//port1
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][9])
 						{
-							pe_port_fanout[j][1]++;
-						}
-						else if (vec_config_parsed_tmp[i][10] == 1)
-						{
-							pe_port_fanout[j][2]++;
-						}
-						else if (vec_config_parsed_tmp[i][10] == 2)
-						{
-							pe_port_fanout[j][3]++;
+							if (vec_config_parsed_tmp[i][10] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][10] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][10] == 2)
+							{
+								port_fanout[j][4]++;
+							}
 						}
 					}
 				}
 
 			}
+			else if (vec_config_parsed_tmp[i][11] == 1)//in3 from le
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 1)
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][9])
+						{
+							if (vec_config_parsed_tmp[i][10] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else
+							{
+								cout << "error occurs!" << endl;
+							}
+						}
+					}
+				}
+			}
 
+		}
+
+		else if (vec_config_parsed_tmp[i][0] == 9)                      //le的扇入
+		{
+			for (int j = 0; j < (int)port_fanout.size(); j++)
+			{
+				if (port_fanout[j][0] == 0)                                  //pe
+				{
+					if (port_fanout[j][1] == vec_config_parsed_tmp[i][2])
+					{
+						if (vec_config_parsed_tmp[i][3] == 0)//port1
+						{
+							port_fanout[j][2]++;
+						}
+						else if (vec_config_parsed_tmp[i][3] == 1)
+						{
+							port_fanout[j][3]++;
+						}
+						else if (vec_config_parsed_tmp[i][3] == 2)
+						{
+							port_fanout[j][4]++;
+						}
+					}
+				}
+			}
+		}
+
+		else if (vec_config_parsed_tmp[i][0] == 0)                      //se扇入
+		{
+			if (vec_config_parsed_tmp[i][4] == 0)                  //in1 from pe
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 0)                                  //pe
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][2])
+						{
+							if (vec_config_parsed_tmp[i][3] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][3] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][3] == 2)
+							{
+								port_fanout[j][4]++;
+							}
+						}
+					}
+				}
+			}
+			else if (vec_config_parsed_tmp[i][4] == 1)                  //in1 from le
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 1)                                  //le
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][2])
+						{
+							if (vec_config_parsed_tmp[i][3] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][3] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][3] == 2)
+							{
+								port_fanout[j][4]++;
+							}
+						}
+					}
+				}
+			}
+
+			if (vec_config_parsed_tmp[i][7] == 0)                  //in2 from pe
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 0)                                  //pe
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][5])
+						{
+							if (vec_config_parsed_tmp[i][6] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][6] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][6] == 2)
+							{
+								port_fanout[j][4]++;
+							}
+						}
+					}
+				}
+			}
+			else if (vec_config_parsed_tmp[i][7] == 1)                  //in2 from le
+			{
+				for (int j = 0; j < (int)port_fanout.size(); j++)
+				{
+					if (port_fanout[j][0] == 1)                                  //le
+					{
+						if (port_fanout[j][1] == vec_config_parsed_tmp[i][5])
+						{
+							if (vec_config_parsed_tmp[i][6] == 0)//port1
+							{
+								port_fanout[j][2]++;
+							}
+							else if (vec_config_parsed_tmp[i][6] == 1)
+							{
+								port_fanout[j][3]++;
+							}
+							else if (vec_config_parsed_tmp[i][6] == 2)
+							{
+								port_fanout[j][4]++;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
+	for (int k = 0; k < pe_size + se_size; k++)
+	{
+		cout << "fanout[" << k << "] = ";
+		for (int m = 0; m < 5; m++)
+		{
+			cout << port_fanout[k][m];
+		}
+		cout << endl;
+	}
 }
 
 /*

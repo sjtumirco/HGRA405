@@ -100,13 +100,19 @@ void MemoryInt::readFromFile(ifstream& infile)		//从文件中读入到memory中去，相当
 	unsigned int addr_ = 0;
 	while (getline(infile, temp_string))
 	{
-		stringstream ss(temp_string);
-		while (ss >> target)
+		if (temp_string[0] == '-')//遇到"--------"时跳到下一行
+			continue;
+		else
 		{
-			mem[addr_] = target;
-			mem_state[addr_] = 1;
-			addr_++;
+			stringstream ss(temp_string);
+			while (ss >> target)
+			{
+				mem[addr_] = target;
+				mem_state[addr_] = 1;
+				addr_++;
+			}
 		}
+		
 	}
 }
 

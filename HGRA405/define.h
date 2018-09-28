@@ -27,8 +27,8 @@
 
 //#define fgNums 4				//细粒度结构总数
 #define joininportNums 2			//第三类细粒度模块（join节点）的输入端口数量
-#define memoryDepth 200			//保存输入数据memory的大小
-#define memory2depth 200			//保存输出数据memory的大小
+#define memoryDepth 2000			//保存输入数据memory的大小
+#define memory2depth 2000			//保存输出数据memory的大小
 
 //with memory or not
 #define ATTACH_MEMORY 0			//仿真器加上或者不加上memory

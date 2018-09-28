@@ -41,7 +41,7 @@ extern bool begin_signal;
 extern ofstream outfile;
 extern ofstream outfile2;
 extern vector<vector<int>> vec_config_parsed_tmp;
-extern vector<vector<int>> pe_port_fanout;
+extern vector<vector<int>> port_fanout;
 
 void PeSimProcess(ProcessingElement* pe_current);//index 是vec_config_parsed的索引值，用来表示当前仿真的具体进度
 void LeSimProcess(Load* le_current,LSUnit* lsunit);
@@ -72,6 +72,6 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current);//针对当前PE，函数参数是
 //void pe_sim_step1_new_no_tag(ProcessingElement* pe_current);
 
 //find fanout for each PE port
-void pe_port_fanout_collect();
+void port_fanout_collect();
 
 

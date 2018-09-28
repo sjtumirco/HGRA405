@@ -47,7 +47,7 @@ JoinBp** joinbp = new JoinBp*[joinbpNums];
 TagIssue* ti = new TagIssue;
 
 //Memory init
-MemoryInt memory(memoryDepth);
+MemoryInt memory(memoryDepth);//读和写
 MemoryInt memory2(memory2depth);//写结果的memory
 //配置文件
 vector<vector<int>> vec_config_parsed_tmp;
@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
 	
 	//memory 
 	ifstream memoryInFile;
-	memoryInFile.open("MemoryInFIle8x8.txt");
+	memoryInFile.open("MemoryInFile8x8.txt");
 	memory.readFromFile(memoryInFile);
 
 	//GET DRAM INSTANCE
@@ -153,7 +153,15 @@ int main(int argc,char* argv[])
 	cp.configFile2vec(config_infile);
 	cp.configVec2parsed();
 	vec_config_parsed_tmp = cp.vec_config_parsed;//parsed config vector,use in this main function
-	//
+	/*for (auto s : vec_config_parsed_tmp)
+	{
+		for (auto s_ : s)
+		{
+			cout << s_  << " ";
+		}
+		cout << endl;
+	}*/
+
 
 	////图排序
 	//
@@ -241,13 +249,6 @@ int main(int argc,char* argv[])
 		pe[pe_idx]->loc_reg_v = 1;
 	}
 
-
-	//extract execute order info from config file
-
-	//decide similating order
-
-	//start simulation
-	//ofstream outfile("debug.txt");
 	
 	while(1)
 	{
@@ -266,6 +267,8 @@ int main(int argc,char* argv[])
 				//
 				outfile2 << "---------------------------------------------------------------" << endl;
 				outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << "-" << endl;
+				if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 18)
+					continue;
 				PeSimProcess(pe[vec_config_parsed_tmp[i][1]]);
 				//for debug				
 				/*outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]输出值" << endl;
@@ -438,8 +441,8 @@ int main(int argc,char* argv[])
 
 		if (end)
 			break;
-		/*if (cnt == 300)
-			break;*/
+		if (cnt == 50)
+			break;
 
 		cnt++;
 	}
@@ -447,26 +450,65 @@ int main(int argc,char* argv[])
 	outfile << "||||||||||||||||||||||||||" << endl;
 	outfile << "PE alu运行周期数" << endl;
 	outfile << cnt << endl;
-
-	//int cycle_max = 0;
-	//int	cycle_tmp;
-	//for (vector<vector<int>>::size_type i_ = 0; i_ < vec_config_parsed_tmp.size(); i_++)
-	//{				
-	//	if (vec_config_parsed_tmp[i_][0] == 8)//pe
-	//	{
-	//		cycle_tmp = pe[vec_config_parsed_tmp[i_][1]]->cycle;
-	//		outfile << "pe[" << vec_config_parsed_tmp[i_][1] << "] ALU运行量化时钟数是： " << cycle_tmp << endl;
-	//		outfile << " " << endl;
-	//		if (cycle_max < cycle_tmp)
-	//		{
-	//			cycle_max = cycle_tmp;
-	//		}
-	//	}		
-	//}
-	//outfile << "整个仿真过程需要的量化时钟是： " << cycle_max << endl;
 	ofstream ofile("memoryOutFile.txt");
 	memory2.writeToFile(ofile);
-
+	if (1)
+	{
+		for (int i = 0; i < peNums; i++)
+		{
+			delete pe[i] ;
+		}
+		for (int i = 0; i < leNums; i++)
+		{
+			delete le[i];
+		}
+		for (int i = 0; i < seNums; i++)
+		{
+			delete se[i];
+		}
+		/*for (int i = 0; i < taNums; i++)
+		{
+		ta[i] = new TagAttach;
+		}*/
+		for (int i = 0; i < lbeginNums; i++)
+		{
+			delete lbegin[i];
+		}
+		for (int i = 0; i < lendNums; i++)
+		{
+			delete lend[i];
+		}
+		for (int i = 0; i < switchNums; i++)
+		{
+			delete switch_[i];
+		}
+		for (int i = 0; i < joinNums; i++)
+		{
+			delete join[i] ;
+		}
+		for (int i = 0; i < breakNums; i++)
+		{
+			delete break_[i];
+		}
+		for (int i = 0; i < lendsNums; i++)
+		{
+			delete lends[i];
+		}
+		for (int i = 0; i < joinbpNums; i++)
+		{
+			delete joinbp[i];
+		}
+		delete[] pe;
+		delete[] le;
+		delete[] se;
+		delete[] lbegin;
+		delete[] lend;
+		delete[] switch_;
+		delete[] join;
+		delete[] break_;
+		delete[] lends;
+		delete[] joinbp;
+	}
 	system("pause");
 	return 0;
 }

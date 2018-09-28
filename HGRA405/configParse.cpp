@@ -67,6 +67,8 @@ int ConfigParse::pefield2(string& str)		//[opcode]
 		return 100;				//虚拟操作，真实情况不存在
 	else if (str == "trans")
 		return 11;
+	/*else if (str == "shiftl")
+		return 10;*/
 	else
 	{
 		//cout << "no opcode matched!" << endl;
