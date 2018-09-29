@@ -28,10 +28,10 @@ typedef struct outbuffer {
 	int data;
 }OutBuffer_;
 
-typedef struct outbuffer {
+struct OutBuffer_no_tag {
 	bool valid;
 	int data;
-}OutBuffer_no_tag;
+};
 
 
 typedef struct lebuffer {

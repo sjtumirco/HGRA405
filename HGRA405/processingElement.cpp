@@ -821,7 +821,7 @@ bool InBuffer::dataIn(int in, bool in_v)
 
 bool InBuffer::dataOut(int& out, bool& out_v)
 {
-	if (!inputBuffer.empty())
+	if (inputBuffer.size() != 0)
 	{
 		OutBuffer_no_tag outDataTmp;
 		outDataTmp = inputBuffer.front();
@@ -873,14 +873,17 @@ bool OutBuffer::dataIn(int in, bool in_v)
 bool OutBuffer::dataOut(int& out, bool& out_v)
 {
 	//要修改，添加支持先检查bp再出数的机制
-	if (!outputBuffer.empty())
+	if (outputBuffer.size() != 0)
 	{
 		OutBuffer_no_tag outDataTmp;
 		outDataTmp = outputBuffer.front();
 		out = outDataTmp.data;
 		out_v = outDataTmp.valid;
 		outputBuffer.pop();
+		return 1;
 	}
+	else
+		return 0;
 
 
 }

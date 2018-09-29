@@ -583,7 +583,7 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 	if (ob_index == 0)//ob1需要出数
 	{
 		//ob1出数
-		if (!pe_current->outBuffer1.outputBuffer.empty())
+		if (pe_current->outBuffer1.outputBuffer.size() != 0)
 		{
 			pe_current->outBuffer1.dataOut(pe_current->dout1, pe_current->dout1_v);
 		}
@@ -591,7 +591,7 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 	else if (ob_index == 1)//ob2需要出数
 	{
 		//ob2出数
-		if (!pe_current->outBuffer2.outputBuffer.empty())
+		if (pe_current->outBuffer2.outputBuffer.size() != 0)
 		{
 			pe_current->outBuffer2.dataOut(pe_current->dout2, pe_current->dout2_v);
 		}
@@ -731,13 +731,13 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 	//pe_current->outbuffer1_v = 0; pe_current->outbuffer2_v = 0; pe_current->outbuffer3_v = 0;
 
 	//ib1 out
-	if (!pe_current->inBuffer1.inputBuffer.empty())
+	if (pe_current->inBuffer1.inputBuffer.size() != 0)
 	{
 		pe_current->inbuffer1_out = pe_current->inBuffer1.inputBuffer.front().data;
 		pe_current->inbuffer1_out_v = pe_current->inBuffer1.inputBuffer.front().valid;
 	}
 	//ib2 out
-	if (!pe_current->inBuffer2.inputBuffer.empty())
+	if (pe_current->inBuffer2.inputBuffer.size() != 0)
 	{
 		pe_current->inbuffer2_out = pe_current->inBuffer2.inputBuffer.front().data;
 		pe_current->inbuffer2_out_v = pe_current->inBuffer2.inputBuffer.front().valid;
@@ -2620,8 +2620,10 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 	int se_index_current = se_current->config_reg.front()[1];
 	int addr_in_from = se_current->config_reg.front()[2];//index
 	int addr_in_port = se_current->config_reg.front()[3];//index
-	int data_in_from = se_current->config_reg.front()[4];
-	int data_in_port = se_current->config_reg.front()[5];
+	int addr_in_flag = se_current->config_reg.front()[4];
+	int data_in_from = se_current->config_reg.front()[5];
+	int data_in_port = se_current->config_reg.front()[6];
+	int data_in_flag = se_current->config_reg.front()[7];
 	//se extra out for end node 
 	se_current->se_extra_out_for_end = 0;
 	se_current->se_extra_out_for_end_v = 0;
