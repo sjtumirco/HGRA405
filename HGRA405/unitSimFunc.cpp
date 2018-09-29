@@ -91,10 +91,11 @@ void PeSimProcess(ProcessingElement* pe_current)
 			{
 				if (pe_current->bin)
 				{
-					pe_current->outbuffer1 = pe_current->loc_reg;
-					pe_current->outbuffer1_v = pe_current->loc_reg_v;
-					pe_current->dout1 = pe_current->outbuffer1;
-					pe_current->dout1_v = pe_current->outbuffer1_v;
+					pe_current->outbuffer1_in = pe_current->loc_reg;
+					pe_current->outbuffer1_in_v = pe_current->loc_reg_v;
+					//默认使用ob1
+					(pe_current->outBuffer1).dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v);
+					(pe_current->outBuffer1).dataOut(pe_current->dout1, pe_current->dout1_v);
 				}
 			}
 			
@@ -376,11 +377,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer1_in = pe_current->din1;
 				pe_current->outbuffer1_in_v = 1;
-				pe_current->outbuffer1 = pe_current->outbuffer1_in;
-				pe_current->outbuffer1_v = pe_current->outbuffer1_in_v;
+				if (pe_current->outBuffer1.dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v))
+					pe_current->ack_outbuffer12alu = 1;
 				//out
-				pe_current->dout1 = pe_current->outbuffer1;
-				pe_current->dout1_v = pe_current->outbuffer1_v;
+				pe_current->outBuffer1.dataOut(pe_current->dout1, pe_current->dout1_v);
 				//处理完成，入口数据清零
 				pe_current->din1_v = 0;
 
@@ -389,11 +389,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer2_in = pe_current->din2;
 				pe_current->outbuffer2_in_v = 1;
-				pe_current->outbuffer1 = pe_current->outbuffer1_in;
-				pe_current->outbuffer1_v = pe_current->outbuffer1_in_v;
+				if (pe_current->outBuffer2.dataIn(pe_current->outbuffer2_in, pe_current->outbuffer2_in_v))
+					pe_current->ack_outbuffer22alu = 1;
 				//out
-				pe_current->dout2 = pe_current->outbuffer2;
-				pe_current->dout2_v = pe_current->outbuffer2_v;
+				pe_current->outBuffer2.dataOut(pe_current->dout2, pe_current->dout2_v);
 				//处理完成，入口数据清零
 				pe_current->din2_v = 0;
 			}
@@ -584,19 +583,17 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 	if (ob_index == 0)//ob1需要出数
 	{
 		//ob1出数
-		if (pe_current->outbuffer1_v)
+		if (!pe_current->outBuffer1.outputBuffer.empty())
 		{
-			pe_current->dout1 = pe_current->outbuffer1;
-			pe_current->dout1_v = pe_current->outbuffer1_v;
+			pe_current->outBuffer1.dataOut(pe_current->dout1, pe_current->dout1_v);
 		}
 	}	
 	else if (ob_index == 1)//ob2需要出数
 	{
 		//ob2出数
-		if (pe_current->outbuffer2_v)
+		if (!pe_current->outBuffer2.outputBuffer.empty())
 		{
-			pe_current->dout2 = pe_current->outbuffer2;
-			pe_current->dout2_v = pe_current->outbuffer2_v;
+			pe_current->outBuffer2.dataOut(pe_current->dout2, pe_current->dout2_v);
 		}
 	}
 	
@@ -731,19 +728,19 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 	pe_current->inbuffer1_out_v = 0; pe_current->inbuffer2_out_v = 0; pe_current->inbuffer3_out_v = 0;
 	pe_current->outbuffer1_in_v = 0; pe_current->outbuffer2_in_v = 0; pe_current->outbuffer3_in_v = 0;
 	//开始前ob中的内容清零，只让ob中的把内容保持一个周期的生存周期
-	pe_current->outbuffer1_v = 0; pe_current->outbuffer2_v = 0; pe_current->outbuffer3_v = 0;
+	//pe_current->outbuffer1_v = 0; pe_current->outbuffer2_v = 0; pe_current->outbuffer3_v = 0;
 
 	//ib1 out
-	if (pe_current->inbuffer1_v )
+	if (!pe_current->inBuffer1.inputBuffer.empty())
 	{
-		pe_current->inbuffer1_out = pe_current->inbuffer1;
-		pe_current->inbuffer1_out_v = pe_current->inbuffer1_v;
+		pe_current->inbuffer1_out = pe_current->inBuffer1.inputBuffer.front().data;
+		pe_current->inbuffer1_out_v = pe_current->inBuffer1.inputBuffer.front().valid;
 	}
 	//ib2 out
-	if (pe_current->inbuffer2_v)
+	if (!pe_current->inBuffer2.inputBuffer.empty())
 	{
-		pe_current->inbuffer2_out = pe_current->inbuffer2;
-		pe_current->inbuffer2_out_v = pe_current->inbuffer2_v;
+		pe_current->inbuffer2_out = pe_current->inBuffer2.inputBuffer.front().data;
+		pe_current->inbuffer2_out_v = pe_current->inBuffer2.inputBuffer.front().valid;
 	}
 	//ib3 out
 	if (pe_current->inbuffer3_v)
@@ -818,7 +815,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 					pe_current->inbuffer1_out_v = 0;
 					pe_current->inbuffer2_out_v = 0;
 					pe_current->inbuffer3_out_v = 0;
-					pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
+					//inBuffer数据弹出，请补充
+					//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
 				}
 
 			}
@@ -833,7 +831,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 					pe_current->inbuffer1_out_v = 0;
 					pe_current->inbuffer2_out_v = 0;
 					pe_current->inbuffer3_out_v = 0;
-					pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
+					//inBuffer数据弹出，请补充
+					//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
 				}				
 			}
 
@@ -852,7 +851,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 			pe_current->inbuffer1_out_v = 0;
 			pe_current->inbuffer2_out_v = 0;
 			pe_current->inbuffer3_out_v = 0;
-			pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;			
+			//inBuffer数据弹出，请补充
+			//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;			
 		}
 	}
 
@@ -886,8 +886,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 			//入数
 			if (pe_current->outbuffer1_in_v)
 			{
-				pe_current->outbuffer1 = pe_current->outbuffer1_in;
-				pe_current->outbuffer1_v = pe_current->outbuffer1_in_v;
+				pe_current->outBuffer1.dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v);
 			}
 
 		}
@@ -918,8 +917,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 			//入数
 			if (pe_current->outbuffer2_in_v)
 			{
-				pe_current->outbuffer2 = pe_current->outbuffer2_in;
-				pe_current->outbuffer2_v = pe_current->outbuffer2_in_v;
+				pe_current->outBuffer2.dataIn(pe_current->outbuffer2_in, pe_current->outbuffer2_in_v);
 			}
 
 		}
@@ -948,8 +946,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 	outfile << "outbuffer值打印" << endl;
 	outfile << setw(15) << "outbuffer1_v" << setw(15) << "outbuffer1" << setw(15) << "outbuffer2_v" << setw(15) << "outbuffer2"
 		<< setw(15) << "outbuffer3_v" << setw(15) << "outbuffer3" << endl;
-	outfile << setw(15) << pe_current->outbuffer1_v << setw(15) << pe_current->outbuffer1 << setw(15) << pe_current->outbuffer2_v <<
-		setw(15) << pe_current->outbuffer2 << setw(15) << pe_current->outbuffer3_v << setw(15) << pe_current->outbuffer3 << endl;
+	outfile << setw(15) << pe_current->outBuffer1.outputBuffer.front().valid << setw(15) << pe_current->outBuffer1.outputBuffer.front().data << setw(15) << pe_current->outBuffer2.outputBuffer.front().valid <<
+		setw(15) << pe_current->outBuffer2.outputBuffer.front().data << setw(15) << pe_current->outbuffer3_v << setw(15) << pe_current->outbuffer3 << endl;
 	
 	//lr 仿真
 	if (pe_current->config_reg.front()[12] == 1)	//lr from alu
@@ -987,8 +985,7 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 		//入数
 		if (pe_current->din1_v)
 		{
-			pe_current->inbuffer1 = pe_current->din1;
-			pe_current->inbuffer1_v = pe_current->din1_v;
+			pe_current->inBuffer1.dataIn(pe_current->din1, pe_current->din1_v);
 			//入buffer成功，置ack信号
 			pe_current->ack2in1port = 1;
 			//清除
@@ -1016,8 +1013,7 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 		//入数
 		if (pe_current->din2_v)
 		{
-			pe_current->inbuffer2 = pe_current->din2;
-			pe_current->inbuffer2_v = pe_current->din2_v;	
+			pe_current->inBuffer2.dataIn(pe_current->din2, pe_current->din2_v);
 			//入buffer成功，置ack信号
 			pe_current->ack2in2port = 1;
 			//清除
@@ -1069,8 +1065,8 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 	outfile << "inbuffer值打印" << endl;
 	outfile << setw(15) << "inbuffer1_v" << setw(15) << "inbuffer1" << setw(15) << "inbuffer2_v" << setw(15) << "inbuffer2"
 		<< setw(15) << "inbuffer3_v" << setw(15) << "inbuffer3" << endl;
-	outfile << setw(15) << pe_current->inbuffer1_v << setw(15) << pe_current->inbuffer1 << setw(15) << pe_current->inbuffer2_v <<
-		setw(15) << pe_current->inbuffer2 << setw(15) << pe_current->inbuffer3_v << setw(15) << pe_current->inbuffer3 << endl;
+	outfile << setw(15) << pe_current->inBuffer1.inputBuffer.front().valid << setw(15) << pe_current->inBuffer1.inputBuffer.front().data << setw(15) << pe_current->inBuffer2.inputBuffer.front().valid <<
+		setw(15) << pe_current->inBuffer2.inputBuffer.front().data << setw(15) << pe_current->inbuffer3_v << setw(15) << pe_current->inbuffer3 << endl;
 
 }
 

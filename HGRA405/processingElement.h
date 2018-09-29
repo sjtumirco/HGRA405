@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <queue>
-#include "peModule.h"
+//#include "peModule.h"
 #include <list>
 #include "typedef.h"
 #include "define.h"
@@ -15,6 +15,66 @@ typedef unsigned int CLOCK;
 using namespace std;
 
 class ProcessingElement;//类前向申明
+
+//for no tag
+class InBuffer {
+public:
+	/*int in;
+	bool in_v;
+	int out;
+	bool out_v;*/
+	/*bool isInBufFull,
+	isInDataFinished;*/
+
+	queue<OutBuffer_no_tag> inputBuffer;
+	/*queue<OutBuffer_> inputBuffer2;
+	queue<OutBuffer_> inputBuffer3;*/
+	//indicate which input port is aviable
+	//bool flag_reg1, flag_reg2, flag_reg3;
+
+public:
+	//InBuffer();
+	InBuffer(const int inBufDepth = inbuffer_depth);//initialize depth of InBuffer
+	~InBuffer();
+	bool isInBufferFull();
+	bool dataIn(int in,bool in_v);  //bool value show if input data has been stored correctly.
+	bool dataOut(int& out,bool& out_v);
+
+
+
+private:
+
+	unsigned int bufDepth;
+	/*int inDataTmp;
+	int outDataTmp;*/
+
+
+};
+
+class OutBuffer
+{
+public:
+	/*int in;
+	int out;
+	bool isOutBufFull,
+		isDataInFinished;*/
+
+public:
+	//OutBuffer();
+	OutBuffer(const int outBufDepth = outbuffer_depth);
+	~OutBuffer();
+	bool isOutBufferFull();
+	bool dataIn(int in,bool in_v);
+	bool dataOut(int& out,bool& out_v);
+	queue<OutBuffer_no_tag> outputBuffer;
+
+
+private:
+	unsigned int bufDepth;
+	
+};
+
+//for tag
 class InTableBuffer {
 
 public:
@@ -33,7 +93,7 @@ public:
 
 public:
 	//InBuffer();
-	InTableBuffer(const int inBufDepth = 4);//initialize depth of InBuffer
+	InTableBuffer(const int inBufDepth = intablebuffer_depth);//initialize depth of InBuffer
 	~InTableBuffer();
 	//void isInBufferFull();//要在dataIn()函数之前运行
 	void dataIn(ProcessingElement* pe);  //bool value show if input data has been stored correctly.
@@ -72,7 +132,7 @@ public:
 
 public:
 	//OutBuffer();
-	OutTableBuffer(const int outBufDepth = 4);
+	OutTableBuffer(const int outBufDepth = outtablebuffer_depth);
 	~OutTableBuffer();
 	bool isOutBufferFull();
 	void dataIn();
@@ -110,52 +170,57 @@ public:
 	/*bool outbuffer3, outbuffer3_v;*/
 	short outbuffer3_tag;
 	//ack 信号
+	//inTableBuffer/inBuffer生成的bp信号
 	bool ack2in1port, ack2in2port, ack2in3port;
+	//outTableBuffer/outBuffer生成的bp信号
+	bool ack_outbuffer12alu, ack_outbuffer22alu,ack_outbuffer32alu;
+	//tag bind模式的last_tag
 	int last_t4bind;
 
-	//
-	int cycle;
-
-
-
-	
+	int cycle;	
 	//input and output buffer declaration
+	//for no tag
 	InBuffer inBuffer1, inBuffer2;
 	OutBuffer outBuffer1, outBuffer2;
+	//for tag
 	InTableBuffer inTableBuffer;
 	OutTableBuffer outTableBuffer1, outTableBuffer2;
+
 	//for tag match mode
 	queue<TableLine4Fifo> tableBuffer_fifo1;
 	queue<TableLine4Fifo> tableBuffer_fifo2;
-	//inbuffer for no tag
-	int inbuffer1, inbuffer2;
-	bool inbuffer1_v, inbuffer2_v;
-	bool inbuffer3, inbuffer3_v;
-	//outbuffer for no tag
-	int outbuffer1, outbuffer2;
-	bool outbuffer1_v, outbuffer2_v;
+
+	//inbuffer3 for no tag
+	bool inbuffer3, inbuffer3_v; 
+	int inbuffer3_tag;
+
+	//outbuffer3 for no tag
 	bool outbuffer3, outbuffer3_v;
+
 	//local reg declaration
 	int loc_reg;
 	short loc_reg_tag;
 	bool loc_reg_v;
 	queue<vector<int>> config_reg; //配置寄存器，深度可以配置
-	//inableBuffer输出信号申明
+
+	//intableBuffer输出端口信号申明
 	int inbuffer1_out, inbuffer2_out,inbuffer3_out;
 	short inbuffer1_out_tag, inbuffer2_out_tag, inbuffer3_out_tag;
 	bool inbuffer1_out_v, inbuffer2_out_v, inbuffer3_out_v;
-	//alu输入输出信号申明
+	
+	//alu输入输出端口信号申明
 	int alu_out, alu_out_b;
 	bool alu_out_v, alu_out_b_v;
 	int alu_in1, alu_in2;
 	bool alu_in1_v, alu_in2_v;
 	bool ack_alu2ib1, ack_alu2ib2;
-	//outbuffer输入输出信号申明
+
+	//outbuffer输入输出端口信号申明
 	int outbuffer1_in, outbuffer2_in;
 	short outbuffer1_in_tag, outbuffer2_in_tag;
 	bool outbuffer1_in_v, outbuffer2_in_v, outbuffer3_in_v;
 	int outbuffer1_out, outbuffer2_out;
-	bool ack_outbuffer12alu, ack_outbuffer22alu;
+	
 	
 	
 	
@@ -168,15 +233,15 @@ public:
 	void ALU(int opcode, int in1, int in2, bool for_mux);
 
 	//inBuffer入数,出数
-	void peInportCtr1();
-	void peInportCtr2();
-	void inBufferOutCtr1();
-	void inBufferOutCtr2();
+	void inbuffer_in(ProcessingElement* pe);
+	void inbuffer_out(ProcessingElement* pe);
+
 	//outBuffer入数，出数
 	void outBuffer1In();
 	void outBuffer2In();
-	void peExportCtr1();
-	void peExportCtr2();
+	void outBuffer1_out();
+	void outBuffer2_out();
+
 	//出口数据有效位清零
 	void valid_clear(CLOCK port_idx);
 	//clock

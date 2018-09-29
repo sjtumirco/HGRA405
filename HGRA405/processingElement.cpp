@@ -85,104 +85,93 @@ bool ProcessingElement::tableBuffer_fifo_full2()
 		return 1;
 }
 
-void ProcessingElement::peExportCtr1()
+void ProcessingElement::inbuffer_in(ProcessingElement* pe)
 {
-	if (!bp1)
+	pe->ack2in1port = 0;
+	pe->ack2in2port = 0;
+	pe->ack2in3port = 0;
+
+	//check flag_reg,3steps to simulate
+	int flag_reg1 = pe->config_reg.front()[20];
+	int flag_reg2 = pe->config_reg.front()[21];
+	int flag_reg3 = pe->config_reg.front()[22];
+	if (flag_reg1)//in1port没有悬空
 	{
-		outBuffer1.dataOut();
-		dout1 = outBuffer1.out;
-		dout1_v = 1;
+		if (pe->din1_v)//上一个PE发出了request请求
+		{
+			if (!inBuffer1.isInBufferFull())
+			{
+				if(inBuffer1.dataIn(pe->din1, pe->din1_v))
+					pe->ack2in1port = 1;//数据被接收				
+			}
+		}
 	}
-	else
+
+	if (flag_reg2)//in2port没有悬空
 	{
-		dout1_v = 0;
+		if (pe->din2_v)//上一个PE发出了request请求
+		{
+			if (!inBuffer2.isInBufferFull())
+			{
+				if (inBuffer2.dataIn(pe->din2, pe->din2_v))
+					pe->ack2in2port = 1;//数据被接收				
+			}
+		}
 	}
-	
-}
-void ProcessingElement::peExportCtr2()
-{
-	
 
-	if (!bp2)
+	if (flag_reg3)//in3port没有悬空
 	{
-		outBuffer2.dataOut();
-		dout2 = outBuffer2.out;
-		dout2_v = 1;
+		if (pe->bin_v)//上一个PE发出了request请求
+		{
+			pe->inbuffer3 = pe->bin;
+			pe->inbuffer3_v = pe->bin_v;
+			pe->inbuffer3_tag = pe->bin_tag;
+			pe->ack2in3port = 1;
 
+		}
 	}
-	else
-		dout2_v = 0;
 }
 
-void ProcessingElement::peInportCtr1()
-{	//in1 data get into the buffer1
-	inBuffer1.in = din1;
-	inBuffer1.in_v = din1_v;
-	inBuffer1.dataIn();
-
-}
-void ProcessingElement::peInportCtr2()
-{
-	//in2 data get into the buffer2
-	inBuffer2.in = din2;
-	inBuffer2.in_v = din2_v;
-	inBuffer2.dataIn();
-}
-
-//void ProcessingElement::peInportCtr()
-//{	//in data get into the buffer class 
-//	inBuffer.in1 = din1;
-//	inBuffer.in1_v = din1_v;
-//	inBuffer.in1_t = din1_tag;
-//	inBuffer.in2 = din2;
-//	inBuffer.in2_v = din2_v;
-//	inBuffer.in2_t = din2_tag;
-//	inBuffer.in3 = bin;
-//	inBuffer.in3_v = bin_v;
-//	inBuffer.in3_t = bin_tag;
-//
-//	inBuffer.dataIn();
+//void ProcessingElement::outBuffer1_out()
+//{
+//	if (!bp1)
+//	{
+//		outBuffer1.dataOut();
+//		dout1 = outBuffer1.out;
+//		dout1_v = 1;
+//	}
+//	else
+//	{
+//		dout1_v = 0;
+//	}
 //	
+//}
+//void ProcessingElement::outBuffer2_out()
+//{
+//	
+//
+//	if (!bp2)
+//	{
+//		outBuffer2.dataOut();
+//		dout2 = outBuffer2.out;
+//		dout2_v = 1;
+//
+//	}
+//	else
+//		dout2_v = 0;
 //}
 
 
-void ProcessingElement::inBufferOutCtr1()
-{
-	if (inBuffer1.inputBuffer.size() != 0)//保证inputBuffer出数的时候不是空的
-	{				
-		inBuffer1.dataOut();
-		inbuffer1_out = inBuffer1.out;		
-	}
-	else
-		cout << "inputBuffer1是空的" << endl;
-
-	
-
-}
-
-void ProcessingElement::inBufferOutCtr2()
-{
-	if (inBuffer2.inputBuffer.size() != 0)//保证inputBuffer出数的时候不是空的
-	{		
-		inBuffer2.dataOut();
-		inbuffer2_out = inBuffer2.out;		
-	}
-	else
-		cout << "inputBuffer2是空的" << endl;
-	
-
-}
-
-void ProcessingElement::outBuffer1In()
-{
-	outBuffer1.in = outbuffer1_in;
-	outBuffer1.dataIn();
-}
-void ProcessingElement::outBuffer2In()
-{
-	outBuffer2.in = outbuffer2_in;
-	outBuffer2.dataIn();
-}
+//void ProcessingElement::outBuffer1In()
+//{
+//	outBuffer1.in = outbuffer1_in;
+//	outBuffer1.dataIn();
+//}
+//void ProcessingElement::outBuffer2In()
+//{
+//	outBuffer2.in = outbuffer2_in;
+//	outBuffer2.dataIn();
+//}
 
 void ProcessingElement::cycle_alu(int opcode)
 {
@@ -794,4 +783,104 @@ void ProcessingElement::valid_clear(CLOCK port_idx)
 	{
 		bout_v = 0;
 	}
+}
+
+
+//for no tag inBuffer and outBuffer类的定义
+//for no tag operate
+InBuffer::InBuffer(const int bufDpth) { this->bufDepth = bufDepth; }
+InBuffer::~InBuffer() {}
+bool InBuffer::isInBufferFull()
+{
+	if (inputBuffer.size() < inbuffer_depth)
+	{
+		return 0;//no full
+	}
+	else
+	{
+		return 1;//full
+	}
+}
+
+bool InBuffer::dataIn(int in, bool in_v)
+{
+	if (!isInBufferFull())
+	{
+		if (in_v)
+		{
+			OutBuffer_no_tag buffer_line_tmp;
+			buffer_line_tmp.data = in;
+			buffer_line_tmp.valid = in_v;
+			inputBuffer.push(buffer_line_tmp);
+			return 1;//入数成功
+		}
+	}
+	else
+		return 0;
+}
+
+bool InBuffer::dataOut(int& out, bool& out_v)
+{
+	if (!inputBuffer.empty())
+	{
+		OutBuffer_no_tag outDataTmp;
+		outDataTmp = inputBuffer.front();
+		out = outDataTmp.data;
+		out_v = outDataTmp.valid;
+		inputBuffer.pop();
+		return 1;
+	}
+	else
+		return 0;
+}
+
+//definition of OutBuffer
+
+//OutBuffer::OutBuffer() {}
+OutBuffer::OutBuffer(const int bufDepth) { this->bufDepth = bufDepth; }
+OutBuffer::~OutBuffer() {}
+
+bool OutBuffer::isOutBufferFull()
+{
+	if (outputBuffer.size() < outbuffer_depth)
+	{
+		return 0;//没有满
+	}
+	else
+	{
+		return 1;//满了
+	}
+}
+
+
+bool OutBuffer::dataIn(int in, bool in_v)
+{
+	if (!isOutBufferFull())
+	{
+		OutBuffer_no_tag inDataTmp;
+		inDataTmp.data = in;
+		inDataTmp.valid = in_v;
+		outputBuffer.push(inDataTmp);
+		return 1;
+	}
+	else
+	{
+		//std::cout << "OutBuffer if full1" << std::endl;
+		return 0;
+	}
+}
+
+bool OutBuffer::dataOut(int& out, bool& out_v)
+{
+	//要修改，添加支持先检查bp再出数的机制
+	if (!outputBuffer.empty())
+	{
+		OutBuffer_no_tag outDataTmp;
+		outDataTmp = outputBuffer.front();
+		out = outDataTmp.data;
+		out_v = outDataTmp.valid;
+		outputBuffer.pop();
+	}
+
+
 }

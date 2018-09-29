@@ -176,7 +176,7 @@ int main(int argc,char* argv[])
 
 
 	//find fanout for each PE port
-	pe_port_fanout_collect();
+	port_fanout_collect();
 	
 	//µº»Î≈‰÷√
 	int idx_config;
