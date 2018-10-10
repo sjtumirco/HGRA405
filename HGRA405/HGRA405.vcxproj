@@ -85,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,12 +186,16 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="config8+8.txt" />
+    <Text Include="testfig.txt" />
     <Text Include="config8x8_1.txt" />
     <Text Include="config8x8_2.txt" />
     <Text Include="config_ori.txt" />
     <Text Include="config_ori_s.txt" />
     <Text Include="DEBUG.txt" />
     <Text Include="DEBUG2.txt" />
+    <Text Include="iirdynfig.txt" />
+    <Text Include="iirdynpara.txt" />
+    <Text Include="iirmemini.txt" />
     <Text Include="input8x8_ori.txt" />
     <Text Include="memoryInFile.txt" />
     <Text Include="MemoryInFile8x8.txt" />
@@ -201,6 +206,7 @@
     <Text Include="parameter_8x8_2.txt" />
     <Text Include="parameter_file.txt" />
     <Text Include="parameter_file_s.txt" />
+    <Text Include="testpara.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

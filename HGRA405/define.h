@@ -9,8 +9,8 @@
 #define outtablebuffer_depth 4	//outTableBuffer的深度
 #define intablebuffer_depth 4	//intablebuffer的深度
 //unit num
-#define peNums 53				//PE总数
-#define leNums 16				//LE总数
+#define peNums 11				//PE总数
+#define leNums 0				//LE总数
 #define seNums 1				//SE总数
 
 #define lbeginNums 2			//loop begin总数
@@ -19,7 +19,7 @@
 #define switchNums 0			//switch节点总数
 #define breakNums 0				//break节点总数
 #define lendsNums 0				//loop end2节点总数
-#define joinbpNums 3			//joinbp节点总数
+#define joinbpNums 4			//joinbp节点总数
 
 #define fgNums (lbeginNums+lendNums+joinNums+switchNums+breakNums+lendsNums+joinbpNums)				//总的fg节点的数量
 

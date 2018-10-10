@@ -265,5 +265,20 @@
     <Text Include="input8x8_ori.txt">
       <Filter>资源文件</Filter>
     </Text>
+    <Text Include="iirdynfig.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="iirdynpara.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="iirmemini.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="testfig.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="testpara.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>

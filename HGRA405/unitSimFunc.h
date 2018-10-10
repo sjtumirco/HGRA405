@@ -50,7 +50,7 @@ void SeSimProcess(Store* se_current,LSUnit* lsunit);
 void LbeginSimProcess(LoopBegin* lbegin_current);
 void LendSimProcess(LoopEnd* lend_current);
 void JoinSimProcess(Join* join_current);
-void JoinBpSimProcess(JoinBp* joinbp_current);
+void JoinBpSimProcess(JoinBp* joinbp_current);   //动态负责清ob，静态负责清ob和出数？
 void SwitchSimProcess(Switch* switch_current);
 void BreakSimProcess(Break* break_current);
 void LendsSimProcess(LoopEnds* lends_current);

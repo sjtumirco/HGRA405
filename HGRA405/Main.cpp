@@ -51,7 +51,7 @@ MemoryInt memory(memoryDepth);//读和写
 MemoryInt memory2(memory2depth);//写结果的memory
 //配置文件
 vector<vector<int>> vec_config_parsed_tmp;
-vector<vector<int>> pe_port_fanout;//pe_port_fanout[i]的第一个元素是相应的PE标号，第2,3,4个元素分别是该PE的输出端口的扇出
+vector<vector<int>> port_fanout;//port_fanout[i]的第一个元素表示PE或者LE，第2个元素表示编号，第3,4,5个元素分别是该PE的输出端口的扇出
 bool begin_signal = 1;
 
 ofstream outfile("DEBUG.txt");
@@ -267,19 +267,21 @@ int main(int argc,char* argv[])
 				//
 				outfile2 << "---------------------------------------------------------------" << endl;
 				outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << "-" << endl;
-				if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 18)
-					continue;
+				//if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 18)
+				//	continue;
 				PeSimProcess(pe[vec_config_parsed_tmp[i][1]]);
-				//for debug				
-				/*outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]输出值" << endl;
+				//for debug	
+				/*
+				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]输出值" << endl;
 				outfile2 << setw(15) << "dout1_t" << setw(15) << "dout1_v" << setw(15) << "dout1" << setw(15) << "dout2_t" << setw(15) << "dout2_v"
 					<< setw(15) << "dout" << setw(15) << "bout_t" << setw(15) << "bout_v" << setw(15) << "bout" << endl;
 				outfile2 << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout1_tag << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout1_v
 					<< setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout1 << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout2_tag
 					<< setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout2_v << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout2
 					<< setw(15) << pe[vec_config_parsed_tmp[i][1]]->bout_tag << setw(15) << pe[vec_config_parsed_tmp[i][1]]->bout_v
-					<< setw(15) << pe[vec_config_parsed_tmp[i][1]]->bout << endl;*/
+					<< setw(15) << pe[vec_config_parsed_tmp[i][1]]->bout << endl;
 				//outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << endl;
+				*/
 				outfile << endl;
 				//
 				outfile2 << endl;
@@ -407,6 +409,16 @@ int main(int argc,char* argv[])
 			outfile2 << endl;
 			
 		}
+		//Ti update
+		//outfile2 << "--------------------------------------" << endl;
+		//outfile2 << "CLOCK" << cnt << "-ti" << endl;
+		//outfile2 << endl;
+		//TiSimProcess();
+		//outfile2 << "Ti节点的输出值" << endl;
+		//outfile2 << setw(10) << "out_v" << setw(10) << "out" << endl;
+		//outfile2 << setw(10) << ti->out_v << setw(10) << ti->out << endl;
+		//outfile2 << endl;
+
 		//memmory update
 		lsunit->update();
 		//静态下PE outbuffer数据刷新

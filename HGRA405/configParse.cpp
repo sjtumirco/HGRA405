@@ -402,7 +402,7 @@ bool ConfigParse::lefield3(string& str)
 		return 1;
 }
 
-pair<int,int> ConfigParse::sefield1(string& str)		//[category+index]
+pair<int, int> ConfigParse::sefield1(string& str)		//[category+index]
 {
 	pair<int, int> tmp;
 	string str_ = str.substr(2);
@@ -416,47 +416,82 @@ pair<int,int> ConfigParse::sefield1(string& str)		//[category+index]
 
 vector<int> ConfigParse::sefield2(string& str)			//[se_addr_from]
 {
-	string::size_type pos;
-	string dot_b, dot_a;
-	pos = str.find(".");
-	vector<int> vec;
-	if (pos != string::npos)
+	string head = get_string(str);
+	if (head == "pe")
 	{
-		dot_b = str.substr(2, pos - 2);
-		dot_a = str.substr(pos + 1);
-		stringstream ss1(dot_b);
-		stringstream ss2(dot_a);
-		int num1, num2;
-		ss1 >> num1;
-		ss2 >> num2;
+		string::size_type pos;
+		string dot_b, dot_a;
+		pos = str.find(".");
+		vector<int> vec;
+		if (pos != string::npos)
+		{
+			dot_b = str.substr(2, pos - 2);
+			dot_a = str.substr(pos + 1);
+			stringstream ss1(dot_b);
+			stringstream ss2(dot_a);
+			int num1, num2;
+			ss1 >> num1;
+			ss2 >> num2;
+			vec.clear();
+			vec.push_back(num1);
+			vec.push_back(num2 - 1);
+			vec.push_back(0);
+			return vec;
+		}
+	}
+	else if (head == "le")//´æÔÚse from le
+	{
+		vector<int> vec;
+		string index = str.substr(2);
+		stringstream ss1(index);
+		int index_;
+		ss1 >> index_;
 		vec.clear();
-		vec.push_back(num1);
-		vec.push_back(num2 - 1);
+		vec.push_back(index_);
+		vec.push_back(0);
+		vec.push_back(1);
 		return vec;
-	}	
+	}
 }
 
 vector<int> ConfigParse::sefield3(string& str)			//[se_data_from]
 {
-	string::size_type pos;
-	string dot_b, dot_a;
-	pos = str.find(".");
-	vector<int> vec;
-	if (pos != string::npos)
+	string head = get_string(str);
+	if (head == "pe")
 	{
-		dot_b = str.substr(2, pos - 2);
-		dot_a = str.substr(pos + 1);
-		stringstream ss1(dot_b);
-		stringstream ss2(dot_a);
-		int num1, num2;
-		ss1 >> num1;
-		ss2 >> num2;
+		string::size_type pos;
+		string dot_b, dot_a;
+		pos = str.find(".");
+		vector<int> vec;
+		if (pos != string::npos)
+		{
+			dot_b = str.substr(2, pos - 2);
+			dot_a = str.substr(pos + 1);
+			stringstream ss1(dot_b);
+			stringstream ss2(dot_a);
+			int num1, num2;
+			ss1 >> num1;
+			ss2 >> num2;
+			vec.clear();
+			vec.push_back(num1);
+			vec.push_back(num2 - 1);
+			vec.push_back(0);
+			return vec;
+		}
+	}
+	else if (head == "le")
+	{
+		vector<int> vec;
+		string index = str.substr(2);
+		stringstream ss1(index);
+		int index_;
+		ss1 >> index_;
 		vec.clear();
-		vec.push_back(num1);
-		vec.push_back(num2 - 1);
-		
+		vec.push_back(index_);
+		vec.push_back(0);
+		vec.push_back(1);
 		return vec;
-	}	
+	}
 }
 
 bool ConfigParse::sefield4(string& str)
@@ -883,10 +918,12 @@ void ConfigParse::configVec2parsed()
 			v_tmp_tmp = sefield2(vec_config_ori[it1][1]);
 			vec_config_parsed[it1].push_back(v_tmp_tmp[0]);
 			vec_config_parsed[it1].push_back(v_tmp_tmp[1]);
+			vec_config_parsed[it1].push_back(v_tmp_tmp[2]);
 			v_tmp_tmp.clear();
 			v_tmp_tmp = sefield3(vec_config_ori[it1][2]);
 			vec_config_parsed[it1].push_back(v_tmp_tmp[0]);
 			vec_config_parsed[it1].push_back(v_tmp_tmp[1]);
+			vec_config_parsed[it1].push_back(v_tmp_tmp[2]);
 			v_tmp_tmp.clear();
 			vec_config_parsed[it1].push_back(sefield4(vec_config_ori[it1][3]));
 

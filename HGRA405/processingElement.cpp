@@ -1,7 +1,7 @@
 #include "processingElement.h"
 
 
-ProcessingElement::ProcessingElement():dout1_v(0),dout2_v(0),bout_v(0),loc_reg_v(0),last_t4bind(10) {}
+ProcessingElement::ProcessingElement():dout1_v(0),dout2_v(0),bout_v(0),loc_reg_v(0),last_t4bind(10), ack_outbuffer12alu(1), ack_outbuffer22alu(1), ack_outbuffer32alu(1) {}
 ProcessingElement::~ProcessingElement() {}
 void ProcessingElement::ALU(int opcode, int in1, int in2 ,bool for_mux)//ALU作为MUX的时候，要将in3的信号端值作为参数传递给该函数
 {
@@ -39,6 +39,11 @@ void ProcessingElement::ALU(int opcode, int in1, int in2 ,bool for_mux)//ALU作为
 			break;
 		case 3://sub
 			alu_out = in1 - in2;
+			alu_out_v = 1;
+			break;
+
+		case 5://mod
+			alu_out = in1 % in2;
 			alu_out_v = 1;
 			break;
 
@@ -802,7 +807,7 @@ bool InBuffer::isInBufferFull()
 	}
 }
 
-bool InBuffer::dataIn(int in, bool in_v)
+bool InBuffer::dataIn(int in, bool in_v)    //由于该函数没有PE指针的信息且被动态时的datain复用，将拉bp的代码写在unitSim中
 {
 	if (!isInBufferFull())
 	{
@@ -819,7 +824,7 @@ bool InBuffer::dataIn(int in, bool in_v)
 		return 0;
 }
 
-bool InBuffer::dataOut(int& out, bool& out_v)
+bool InBuffer::dataOut(int& out, bool& out_v)  //并没有被使用
 {
 	if (inputBuffer.size() != 0)
 	{
@@ -832,6 +837,11 @@ bool InBuffer::dataOut(int& out, bool& out_v)
 	}
 	else
 		return 0;
+}
+
+void InBuffer::resize_(const int size)
+{
+	//
 }
 
 //definition of OutBuffer
@@ -872,7 +882,7 @@ bool OutBuffer::dataIn(int in, bool in_v)
 
 bool OutBuffer::dataOut(int& out, bool& out_v)
 {
-	//要修改，添加支持先检查bp再出数的机制
+	//负责出数和清buffer
 	if (outputBuffer.size() != 0)
 	{
 		OutBuffer_no_tag outDataTmp;
@@ -886,4 +896,12 @@ bool OutBuffer::dataOut(int& out, bool& out_v)
 		return 0;
 
 
+}
+
+void OutBuffer::buffer_clear()
+{
+	if (!outputBuffer.empty())
+	{
+		outputBuffer.pop();
+	}
 }

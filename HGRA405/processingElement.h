@@ -14,6 +14,8 @@ typedef unsigned int CLOCK;
 
 using namespace std;
 
+extern vector<vector<int>> port_fanout;
+
 class ProcessingElement;//类前向申明
 
 //for no tag
@@ -39,6 +41,7 @@ public:
 	bool isInBufferFull();
 	bool dataIn(int in,bool in_v);  //bool value show if input data has been stored correctly.
 	bool dataOut(int& out,bool& out_v);
+	void resize_(const int size);
 
 
 
@@ -66,6 +69,7 @@ public:
 	bool isOutBufferFull();
 	bool dataIn(int in,bool in_v);
 	bool dataOut(int& out,bool& out_v);
+	void buffer_clear();
 	queue<OutBuffer_no_tag> outputBuffer;
 
 
@@ -170,12 +174,16 @@ public:
 	/*bool outbuffer3, outbuffer3_v;*/
 	short outbuffer3_tag;
 	//ack 信号
-	//inTableBuffer/inBuffer生成的bp信号
-	bool ack2in1port, ack2in2port, ack2in3port;
+	//inTableBuffer/inBuffer生成的bp信号 初始化为1，buffer未满
+	bool ack2in1port = 1;
+	bool ack2in2port = 1;
+	bool ack2in3port = 1; 
 	//outTableBuffer/outBuffer生成的bp信号
 	bool ack_outbuffer12alu, ack_outbuffer22alu,ack_outbuffer32alu;
 	//tag bind模式的last_tag
 	int last_t4bind;
+
+	//bool joinedbp1, joinedbp2, joinedbp3; //静态一拖多需要先查bp
 
 	int cycle;	
 	//input and output buffer declaration
