@@ -6,10 +6,10 @@
 #define outbuffer_depth 1		//outputBuffer的深度
 #define inbuffer_depth 1		//inBuffer的深度
 //for tag
-#define outtablebuffer_depth 4	//outTableBuffer的深度
-#define intablebuffer_depth 4	//intablebuffer的深度
+#define outtablebuffer_depth 2	//outTableBuffer的深度
+#define intablebuffer_depth 2	//intablebuffer的深度
 //unit num
-#define peNums 11				//PE总数
+#define peNums 15				//PE总数
 #define leNums 0				//LE总数
 #define seNums 1				//SE总数
 

@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /HGRA405/iirdynfig.txt
+/HGRA405/unitSimFunc中转节点未改.cpp

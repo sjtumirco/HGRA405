@@ -6,7 +6,7 @@ lbegin1 pe0.1 pe5.3 nop
 pe3 mux pe4.1 fin2 lbegin1.1 flr ib1 lr alu fob2 nop cal nop inport nop inport ob nop
 pe4 add pe3.1 fin2 fin3 flr ib1 lr alu fob2 nop cal nop inport nop nop ob nop
 pe5 comb pe3.1 fin2 fin3 flr ib1 lr fob1 fob2 nop cal nop inport nop nop ob nop
-pe6 dor pe0.1 fin2 pe3.1 in1 ib1 ib2 alu fob2 nop trans nop nop nop inport ob nop
+pe6 dor pe0.1 fin2 pe3.1 in1 fin fin lr fob2 nop trans nop nop nop nop ob nop
 joinbp0 pe1.1 pe2.1 pe6.1 nop
 joinbp1 pe7.1 pe8.1 nop
 pe7 dor ti pe6.1 fin3 flr ib1 ib2 alu fob2 nop bind nop inport inport nop ob nop
@@ -16,4 +16,8 @@ pe9 mul pe7.1 fin2 fin3 flr ib1 lr alu fob2 nop cal tag inport nop nop ob nop
 pe10 add pe9.1 pe8.1 fin3 flr ib1 ib2 alu fob2 nop cal tag inport inport nop ob nop
 se0 pe10.1 pe10.1 tag
 joinbp3 se0.1 se0.2 tag
-lend0 pe2.3 se0 nop
+pe11 dor fin1 fin2 se0 flr fin fin lr fob2 nop trans nop nop nop inport ob nop
+pe12 dor fin1 fin2 pe2.3 flr fin fin lr fob2 nop trans nop nop nop inport ob nop
+pe13 add pe11.1 pe12.1 fin3 alu ib1 lr alu fob2 nop tac nop inport inport nop ob nop
+pe14 comb fin1 pe13.1 fin3 flr lr ib2 fob1 fob2 nop cal nop nop inport nop ob nop
+lend0 pe2.3 pe14.3 nop
