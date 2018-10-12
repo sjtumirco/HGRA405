@@ -267,8 +267,8 @@ int main(int argc,char* argv[])
 				//
 				outfile2 << "---------------------------------------------------------------" << endl;
 				outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << "-" << endl;
-				//if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 18)
-				//	continue;
+				if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 4)
+					continue;
 				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
 				PeSimProcess(pe[vec_config_parsed_tmp[i][1]]);
 				//for debug	

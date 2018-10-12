@@ -549,31 +549,47 @@ void PeSimProcess(ProcessingElement* pe_current)
 			//	pe_sim_step2_no_tag(pe_current);
 
 			//}
-			/*
-			if (pe_current->config_reg.front()[1] == 2)//pe2开始的组合路径
+			if (pe_current->config_reg.front()[1] == 5)//pe5开始的组合路径，联仿完PE5 PE4 PE3
 			{
-				//pe2->pe3->lb1
-				pe_sim_step3_no_tag(pe[3]);
-				pe_sim_step_connect(pe[3]);
-				pe_sim_step1_no_tag(pe[3]);
+				//PE5的out_v在PESIM中清过了，但PE4和3没有
+				pe[5]->dout1_v = 0;
+				pe[5]->dout2_v = 0;
+				pe[5]->bout_v = 0;
+				pe[5]->dout1 = 0;
+				pe[5]->dout2 = 0;
+				pe[5]->bout = 0;
+				pe_sim_step3_no_tag(pe[5]);
+				pe_sim_step_connect(pe[5]);
+				pe_sim_step1_no_tag(pe[5]);
+				pe_sim_step2_no_tag(pe[5]);
 
-				pe_sim_step2_no_tag(pe[3]);
+				//pe4,注意同样要有清out_v的步骤
+				pe[4]->dout1_v = 0;
+				pe[4]->dout2_v = 0;
+				pe[4]->bout_v = 0;
+				pe[4]->dout1 = 0;
+				pe[4]->dout2 = 0;
+				pe[4]->bout = 0;
+				pe_sim_step3_no_tag(pe[4]);
+				pe_sim_step_connect(pe[4]);
+				pe_sim_step1_no_tag(pe[4]);
+				pe_sim_step2_no_tag(pe[4]);
 
 				LbeginSimProcess(lbegin[1]);
 
-				pe_sim_step3_no_tag(pe[2]);
-				pe_sim_step_connect(pe[2]);
-				pe_sim_step1_no_tag(pe[2]);
-
-				pe_sim_step2_no_tag(pe[2]);
-				//pe18
-				pe_sim_step3_no_tag(pe[18]);
-				pe_sim_step_connect(pe[18]);
-				pe_sim_step1_no_tag(pe[18]);
-				pe_sim_step2_no_tag(pe[18]);
+				pe[3]->dout1_v = 0;
+				pe[3]->dout2_v = 0;
+				pe[3]->bout_v = 0;
+				pe[3]->dout1 = 0;
+				pe[3]->dout2 = 0;
+				pe[3]->bout = 0;
+				pe_sim_step3_no_tag(pe[3]);
+				pe_sim_step_connect(pe[3]);
+				pe_sim_step1_no_tag(pe[3]);
+				pe_sim_step2_no_tag(pe[3]);
+				
 			}
 			else
-			*/
 			{
 				//s3->sc->s1->s2
 				pe_sim_step2_no_tag(pe_current);
