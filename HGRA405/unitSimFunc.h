@@ -16,6 +16,7 @@ using namespace std;
 //namespace DRAMSim
 //{
 //	class LSUnit;
+
 //}
 using DRAMSim::LSUnit;
 using HGRA::Load;
