@@ -179,7 +179,7 @@ public:
 	bool ack2in2port = 1;
 	bool ack2in3port = 1; 
 	//outTableBuffer/outBuffer生成的bp信号
-	bool ack_outbuffer12alu, ack_outbuffer22alu,ack_outbuffer32alu;
+	bool ack_outbuffer12alu, ack_outbuffer22alu, ack_outbuffer32alu;
 	//tag bind模式的last_tag
 	int last_t4bind;
 

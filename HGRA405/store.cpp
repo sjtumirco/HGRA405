@@ -131,7 +131,7 @@ bool Store::is_addr_buffer_ready(short& addr_tag)
 			interspace = 1;
 			break;
 		}
-		else if (se_table_buffer[i].tag != addr_tag & se_table_buffer[i].valid1 == 0 & se_table_buffer[i].tag == 0)
+		else if (se_table_buffer[i].tag != addr_tag & se_table_buffer[i].valid1 == 0 & se_table_buffer[i].tag == 0 & se_table_buffer[i].valid2 == 0)
 		{
 			interspace = 1;
 			break;
@@ -172,12 +172,12 @@ bool Store::is_data_buffer_ready(short& data_tag)
 	bool interspace=1, same_tag=0;
 	for (vector<SeBuffer>::size_type i = 0; i < se_table_buffer.size(); i++)
 	{
-		if (se_table_buffer[i].tag == data_tag & se_table_buffer[i].valid1 == 0)//tag match and valid1 == 0
+		if (se_table_buffer[i].tag == data_tag & se_table_buffer[i].valid2 == 0)//tag match and valid2 == 0
 		{
 			interspace = 1;
 			break;
 		}
-		else if (se_table_buffer[i].tag != data_tag & se_table_buffer[i].valid1 == 0 & se_table_buffer[i].tag == 0)
+		else if (se_table_buffer[i].tag != data_tag & se_table_buffer[i].valid1 == 0 & se_table_buffer[i].valid2 == 0 & se_table_buffer[i].tag == 0)
 		{
 			interspace = 1;
 			break;

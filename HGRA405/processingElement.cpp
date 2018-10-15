@@ -223,7 +223,7 @@ bool InTableBuffer::isDin1BufferReady(short& in1_tag)
 		bp2lastPe_1 = 0;
 		return bp2lastPe_1;
 	}
-	bool interspace =1, same_tag = 0;
+	bool interspace = 0, same_tag = 0;
 	for (vector<TableLine>::size_type i = 0; i < InTableBufferEntity.size(); i++)
 	{
 		if (InTableBufferEntity[i].tag == in1_tag & InTableBufferEntity[i].valid1 == 0)//tag match and valid1 == 0
@@ -231,11 +231,11 @@ bool InTableBuffer::isDin1BufferReady(short& in1_tag)
 			interspace = 1;
 			break;
 		}
-		else if (InTableBufferEntity[i].tag != in1_tag & InTableBufferEntity[i].valid1 == 0 & InTableBufferEntity[i].tag == 0)
+		else if (InTableBufferEntity[i].tag != in1_tag & InTableBufferEntity[i].valid1 == 0 & InTableBufferEntity[i].valid2 == 0 & InTableBufferEntity[i].valid3 == 0 & InTableBufferEntity[i].tag == 0)   //?
 		{
 			interspace = 1;
 			break;
-		}		
+		}
 		else
 		{
 			continue;
@@ -253,7 +253,7 @@ bool InTableBuffer::isDin1BufferReady(short& in1_tag)
 		{
 			continue;
 		}
-		same_tag = 0;
+		//same_tag = 0;
 	}
 
 	if (interspace & !same_tag)//buffer中有空位且无同名tag
@@ -274,7 +274,7 @@ bool InTableBuffer::isDin2BufferReady(short& in2_tag)
 		bp2lastPe_2 = 0;
 		return bp2lastPe_2;
 	}
-	bool interspace=1, same_tag=0;
+	bool interspace = 0, same_tag = 0;
 	for (vector<TableLine>::size_type i = 0; i < InTableBufferEntity.size(); i++)
 	{
 		if (InTableBufferEntity[i].tag == in2_tag & InTableBufferEntity[i].valid2 == 0)//tag match and valid1 == 0
@@ -282,7 +282,7 @@ bool InTableBuffer::isDin2BufferReady(short& in2_tag)
 			interspace = 1;
 			break;
 		}
-		else if (InTableBufferEntity[i].tag != in2_tag & InTableBufferEntity[i].valid2 == 0 & InTableBufferEntity[i].tag == 0)
+		else if (InTableBufferEntity[i].tag != in2_tag & InTableBufferEntity[i].valid2 == 0 & InTableBufferEntity[i].valid3 == 0 & InTableBufferEntity[i].valid1 == 0 & InTableBufferEntity[i].tag == 0)
 		{
 			interspace = 1;
 			break;
@@ -304,7 +304,7 @@ bool InTableBuffer::isDin2BufferReady(short& in2_tag)
 		{
 			continue;
 		}
-		same_tag = 0;
+		//same_tag = 0;
 	}
 
 	if (interspace & !same_tag)//buffer中有空位且无同名tag
@@ -325,7 +325,7 @@ bool InTableBuffer::isBinBufferReady(short& in3_tag)
 		bp2lastPe_3 = 0;
 		return bp2lastPe_3;
 	}
-	bool interspace=1, same_tag=0;
+	bool interspace = 0, same_tag = 0;
 	for (vector<TableLine>::size_type i = 0; i < InTableBufferEntity.size(); i++)
 	{
 		if (InTableBufferEntity[i].tag == in3_tag & InTableBufferEntity[i].valid3 == 0)//tag match and valid1 == 0
@@ -333,7 +333,7 @@ bool InTableBuffer::isBinBufferReady(short& in3_tag)
 			interspace = 1;
 			break;
 		}
-		else if (InTableBufferEntity[i].tag != in3_tag & InTableBufferEntity[i].valid3 == 0 & InTableBufferEntity[i].tag == 0)
+		else if (InTableBufferEntity[i].tag != in3_tag & InTableBufferEntity[i].valid3 == 0 & InTableBufferEntity[i].valid1 == 0 & InTableBufferEntity[i].valid2 == 0 & InTableBufferEntity[i].tag == 0)
 		{
 			interspace = 1;
 			break;
@@ -355,7 +355,7 @@ bool InTableBuffer::isBinBufferReady(short& in3_tag)
 		{
 			continue;
 		}
-		same_tag = 0;
+		//same_tag = 0;
 	}
 
 	if (interspace & !same_tag)//buffer中有空位且无同名tag
