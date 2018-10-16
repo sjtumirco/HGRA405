@@ -625,8 +625,8 @@ void PeSimProcess(ProcessingElement* pe_current)
 			outfile << "PE[" << pe_index_current << "]infifo2的大小" << endl;
 			outfile << pe_current->tableBuffer_fifo2.size() << endl;
 
-			pe_sim_step3_no_tag(pe_current);
-			pe_sim_step_connect(pe_current);
+			pe_sim_step3_no_tag(pe_current);//没有被使用
+			pe_sim_step_connect(pe_current);//ti的值可以直接获取
 
 			if (pe_current->din1 == pe_current->last_t4bind)
 			{	//接收同一个ti节点的数据
@@ -675,12 +675,14 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 			}
 
+
+			pe_current->outbuffer1_in_v = 0;
 			//匹配后的数据-输出
-			if (!pe_current->tableBuffer_fifo1.empty() && !pe_current->tableBuffer_fifo2.empty())
+			if(!pe_current->tableBuffer_fifo1.empty() && !pe_current->tableBuffer_fifo2.empty()&& pe_current->ack_outbuffer12alu)
 			{
 				pe_current->outbuffer1_in = pe_current->tableBuffer_fifo2.front().data;
 				pe_current->outbuffer1_in_tag = pe_current->tableBuffer_fifo1.front().data;
-				pe_current->outbuffer1_in_v = pe_current->tableBuffer_fifo1.front().valid;				
+				pe_current->outbuffer1_in_v = pe_current->tableBuffer_fifo1.front().valid;
 				//数据导入到outTableBuffer类中去
 				pe_current->outTableBuffer1.in = pe_current->outbuffer1_in;
 				pe_current->outTableBuffer1.in_v = pe_current->outbuffer1_in_v;
@@ -693,6 +695,13 @@ void PeSimProcess(ProcessingElement* pe_current)
 				//出数后fifo不满
 				pe_current->ack2in1port = 1;
 				pe_current->ack2in2port = 1;
+				//检测Outtablebuffer是否满，若满则置起来ack_outbuffer
+				if (pe_current->outTableBuffer1.isOutBufferFull())
+				{
+					pe_current->ack_outbuffer22alu = 0;
+				}
+				else
+					pe_current->ack_outbuffer22alu = 1;
 			}
 
 			outfile2 << "PE[" << pe_index_current << "]FIFO输出值" << endl;
@@ -1105,6 +1114,22 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 	outfile2 << setw(15) << "alu_out_v" << setw(15) << "alu_out" << setw(15) << "alu_out_b_v" << setw(15) << "alu_out_b" << endl;
 	outfile2 << setw(15) << pe_current->alu_out_v << setw(15) << pe_current->alu_out
 		<< setw(15) << pe_current->alu_out_b_v << setw(15) << pe_current->alu_out_b << endl;
+
+	//lr 仿真,要放在之前ob访问之前，因为pe_current->alu_out_v会被清零。
+	if (pe_current->config_reg.front()[12] == 1)	//lr from alu
+	{
+		if (pe_current->alu_out_v)
+		{
+			pe_current->loc_reg = pe_current->alu_out;
+			pe_current->loc_reg_v = 1;
+		}
+		//额外增加的loc reg 清零的功能
+		if (pe_current->loc_reg == THRESHOLD)
+		{
+			pe_current->loc_reg = 0;
+		}
+
+	}
 	//ob入数
 	//入数后检查是否要改变bp
 	if (1)
@@ -1228,21 +1253,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 		outfile << setw(15) << pe_current->outbuffer3_v << setw(15) << pe_current->outbuffer3 << endl;
 	}
 	
-	//lr 仿真
-	if (pe_current->config_reg.front()[12] == 1)	//lr from alu
-	{
-		if (pe_current->alu_out_v)
-		{
-			pe_current->loc_reg = pe_current->alu_out;
-			pe_current->loc_reg_v = 1;
-		}
-		//额外增加的loc reg 清零的功能
-		if (pe_current->loc_reg == THRESHOLD)
-		{
-			pe_current->loc_reg = 0;
-		}
 
-	}
 	else if (pe_current->config_reg.front()[12] == 2)	//lr from in1 for 中转
 	{
 	}
@@ -1558,11 +1569,11 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 					pe_current->bin = pe[bin_from_index]->bout;
 					pe_current->bin_v = pe[bin_from_index]->bout_v;
 				}
-				else
+				/*else
 				{
 					cout << "上一个PE的输出数据没有valid" << endl;
 					//pe_current->in3_v = 0;
-				}
+				}*/
 
 			}
 			else if (bin_from_port == 0)//port1
@@ -1745,6 +1756,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din1_from_flag == 2)//from PE
 						{
 							pe[din1_from_index]->outTableBuffer1.buffer_clear();
+							pe[din1_from_index]->ack_outbuffer12alu = 1;
 							//pe[din1_from_index]->dout1_v = 0;应在访问pe[din1_from_index]的时候清除
 						}
 						else if (din1_from_flag == 1)//from LE
@@ -1763,6 +1775,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din1_from_index]->outTableBuffer2.buffer_clear();
+							pe[din1_from_index]->ack_outbuffer22alu = 1;
 							//pe[din1_from_index]->dout2_v = 0;
 						}
 						else if (din2_from_flag == 1)//from LE
@@ -1824,6 +1837,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din2_from_index]->outTableBuffer1.buffer_clear();
+							pe[din2_from_index]->ack_outbuffer12alu = 1;
 							//pe[din2_from_index]->dout1_v = 0;
 						}
 						else if (din2_from_flag == 1)//from LE
@@ -1843,6 +1857,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din2_from_index]->outTableBuffer2.buffer_clear();
+							pe[din2_from_index]->ack_outbuffer22alu = 1;
 							//pe[din2_from_index]->dout2_v = 0;
 						}
 
@@ -2016,7 +2031,11 @@ void pe_sim_step2(ProcessingElement* pe_current)
 
 	//inTableBuffer输出
 	//data out
-	pe_current->inTableBuffer.dataOut(pe_current);
+	if (pe_current->ack_outbuffer12alu == 1)     //查询obuffer是否已满
+	{
+		pe_current->inTableBuffer.dataOut(pe_current);
+	}
+	
 	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]中间值1" << endl;
 	outfile2 << setw(15) << "ib1_out_t" << setw(15) << "ib1_out_v" << setw(15) << "ib1_out" << setw(15) << "ib2_out_t" << setw(15) << "ib2_out_v"
 		<< setw(15) << "ib2_out" << setw(15) << "ib3_out_t" << setw(15) << "ib3_out_v" << setw(15) << "ib3_out" << endl;
@@ -2115,12 +2134,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer1_in = pe_current->alu_out;
 				pe_current->outbuffer1_in_v = pe_current->alu_out_v;
-				if (pe_current->outBuffer1.isOutBufferFull())
-				{
-					pe_current->ack_outbuffer12alu = 0;
-				}
-				else
-					pe_current->ack_outbuffer12alu = 1;
+
 			}
 		}
 
@@ -2133,12 +2147,12 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer1_in = pe_current->loc_reg;
 				pe_current->outbuffer1_in_v = pe_current->loc_reg_v;
-				if (pe_current->outBuffer1.isOutBufferFull())
+				/*if (pe_current->outTableBuffer2.isOutBufferFull())
 				{
 					pe_current->ack_outbuffer12alu = 0;
 				}
 				else
-					pe_current->ack_outbuffer12alu = 1;
+					pe_current->ack_outbuffer12alu = 1;*/
 			}
 		}
 		//pe_current->outbuffer1_in_tag = pe_current->inbuffer1_out_tag;
@@ -2155,6 +2169,12 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			//pe操作完成，子模块入口处的valid值清零
 			pe_current->outbuffer1_in_v = 0;
 			pe_current->alu_out_v = 0;
+			if (pe_current->outTableBuffer1.isOutBufferFull())
+			{
+				pe_current->ack_outbuffer12alu = 0;
+			}
+			else
+				pe_current->ack_outbuffer12alu = 1;
 		}
 
 	}
@@ -2166,12 +2186,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->outbuffer2_in = pe_current->alu_out;
 			pe_current->outbuffer2_in_v = pe_current->alu_out_v;
-			if (pe_current->outBuffer2.isOutBufferFull())
-			{
-				pe_current->ack_outbuffer22alu = 0;
-			}
-			else
-				pe_current->ack_outbuffer22alu = 1;
+
 		}
 
 		else if (pe_current->config_reg.front()[16] == 3)//ob2 from in2
@@ -2181,12 +2196,12 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->outbuffer2_in = pe_current->loc_reg;
 			pe_current->outbuffer2_in_v = pe_current->loc_reg_v;
-			if (pe_current->outBuffer2.isOutBufferFull())
+			/*if (pe_current->outBuffer2.isOutBufferFull())
 			{
 				pe_current->ack_outbuffer22alu = 0;
 			}
 			else
-				pe_current->ack_outbuffer22alu = 1;
+				pe_current->ack_outbuffer22alu = 1;*/
 		}
 
 
@@ -2202,6 +2217,12 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			pe_current->outTableBuffer2.dataIn();
 			//pe操作完成，子模块入口处的valid值清零
 			pe_current->outbuffer2_in_v = 0;
+			if (pe_current->outTableBuffer2.isOutBufferFull())
+			{
+				pe_current->ack_outbuffer22alu = 0;
+			}
+			else
+				pe_current->ack_outbuffer22alu = 1;
 		}
 
 	}
@@ -2221,8 +2242,11 @@ void pe_sim_step2(ProcessingElement* pe_current)
 	//ob队首元素打印
 	if (1)
 	{
+
 		if (!pe_current->outTableBuffer1.outBuffer.empty())
 		{
+			outfile << "outTableBuffer1的大小" << endl;
+			outfile << pe_current->outTableBuffer1.outBuffer.size()<<endl;
 			outfile << "PE[" << pe_index_current << "]ob1队首元素值" << endl;
 			outfile << setw(10) << "ob1_t" << setw(10) << "ob1_v" << setw(10) << "ob1_d" << endl;
 			outfile << setw(10) << pe_current->outTableBuffer1.outBuffer.front().tag << setw(10) << pe_current->outTableBuffer1.outBuffer.front().valid
@@ -2796,6 +2820,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 						{
 							pe[le_infrom_index]->outTableBuffer1.buffer_clear();
 							pe[le_infrom_index]->dout1_v = 0;
+							pe[le_infrom_index]->ack_outbuffer12alu = 1;
 						}
 					}
 				}
@@ -2807,6 +2832,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 						{
 							pe[le_infrom_index]->outTableBuffer2.buffer_clear();
 							pe[le_infrom_index]->dout2_v = 0;
+							pe[le_infrom_index]->ack_outbuffer22alu = 1;
 						}
 					}
 				}
@@ -3178,6 +3204,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 						se_current->addr_v = 0;
 						pe[addr_in_from]->outTableBuffer1.buffer_clear();
 						pe[addr_in_from]->dout1_v = 0;
+						pe[addr_in_from]->ack_outbuffer12alu = 1;
 					}
 				}
 			}
@@ -3190,6 +3217,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 						se_current->addr_v = 0;
 						pe[addr_in_from]->outTableBuffer2.buffer_clear();
 						pe[addr_in_from]->dout2_v = 0;
+						pe[addr_in_from]->ack_outbuffer22alu = 1;
 					}
 				}
 			}
@@ -3222,6 +3250,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 						se_current->data_in_v = 0;
 						pe[data_in_from]->outTableBuffer1.buffer_clear();
 						pe[data_in_from]->dout1_v = 0;
+						pe[data_in_from]->ack_outbuffer12alu = 1;
 					}
 				}
 			}
@@ -3234,6 +3263,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 						se_current->data_in_v = 0;
 						pe[data_in_from]->outTableBuffer2.buffer_clear();
 						pe[data_in_from]->dout2_v = 0;
+						pe[data_in_from]->ack_outbuffer22alu = 1;
 					}
 				}
 			}
@@ -3806,11 +3836,13 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 				if (joinbp_in_from_from_port == 0)//port1
 				{
 					pe[joinbp_in_from_from_index]->outTableBuffer1.buffer_clear();
+					pe[joinbp_in_from_from_index]->ack_outbuffer12alu = 1;
 					//pe[joinbp_in_from_from_index]->dout1_v = 0;
 				}
 				else if (joinbp_in_from_from_port == 1)//port2
 				{
 					pe[joinbp_in_from_from_index]->outTableBuffer2.buffer_clear();
+					pe[joinbp_in_from_from_index]->ack_outbuffer22alu = 1;
 					//pe[joinbp_in_from_from_index]->dout2_v = 0;
 				}
 				else if (joinbp_in_from_from_port == 2)//port3

@@ -228,9 +228,9 @@ int main(int argc,char* argv[])
 		{ 
 			joinbp[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
 		}
-		cout << endl;
-		cout << endl;
-		cout << endl;
+		//cout << endl;
+		//cout << endl;
+		//cout << endl;
 
 	}
 
@@ -257,7 +257,7 @@ int main(int argc,char* argv[])
 		//将配置中涉及到的各个结构组件组合成一个容器，仿真的过程就是对容器里面的每一个组件进行遍历
 		for (int i = vec_config_parsed_tmp.size() - 1; i >= 0; i--)//int i = vec_config_parsed_tmp.size()-1;i>=0; i--)
 		{
-			cout << endl;
+			//cout << endl;
 			//正在仿真的是PE
 			if (vec_config_parsed_tmp[i][0] == 8)
 			{
@@ -335,6 +335,8 @@ int main(int argc,char* argv[])
 			//正在仿真的是FG
 			else if (vec_config_parsed_tmp[i][0] == 1)//lbegin
 			{
+				if (vec_config_parsed_tmp[i][1] == 1)
+					continue;
 				outfile2 << "--------------------------------------" << endl;
 				outfile2 << "CLOCK" << cnt << "-lbegin" << vec_config_parsed_tmp[i][1] << "-" << endl;
 				outfile2 << endl;
@@ -454,7 +456,7 @@ int main(int argc,char* argv[])
 
 		if (end)
 			break;
-		if (cnt == 500)
+		if (cnt == 2000)
 			break;
 
 		cnt++;
