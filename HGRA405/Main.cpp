@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -21,7 +21,7 @@
 #include "unitSimFunc.h"
 //#include "LSUnit.h"
 #include <stdio.h>
-//
+//include "time.h"
 
 template<typename T>
 void connector(bool source_v, T source, bool destination_v, T destination);
@@ -30,7 +30,7 @@ template<typename T> void connector(bool source_v, T source, bool destination_v,
 	destination_v = source_v;
 	destination = source;
 }
-//È«¾Ö±äÁ¿ÉêÃ÷
+//å…¨å±€å˜é‡ç”³æ˜
 using HGRA::Load;
 using HGRA::Store;
 ProcessingElement ** pe = new ProcessingElement*[peNums];
@@ -47,11 +47,11 @@ JoinBp** joinbp = new JoinBp*[joinbpNums];
 TagIssue* ti = new TagIssue;
 
 //Memory init
-MemoryInt memory(memoryDepth);//¶ÁºÍĞ´
-MemoryInt memory2(memory2depth);//Ğ´½á¹ûµÄmemory
-//ÅäÖÃÎÄ¼ş
+MemoryInt memory(memoryDepth);//è¯»å’Œå†™
+MemoryInt memory2(memory2depth);//å†™ç»“æœçš„memory
+//é…ç½®æ–‡ä»¶
 vector<vector<int>> vec_config_parsed_tmp;
-vector<vector<int>> port_fanout;//port_fanout[i]µÄµÚÒ»¸öÔªËØ±íÊ¾PE»òÕßLE£¬µÚ2¸öÔªËØ±íÊ¾±àºÅ£¬µÚ3,4,5¸öÔªËØ·Ö±ğÊÇ¸ÃPEµÄÊä³ö¶Ë¿ÚµÄÉÈ³ö
+vector<vector<int>> port_fanout;//port_fanout[i]çš„ç¬¬ä¸€ä¸ªå…ƒç´ è¡¨ç¤ºPEæˆ–è€…LEï¼Œç¬¬2ä¸ªå…ƒç´ è¡¨ç¤ºç¼–å·ï¼Œç¬¬3,4,5ä¸ªå…ƒç´ åˆ†åˆ«æ˜¯è¯¥PEçš„è¾“å‡ºç«¯å£çš„æ‰‡å‡º
 bool begin_signal = 1;
 
 ofstream outfile("DEBUG.txt");
@@ -61,7 +61,7 @@ void power_callback(double a, double b, double c, double d) {}
 
 int main(int argc,char* argv[])
 {
-
+	time_t start = clock();
 	using namespace DRAMSim;
 	bool end = 0;
 	uint cnt = 0;
@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
 	
 	//memory 
 	ifstream memoryInFile;
-	memoryInFile.open("MemoryInFile8x8.txt");
+	memoryInFile.open("memoryInFile.txt");
 	memory.readFromFile(memoryInFile);
 
 	//GET DRAM INSTANCE
@@ -149,7 +149,7 @@ int main(int argc,char* argv[])
 	vector<pe_line_int> vec_pe_config_;
 	////handwrite config file parse to auto-generated config file////
 	ifstream config_infile;
-	config_infile.open(argv[1]);//ÅäÖÃÎÄ¼şÂ·¾¶£¬Èçconfig_ori.txt,config_ori_s.txt
+	config_infile.open(argv[1]);//é…ç½®æ–‡ä»¶è·¯å¾„ï¼Œå¦‚config_ori.txt,config_ori_s.txt
 	cp.configFile2vec(config_infile);
 	cp.configVec2parsed();
 	vec_config_parsed_tmp = cp.vec_config_parsed;//parsed config vector,use in this main function
@@ -163,7 +163,7 @@ int main(int argc,char* argv[])
 	}*/
 
 
-	////Í¼ÅÅĞò
+	////å›¾æ’åº
 	//
 	//Graph graph(peNums + leNums + seNums + fgNums);
 	//vector<pair<int, int>> edge = graph.edgeConstruct(vec_config_parsed_tmp);
@@ -178,24 +178,24 @@ int main(int argc,char* argv[])
 	//find fanout for each PE port
 	port_fanout_collect();
 	
-	//µ¼ÈëÅäÖÃ
+	//å¯¼å…¥é…ç½®
 	int idx_config;
 	for (unsigned int i = 0; i < vec_config_parsed_tmp.size(); i++)
 	{
 		idx_config = vec_config_parsed_tmp[i][1];
-		if (vec_config_parsed_tmp[i][0] == 8)//µ¼ÈëPEµÄÅäÖÃ
+		if (vec_config_parsed_tmp[i][0] == 8)//å¯¼å…¥PEçš„é…ç½®
 		{			
 			pe[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
 		}
-		else if (vec_config_parsed_tmp[i][0] == 9)//µ¼ÈëLEµÄÅäÖÃ
+		else if (vec_config_parsed_tmp[i][0] == 9)//å¯¼å…¥LEçš„é…ç½®
 		{
 			le[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
 		}
-		else if (vec_config_parsed_tmp[i][0] == 0)//µ¼ÈëSEµÄÅäÖÃ
+		else if (vec_config_parsed_tmp[i][0] == 0)//å¯¼å…¥SEçš„é…ç½®
 		{
 			se[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
 		}
-		//µ¼ÈëFGµÄÅäÖÃ
+		//å¯¼å…¥FGçš„é…ç½®
 		else if(vec_config_parsed_tmp[i][0] == 1)//lbegin												 
 		{
 			lbegin[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
@@ -228,15 +228,15 @@ int main(int argc,char* argv[])
 		{ 
 			joinbp[idx_config]->config_reg.push(vec_config_parsed_tmp[i]);
 		}
-		cout << endl;
-		cout << endl;
-		cout << endl;
+		//cout << endl;
+		//cout << endl;
+		//cout << endl;
 
 	}
 
 	//parameter import,only for PE
 	ifstream para_file;
-	para_file.open(argv[2]);//²ÎÊıÎÄ¼şÂ·¾¶£¬Èçparameter_file.txt
+	para_file.open(argv[2]);//å‚æ•°æ–‡ä»¶è·¯å¾„ï¼Œå¦‚parameter_file.txt
 	ParaParse paraparse;
 	paraparse.parsePara(para_file);
 	vector<int> v_tmp;
@@ -254,11 +254,11 @@ int main(int argc,char* argv[])
 	{
 		outfile << "==========clock--" << cnt <<"======================================================================================" << endl;
 		outfile2 << "====CLOCK-" << cnt << "======================================================================================" << endl;
-		//½«ÅäÖÃÖĞÉæ¼°µ½µÄ¸÷¸ö½á¹¹×é¼ş×éºÏ³ÉÒ»¸öÈİÆ÷£¬·ÂÕæµÄ¹ı³Ì¾ÍÊÇ¶ÔÈİÆ÷ÀïÃæµÄÃ¿Ò»¸ö×é¼ş½øĞĞ±éÀú
+		//å°†é…ç½®ä¸­æ¶‰åŠåˆ°çš„å„ä¸ªç»“æ„ç»„ä»¶ç»„åˆæˆä¸€ä¸ªå®¹å™¨ï¼Œä»¿çœŸçš„è¿‡ç¨‹å°±æ˜¯å¯¹å®¹å™¨é‡Œé¢çš„æ¯ä¸€ä¸ªç»„ä»¶è¿›è¡Œéå†
 		for (int i = vec_config_parsed_tmp.size() - 1; i >= 0; i--)//int i = vec_config_parsed_tmp.size()-1;i>=0; i--)
 		{
-			cout << endl;
-			//ÕıÔÚ·ÂÕæµÄÊÇPE
+			//cout << endl;
+			//æ­£åœ¨ä»¿çœŸçš„æ˜¯PE
 			if (vec_config_parsed_tmp[i][0] == 8)
 			{
 				outfile << "----------------------------------------------------------------" << endl;
@@ -269,11 +269,11 @@ int main(int argc,char* argv[])
 				outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << "-" << endl;
 				if (vec_config_parsed_tmp[i][1] == 3 | vec_config_parsed_tmp[i][1] == 4)
 					continue;
-				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				PeSimProcess(pe[vec_config_parsed_tmp[i][1]]);
 				//for debug	
 				/*
-				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				outfile2 << setw(15) << "dout1_t" << setw(15) << "dout1_v" << setw(15) << "dout1" << setw(15) << "dout2_t" << setw(15) << "dout2_v"
 					<< setw(15) << "dout" << setw(15) << "bout_t" << setw(15) << "bout_v" << setw(15) << "bout" << endl;
 				outfile2 << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout1_tag << setw(15) << pe[vec_config_parsed_tmp[i][1]]->dout1_v
@@ -289,7 +289,7 @@ int main(int argc,char* argv[])
 				
 				
 			}
-			//ÕıÔÚ·ÂÕæµÄÊÇLE
+			//æ­£åœ¨ä»¿çœŸçš„æ˜¯LE
 			else if (vec_config_parsed_tmp[i][0] == 9)
 			{
 				outfile << "----------------------------------------------------------------" << endl;
@@ -301,7 +301,7 @@ int main(int argc,char* argv[])
 				outfile2 << endl;
 				LeSimProcess(le[vec_config_parsed_tmp[i][1]],lsunit);
 				//for debug
-				outfile2 << "LE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 << "LE[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				outfile2 << setw(15) << "data_out_t" << setw(15) << "data_out_v" << setw(15) << "data_out" << endl;
 				outfile2 << setw(15) << le[vec_config_parsed_tmp[i][1]]->data_out_tag << setw(15) << le[vec_config_parsed_tmp[i][1]]->data_out_v 
 					<< setw(15) << le[vec_config_parsed_tmp[i][1]]->data_out << endl;
@@ -311,7 +311,7 @@ int main(int argc,char* argv[])
 				
 				
 			}
-			//ÕıÔÚ·ÂÕæµÄÊÇSE
+			//æ­£åœ¨ä»¿çœŸçš„æ˜¯SE
 			else if (vec_config_parsed_tmp[i][0] == 0)
 			{
 				outfile << "----------------------------------------------------------------" << endl;
@@ -323,7 +323,7 @@ int main(int argc,char* argv[])
 				outfile2 << endl;
 				SeSimProcess(se[vec_config_parsed_tmp[i][1]],lsunit);
 				//for debug
-				outfile2 <<"SE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 <<"SE[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				outfile2 << setw(15) << "out4end_v" << setw(15) << "out4end" << endl;
 				outfile2 << setw(15) << se[vec_config_parsed_tmp[i][1]]->se_extra_out_for_end_v << setw(15) << se[vec_config_parsed_tmp[i][1]]->se_extra_out_for_end << endl;
 				outfile << "CLOCK" << cnt << "-SE" << vec_config_parsed_tmp[i][1] << endl;
@@ -332,15 +332,17 @@ int main(int argc,char* argv[])
 				outfile2 << endl;
 
 			}
-			//ÕıÔÚ·ÂÕæµÄÊÇFG
+			//æ­£åœ¨ä»¿çœŸçš„æ˜¯FG
 			else if (vec_config_parsed_tmp[i][0] == 1)//lbegin
 			{
+				if (vec_config_parsed_tmp[i][1] == 1)
+					continue;
 				outfile2 << "--------------------------------------" << endl;
 				outfile2 << "CLOCK" << cnt << "-lbegin" << vec_config_parsed_tmp[i][1] << "-" << endl;
 				outfile2 << endl;
 				LbeginSimProcess(lbegin[vec_config_parsed_tmp[i][1]]);
 				//for debug
-				outfile2 <<"lbegin[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 <<"lbegin[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				outfile2 << setw(15) << "out_v" << setw(15) << "out" << endl;
 				outfile2 << setw(15) << lbegin[vec_config_parsed_tmp[i][1]]->out_v << setw(15) << lbegin[vec_config_parsed_tmp[i][1]]->out << endl;
 				outfile2 << endl;
@@ -352,7 +354,7 @@ int main(int argc,char* argv[])
 				outfile2 << endl;
 				LendSimProcess(lend[vec_config_parsed_tmp[i][1]]);
 				//for debug
-				outfile2 <<"lend[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+				outfile2 <<"lend[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 				outfile2 << setw(15) << "out2back" << setw(15) << "out2end" << endl;
 				outfile2 << setw(15) << lend[vec_config_parsed_tmp[i][1]]->out2back << setw(15) << lend[vec_config_parsed_tmp[i][1]]->out2end << endl;				
 				outfile2 << endl;
@@ -360,51 +362,51 @@ int main(int argc,char* argv[])
 			else if (vec_config_parsed_tmp[i][0] == 3)//join
 			{
 				outfile << "                " << endl;
-				outfile << "ÕıÔÚ´¦ÀíµÄÊÇjoin½Úµã......" << endl;
+				outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯joinèŠ‚ç‚¹......" << endl;
 				JoinSimProcess(join[vec_config_parsed_tmp[i][1]]);
 			}
 			else if (vec_config_parsed_tmp[i][0] == 4)//switch
 			{
 				outfile << "                " << endl;
-				outfile << "ÕıÔÚ´¦ÀíµÄÊÇSwitch½Úµã......" << endl;
+				outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯SwitchèŠ‚ç‚¹......" << endl;
 				SwitchSimProcess(switch_[vec_config_parsed_tmp[i][1]]);
 			}
 			else if (vec_config_parsed_tmp[i][0] == 5)//break
 			{
 				outfile << "                " << endl;
-				outfile << "ÕıÔÚ´¦ÀíµÄÊÇbreak½Úµã......" << endl;
+				outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯breakèŠ‚ç‚¹......" << endl;
 				BreakSimProcess(break_[vec_config_parsed_tmp[i][1]]);
 			}
 			else if (vec_config_parsed_tmp[i][0] == 6)//lends
 			{
 				outfile << "                " << endl;
-				outfile << "ÕıÔÚ´¦ÀíµÄÊÇlends½Úµã......" << endl;
+				outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯lendsèŠ‚ç‚¹......" << endl;
 				LendsSimProcess(lends[vec_config_parsed_tmp[i][1]]);
 			}
 			else if (vec_config_parsed_tmp[i][0] == 10)//joinbp
 			{
 				outfile << "                " << endl;
-				outfile << "ÕıÔÚ´¦ÀíµÄÊÇjoinbp½Úµã......" << endl;
+				outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯joinbpèŠ‚ç‚¹......" << endl;
 				JoinBpSimProcess(joinbp[vec_config_parsed_tmp[i][1]]);
 			}
-			//ÕıÔÚ·ÂÕæµÄÊÇTA½Úµã
+			//æ­£åœ¨ä»¿çœŸçš„æ˜¯TAèŠ‚ç‚¹
 			//else if (vec_config_parsed_tmp[i][0] == 7)//ta
 			//{
 			//	outfile << "                " << endl;
-			//	outfile << "ÕıÔÚ´¦ÀíµÄÊÇta½Úµã......" << endl;
+			//	outfile << "æ­£åœ¨å¤„ç†çš„æ˜¯taèŠ‚ç‚¹......" << endl;
 			//	TaSimProcess(ta[vec_config_parsed_tmp[i][1]]);
 			//	//for debug
-			//	outfile2 << "CLOCK" << cnt << "-TA[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+			//	outfile2 << "CLOCK" << cnt << "-TA[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 			//	outfile2 << setw(15) << "out_tag" << setw(15) << "out_v" << setw(15) << "out" << endl;
 			//	outfile2 << setw(15) << ta[vec_config_parsed_tmp[i][1]]->out_tag << setw(15) << ta[vec_config_parsed_tmp[i][1]]->out_v 
 			//		<< setw(15) << ta[vec_config_parsed_tmp[i][1]]->out << endl;
 			//}		
-			//tag issue·ÂÕæ
+			//tag issueä»¿çœŸ
 			outfile2 << "--------------------------------------" << endl;
 			outfile2 << "CLOCK" << cnt << "-ti" << endl;
 			outfile2 << endl;
 			TiSimProcess();
-			outfile2 << "Ti½ÚµãµÄÊä³öÖµ" << endl;
+			outfile2 << "TièŠ‚ç‚¹çš„è¾“å‡ºå€¼" << endl;
 			outfile2 << setw(10) << "out_v" << setw(10) << "out" << endl;
 			outfile2 << setw(10) << ti->out_v << setw(10) << ti->out << endl;
 			outfile2 << endl;
@@ -415,14 +417,14 @@ int main(int argc,char* argv[])
 		//outfile2 << "CLOCK" << cnt << "-ti" << endl;
 		//outfile2 << endl;
 		//TiSimProcess();
-		//outfile2 << "Ti½ÚµãµÄÊä³öÖµ" << endl;
+		//outfile2 << "TièŠ‚ç‚¹çš„è¾“å‡ºå€¼" << endl;
 		//outfile2 << setw(10) << "out_v" << setw(10) << "out" << endl;
 		//outfile2 << setw(10) << ti->out_v << setw(10) << ti->out << endl;
 		//outfile2 << endl;
 
 		//memmory update
 		lsunit->update();
-		//¾²Ì¬ÏÂPE outbufferÊı¾İË¢ĞÂ
+		//é™æ€ä¸‹PE outbufferæ•°æ®åˆ·æ–°
 		/*
 		for (int i = vec_config_parsed_tmp.size() - 1; i >= 0; i--)
 		{
@@ -448,20 +450,24 @@ int main(int argc,char* argv[])
 		//for debug
 		//----------------------------------------
 
-		//×¢ÒâÒ»ÏÂ£¬lend0,lend1ÔÚ²»Í¬³¡¾°ÏÂ¶¼ÓĞ¿ÉÄÜÊÇ½áÊø½Úµã
+		//æ³¨æ„ä¸€ä¸‹ï¼Œlend0,lend1åœ¨ä¸åŒåœºæ™¯ä¸‹éƒ½æœ‰å¯èƒ½æ˜¯ç»“æŸèŠ‚ç‚¹
 		uint lend_end_index = vec_config_parsed_tmp[vec_config_parsed_tmp.size() - 1][1];
 		end = lend[lend_end_index]->out2end;
 
 		if (end)
 			break;
-		if (cnt == 50)
+		if (cnt == 2000)
 			break;
 
 		cnt++;
+
 	}
-	//ALU²Ù×÷Á¿»¯Ê±ÖÓÊı´òÓ¡
+	time_t last = clock();
+	double all_time = double(last - start) / CLOCKS_PER_SEC;
+	cout << "the all cost time is " << all_time;
+	//ALUæ“ä½œé‡åŒ–æ—¶é’Ÿæ•°æ‰“å°
 	outfile << "||||||||||||||||||||||||||" << endl;
-	outfile << "PE aluÔËĞĞÖÜÆÚÊı" << endl;
+	outfile << "PE aluè¿è¡Œå‘¨æœŸæ•°" << endl;
 	outfile << cnt << endl;
 	ofstream ofile("memoryOutFile.txt");
 	memory2.writeToFile(ofile);

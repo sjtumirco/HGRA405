@@ -30,7 +30,7 @@ void LoopEnd::lend()
 		}
 		else if (in2 == 1)
 		{
-			//cout << "loop end½ÚµãµÄÕâÖÖÊäÈëÄ£Ê½ÊÇ±»½ûÖ¹µÄ" << endl;
+			exit(0);//cout << "loop end½ÚµãµÄÕâÖÖÊäÈëÄ£Ê½ÊÇ±»½ûÖ¹µÄ" << endl;
 		}		
 	}
 	else if (in1_v == 1 && in1 == 1)
@@ -52,12 +52,12 @@ void LoopEnd::lend()
 		if (in2 == 0)
 		{
 			out2back = 0;
-			out2end = 0;
+			out2end = 1;   //Ó¦·µ»Øend
+			in1_v = 0;    //Ó¦¸ÃÇåÁã
 		}
-		else if (in2 = 1)
+		else if (in2 == 1)
 		{
-			out2back = 0;
-			out2end = 1;
+			exit(0);//cout << "loop end½ÚµãµÄÕâÖÖÊäÈëÄ£Ê½ÊÇ±»½ûÖ¹µÄ" << endl;
 		}
 	}	
 }
@@ -75,6 +75,24 @@ void Join::join()//µ÷ÓÃÕâ¸öº¯ÊýÖ®Ç°Ò»¶¨ÒªÈ·±£inputCollectÕâ¸öÏòÁ¿±»´«ÈëÁË×îÐÂµÄÊ
 	for (unsigned int i = 2; i < size_in; i++)
 	{
 		out_init = out_init & inputCollect[i];		
+	}
+	out = out_init;
+	ismergeFinished = 1;
+
+}
+//Shit½Úµã
+Shit::Shit() {
+	inputCollect.resize(shitinportNums);
+}
+Shit::~Shit() {}
+
+void Shit::shit()//µ÷ÓÃÕâ¸öº¯ÊýÖ®Ç°Ò»¶¨ÒªÈ·±£inputCollectÕâ¸öÏòÁ¿±»´«ÈëÁË×îÐÂµÄÊý¾Ý
+{
+	vector<bool>::size_type size_in = inputCollect.size();
+	bool out_init = inputCollect[0] | inputCollect[1];
+	for (unsigned int i = 2; i < size_in; i++)
+	{
+		out_init = out_init | inputCollect[i];
 	}
 	out = out_init;
 	ismergeFinished = 1;

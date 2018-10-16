@@ -54,7 +54,20 @@ public:
 
 };
 
+class Shit			//shit节点
+{
+public:
+	Shit();
+	~Shit();
+	vector<bool> inputCollect;  //input port is not certain,use vector for flexiable 
+	bool out;
+	queue<vector<int>> config_reg;
+	void shit();
 
+public:
+	bool ismergeFinished; //表示一次汇合操作是否已经完成
+
+};
 class JoinBp {
 public:
 	JoinBp();

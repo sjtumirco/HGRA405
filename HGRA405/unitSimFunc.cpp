@@ -1,4 +1,4 @@
-#include "unitSimFunc.h"
+ï»¿#include "unitSimFunc.h"
 
 typedef unsigned int uint;
 
@@ -7,7 +7,7 @@ typedef unsigned int uint;
 void PeSimProcess(ProcessingElement* pe_current)
 {
 	int opcode = pe_current->config_reg.front()[2];
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	//in_from index
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
@@ -20,12 +20,12 @@ void PeSimProcess(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
 
-	//outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]Êä³öÖµ" << endl;
+	//outfile2 << "CLOCK" << cnt << "-PE[" << vec_config_parsed_tmp[i][1] << "]è¾“å‡ºå€¼" << endl;
 	outfile2 << setw(15) << "dout1_t" << setw(15) << "dout1_v" << setw(15) << "dout1" << setw(15) << "dout2_t" << setw(15) << "dout2_v"
 		<< setw(15) << "dout" << setw(15) << "bout_t" << setw(15) << "bout_v" << setw(15) << "bout" << endl;
 	outfile2 << setw(15) << pe_current->dout1_tag << setw(15) << pe_current->dout1_v
@@ -35,7 +35,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 		<< setw(15) << pe_current->bout << endl;
 	//outfile2 << "CLOCK" << cnt << "-PE" << vec_config_parsed_tmp[i][1] << endl;
 	
-	//¿ªÊ¼·ÂÕæÇ°Êä³ö¶Ë¿ÚÊı¾İÇåÁã
+	//å¼€å§‹ä»¿çœŸå‰è¾“å‡ºç«¯å£æ•°æ®æ¸…é›¶
 
 	pe_current->dout1_v = 0;
 	pe_current->dout2_v = 0;
@@ -46,13 +46,13 @@ void PeSimProcess(ProcessingElement* pe_current)
 
 	bool tag_mode = pe_current->config_reg.front()[19];
 	uint mode = pe_current->config_reg.front()[18];
-	if (tag_mode)//ĞèÒª½øĞĞtagµÄ´¦Àí
+	if (tag_mode)//éœ€è¦è¿›è¡Œtagçš„å¤„ç†
 	{
-		outfile << "PEĞèÒªtag´¦Àí...." << endl;
+		outfile << "PEéœ€è¦tagå¤„ç†...." << endl;
 		if (mode == 0)//bypass
 		{
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚÅÔÂ·Ä£Ê½...." << endl;
-			pe_sim_step3(pe_current);//ÅÅ³ıÁËLE,SEµÈ²»ĞèÒªob³öÊıµÄ²Ù×÷ºÍPE´¦ÓÚÅÔÂ·ºÍÖĞ×ªÄ£Ê½ÏÂµÄob³öÊı²Ù×÷
+			outfile << "pe[" << pe_index_current << "]å¤„äºæ—è·¯æ¨¡å¼...." << endl;
+			pe_sim_step3(pe_current);//æ’é™¤äº†LE,SEç­‰ä¸éœ€è¦obå‡ºæ•°çš„æ“ä½œå’ŒPEå¤„äºæ—è·¯å’Œä¸­è½¬æ¨¡å¼ä¸‹çš„obå‡ºæ•°æ“ä½œ
 			pe_sim_step_connect(pe_current);
 			if (pe_current->din1_v)
 			{
@@ -76,25 +76,25 @@ void PeSimProcess(ProcessingElement* pe_current)
 				pe_current->dout2_v = pe_current->outTableBuffer2.out_v;
 				pe_current->dout2_tag = pe_current->outTableBuffer2.out_tag;
 			}
-			//bypassÍê³É£¬Çå¿ÕvalidÖµ
+			//bypasså®Œæˆï¼Œæ¸…ç©ºvalidå€¼
 			pe_current->din1_v = 0; pe_current->din1 = 0; pe_current->din1_tag = 0;						
 			pe_current->din2_v = 0; pe_current->din2 = 0; pe_current->din2_tag = 0;
 			pe_current->bin_v = 0; pe_current->bin = 0; pe_current->bin_tag = 0;
 			
 			
-			outfile << "pe[" << pe_index_current << "]ÊÇÅÔÂ·Ä£Ê½" << endl;
-			outfile << "PE[" << pe_current->config_reg.front()[1] << "]µÄÊä³öÊÇ£ºdout1: " << pe_current->dout1 << " dout1_v: " << pe_current->dout1_v << " dout1_tag: " << pe_current->dout1_tag << endl;
+			outfile << "pe[" << pe_index_current << "]æ˜¯æ—è·¯æ¨¡å¼" << endl;
+			outfile << "PE[" << pe_current->config_reg.front()[1] << "]çš„è¾“å‡ºæ˜¯ï¼šdout1: " << pe_current->dout1 << " dout1_v: " << pe_current->dout1_v << " dout1_tag: " << pe_current->dout1_tag << endl;
 			outfile << "                                        " << "dout2: " << pe_current->dout2 << " dout2_v: " << pe_current->dout2_v << " dout2_tag: " << pe_current->dout2_tag << endl;
 			//outfile << "                                        " << "bout: " << pe_current->bout << " bout_v: " << pe_current->bout_v << " bout_tag: " << pe_current->bout_tag << endl;
 		}
 		else if (mode == 1)//transmit
 		{
-			//Ä¬ÈÏÖ»Ê¹ÓÃdin1ºÍdout1
-			//ĞèÒªÔÚtagÄ£Ê½ÏÂ¹¤×÷
+			//é»˜è®¤åªä½¿ç”¨din1å’Œdout1
+			//éœ€è¦åœ¨tagæ¨¡å¼ä¸‹å·¥ä½œ
 			
-			//³öÊı
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚÖĞ×ªÄ£Ê½...." << endl;
-			pe_sim_step3(pe_current);//ÅÅ³ıÁËLE,SEµÈ²»ĞèÒªob³öÊıµÄ²Ù×÷ºÍPE´¦ÓÚÅÔÂ·ºÍÖĞ×ªÄ£Ê½ÏÂµÄob³öÊı²Ù×÷
+			//å‡ºæ•°
+			outfile << "pe[" << pe_index_current << "]å¤„äºä¸­è½¬æ¨¡å¼...." << endl;
+			pe_sim_step3(pe_current);//æ’é™¤äº†LE,SEç­‰ä¸éœ€è¦obå‡ºæ•°çš„æ“ä½œå’ŒPEå¤„äºæ—è·¯å’Œä¸­è½¬æ¨¡å¼ä¸‹çš„obå‡ºæ•°æ“ä½œ
 			pe_sim_step_connect(pe_current);
 			if (pe_current->bin_v & pe_current->loc_reg_v)
 			{
@@ -102,10 +102,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 				{
 					pe_current->outbuffer1_in = pe_current->loc_reg;
 					pe_current->outbuffer1_in_v = pe_current->loc_reg_v;
-					//Ä¬ÈÏÊ¹ÓÃob1
+					//é»˜è®¤ä½¿ç”¨ob1
 					(pe_current->outBuffer1).dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v);
 					
-					if (port_fanout[pe_index_current][2] == 1)   //Ò»ÍÏÒ»
+					if (port_fanout[pe_index_current][2] == 1)   //ä¸€æ‹–ä¸€
 					{
 						(pe_current->outBuffer1).dataOut(pe_current->dout1, pe_current->dout1_v);
 						//(pe_current->outBuffer1).outputBuffer.pop();
@@ -113,7 +113,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 			}
 			
-			//ÈëÊı			
+			//å…¥æ•°			
 			if (pe_current->din1_v)
 			{
 				pe_current->loc_reg = pe_current->din1;
@@ -121,12 +121,12 @@ void PeSimProcess(ProcessingElement* pe_current)
 				pe_current->loc_reg_v = pe_current->din1_v;
 			}
 			
-			outfile << "ÖĞ×ªÄ£Ê½ÏÂÖ»ÓĞÊä³ö1ÓĞ½á¹û" << endl;
-			outfile << "pe[" << pe_index_current << "]µÄÊä³ö½á¹û: " << "dout1: " << pe_current->dout1 << "dout1_v: " << pe_current->dout1_v << endl;
+			outfile << "ä¸­è½¬æ¨¡å¼ä¸‹åªæœ‰è¾“å‡º1æœ‰ç»“æœ" << endl;
+			outfile << "pe[" << pe_index_current << "]çš„è¾“å‡ºç»“æœ: " << "dout1: " << pe_current->dout1 << "dout1_v: " << pe_current->dout1_v << endl;
 		}
 		else if (mode == 2)//calculate
 		{
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚ¼ÆËãÄ£Ê½...." << endl;
+			outfile << "pe[" << pe_index_current << "]å¤„äºè®¡ç®—æ¨¡å¼...." << endl;
 
 			pe_sim_step2(pe_current);
 
@@ -139,20 +139,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 			{
 				if (is_din1_float != 0 && is_din2_float != 0 && is_bin_float != 0)// 111
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -163,26 +163,26 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 				else if (is_din1_float == 0 && is_din2_float == 0 && is_bin_float != 0)//001
 				{
-					//³¡¾°ÊÇ£ºbinÊäÈëÒ»¸ö¼¤»îĞÅºÅ£¬loc_regÔÚ¼¤»îĞÅºÅÏÂÊä³öÒ»¸ö³£Öµ
+					//åœºæ™¯æ˜¯ï¼šbinè¾“å…¥ä¸€ä¸ªæ¿€æ´»ä¿¡å·ï¼Œloc_regåœ¨æ¿€æ´»ä¿¡å·ä¸‹è¾“å‡ºä¸€ä¸ªå¸¸å€¼
 
 
 				}
 				else if (is_din1_float != 0 && is_din2_float != 0 && is_bin_float == 0)//110
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -193,20 +193,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 				else if (is_din1_float != 0 && is_din2_float == 0 && is_bin_float == 0)//100
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -217,20 +217,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 				else if (is_din1_float == 0 && is_din2_float != 0 && is_bin_float == 0)//010
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -241,20 +241,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 				else if (is_din1_float != 0 && is_din2_float == 0 && is_bin_float != 0)//101
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -265,20 +265,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 				}
 				else if (is_din1_float == 0 && is_din2_float != 0 && is_bin_float != 0)//011
 				{
-					//last PE³öÊı
-					if (is_din1_float)//din1·ÇĞü¿Õ
+					//last PEå‡ºæ•°
+					if (is_din1_float)//din1éæ‚¬ç©º
 					{
-						//din1 from PE ob³öÊı
+						//din1 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din1_from_index], din1_from_port);
 					}
-					if (is_din2_float)//din2·ÇĞü¿Õ
+					if (is_din2_float)//din2éæ‚¬ç©º
 					{
-						//din2 from PE ob³öÊı
+						//din2 from PE obå‡ºæ•°
 						pe_sim_step3(pe[din2_from_index], din2_from_port);
 					}
-					if (is_bin_float)//bin·ÇĞü¿Õ
+					if (is_bin_float)//binéæ‚¬ç©º
 					{
-						//bin from PE ob³öÊı
+						//bin from PE obå‡ºæ•°
 						pe_sim_step3(pe[bin_from_index], bin_from_index);
 					}
 					//data trans
@@ -298,14 +298,14 @@ void PeSimProcess(ProcessingElement* pe_current)
 		else if (mode == 4)//transmit and calculate
 		{
 			//
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚ¼ÆËã+ÖĞ×ªÄ£Ê½...." << endl;
+			outfile << "pe[" << pe_index_current << "]å¤„äºè®¡ç®—+ä¸­è½¬æ¨¡å¼...." << endl;
 			if (is_din1_float != 0 && is_din2_float != 0 && is_bin_float != 0)// 111
 			{	
 				pe_sim_step2(pe_current);
 
 				pe_sim_step3(pe_current);
 				pe_sim_step_connect(pe_current);
-				//ÖĞ×ªÈëÊı
+				//ä¸­è½¬å…¥æ•°
 				if (pe_current->din2_v)
 				{
 					pe_current->loc_reg = pe_current->din2;
@@ -321,7 +321,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 
 				pe_sim_step3(pe_current);
 				pe_sim_step_connect(pe_current);
-				//ÖĞ×ªÈëÊı
+				//ä¸­è½¬å…¥æ•°
 				if (pe_current->din2_v)
 				{
 					pe_current->loc_reg = pe_current->din2;
@@ -330,18 +330,18 @@ void PeSimProcess(ProcessingElement* pe_current)
 			}
 		}
 		/*
-		else if (mode == 5)//tag °ó¶¨Ä£Ê½
+		else if (mode == 5)//tag ç»‘å®šæ¨¡å¼
 		{
-			//tag°ó¶¨Ä£Ê½Ä¬ÈÏÊäÈë1ÊÇtagÖµ£¬ÊäÈë2ÊÇdataÖµ
+			//tagç»‘å®šæ¨¡å¼é»˜è®¤è¾“å…¥1æ˜¯tagå€¼ï¼Œè¾“å…¥2æ˜¯dataå€¼
 			struct tmp { bool valid; int data; };
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚtag°ó¶¨Ä£Ê½...." << endl;
-			//ackÇåÁã
+			outfile << "pe[" << pe_index_current << "]å¤„äºtagç»‘å®šæ¨¡å¼...." << endl;
+			//ackæ¸…é›¶
 			pe_current->ack2in1port = 0;
 			pe_current->ack2in2port = 0;
-			//³ö¿ÚÊı¾İÇåÁã
+			//å‡ºå£æ•°æ®æ¸…é›¶
 			pe_current->dout1_v = 0;
 			pe_current->dout2_v = 0;
-			//Êı¾İÈëFIFO
+			//æ•°æ®å…¥FIFO
 			if (pe_current->din1_v && pe_current->din2_v)
 			{
 
@@ -352,7 +352,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 					tmp1.data = pe_current->din1;
 					pe_current->tableBuffer_fifo1.push(tmp1);
 					pe_current->ack2in1port = 1;
-					//fifo1ÈëÊıÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//fifo1å…¥æ•°å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->din1_v = 0;
 				}
 				if (!pe_current->tableBuffer_fifo_full2())
@@ -361,20 +361,20 @@ void PeSimProcess(ProcessingElement* pe_current)
 					tmp2.data = pe_current->din2;
 					pe_current->tableBuffer_fifo2.push(tmp2);
 					pe_current->ack2in2port = 0;
-					//fifo2ÈëÊıÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//fifo2å…¥æ•°å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->din2_v = 0;
 				}
 				
 			}
 
-			//Æ¥ÅäºóµÄÊı¾İ-Êä³ö
+			//åŒ¹é…åçš„æ•°æ®-è¾“å‡º
 			if (!pe_current->tableBuffer_fifo1.empty() && !pe_current->tableBuffer_fifo2.empty())
 			{
 				pe_current->outbuffer1_in = pe_current->tableBuffer_fifo2.front().data;
 				pe_current->outbuffer1_in_tag = pe_current->tableBuffer_fifo1.front().data;
 				pe_current->outbuffer1_in_v = pe_current->tableBuffer_fifo1.front().valid;
 				pe_current->outTableBuffer1.dataIn();
-				//pe_current->outTableBuffer1.dataOut();//Ö»ÊÇ´ÓobÖĞÄÃ³öÊı¾İ·ÅÖÃÔÚÊä³ö¶Ë¿Ú£¬Ã»ÓĞÇå¿ÕobÖĞµÄÊı¾İ
+				//pe_current->outTableBuffer1.dataOut();//åªæ˜¯ä»obä¸­æ‹¿å‡ºæ•°æ®æ”¾ç½®åœ¨è¾“å‡ºç«¯å£ï¼Œæ²¡æœ‰æ¸…ç©ºobä¸­çš„æ•°æ®
 			}
 		}
 		*/
@@ -382,10 +382,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 	}
 	else
 	{
-		//²»ĞèÒª½øĞĞtagµÄ´¦Àí
+		//ä¸éœ€è¦è¿›è¡Œtagçš„å¤„ç†
 		if (mode == 0)//bypass
 		{
-			outfile2 << "µ±Ç°PE´¦ÓÚÅÔÂ·Ä£Ê½" << endl;
+			outfile2 << "å½“å‰PEå¤„äºæ—è·¯æ¨¡å¼" << endl;
 			pe_sim_step_connect(pe_current);
 			if (pe_current->din1_v)
 			{
@@ -394,7 +394,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 				if (pe_current->outBuffer1.dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v))
 				{
 					//out
-					if (port_fanout[pe_index_current][2] == 1)   //Ò»ÍÏÒ»
+					if (port_fanout[pe_index_current][2] == 1)   //ä¸€æ‹–ä¸€
 					{
 						pe_current->outBuffer1.dataOut(pe_current->dout1, pe_current->dout1_v);
 						//pe_current->outBuffer1.outputBuffer.pop();
@@ -402,7 +402,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 					}
 				}
 
-				//´¦ÀíÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+				//å¤„ç†å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 				pe_current->din1_v = 0;
 
 			}
@@ -413,7 +413,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 				if (pe_current->outBuffer2.dataIn(pe_current->outbuffer2_in, pe_current->outbuffer2_in_v))
 				{
 					//out
-					if (port_fanout[pe_index_current][3] == 1)   //Ò»ÍÏÒ»
+					if (port_fanout[pe_index_current][3] == 1)   //ä¸€æ‹–ä¸€
 					{
 						pe_current->outBuffer2.dataOut(pe_current->dout2, pe_current->dout2_v);
 						//(pe_current->outBuffer2).outputBuffer.pop();
@@ -421,10 +421,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 					}
 				}
 
-				//´¦ÀíÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+				//å¤„ç†å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 				pe_current->din2_v = 0;
 			}
-			outfile2 << "PE[" << pe_index_current << "]Êä³öÖµ" << endl;
+			outfile2 << "PE[" << pe_index_current << "]è¾“å‡ºå€¼" << endl;
 			outfile2 << setw(15) << "out1_v" << setw(15) << "out1" << endl;
 			outfile2 << setw(15) << pe_current->dout1_v << setw(15) << pe_current->dout1 << endl;
 			outfile2 << setw(15) << "out2_v" << setw(15) << "out2" << endl;
@@ -432,26 +432,19 @@ void PeSimProcess(ProcessingElement* pe_current)
 			outfile2 << setw(15) << "out3_v" << setw(15) << "out3" << endl;
 			outfile2 << setw(15) << pe_current->bout_v << setw(15) << pe_current->bout << endl;
 		}
-		else if (mode == 1)//transmit     Ö»¹ıoutbuffer£¬Ë³ĞòÓ¦¸ÃÎª3c12
+		else if (mode == 1)//transmit     åªè¿‡outbufferï¼Œé¡ºåºåº”è¯¥ä¸º3c12
 		{
-			//¿ªÊ¼¼ÆËãÇ°¸÷×ÓÄ£¿é³ö¿ÚÊı¾İÇåÁã
+			//å¼€å§‹è®¡ç®—å‰å„å­æ¨¡å—å‡ºå£æ•°æ®æ¸…é›¶
 			pe_current->outbuffer1_in_v = 0; pe_current->outbuffer2_in_v = 0; pe_current->outbuffer3_in_v = 0;
 
-			//ÖĞ×ªÄ£Ê½Ö»ÔÊĞíÖĞ×ªÒ»¸ö²Ù×÷Êı£¬Ä¬ÈÏÊ¹ÓÃdin1
+			//ä¸­è½¬æ¨¡å¼åªå…è®¸ä¸­è½¬ä¸€ä¸ªæ“ä½œæ•°ï¼Œé»˜è®¤ä½¿ç”¨din1
 			pe_sim_step3_no_tag(pe_current);
 			pe_sim_step_connect(pe_current);
-			//ÊäÈë
-			if (pe_current->din1_v)
-			{
-				pe_current->loc_reg = pe_current->din1;
-				pe_current->loc_reg_v = pe_current->din1_v;
-				//´¦ÀíÍê³É£¬Èë¿ÚÊı¾İÇåÁã
-				pe_current->din1_v = 0;
-			}
+
 
 			
-			//½øÈëoutbuffer
-			if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+			//è¿›å…¥outbuffer
+			if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 			{
 				if (pe_current->config_reg.front()[15] == 2)//ob1 from lr
 				{
@@ -461,55 +454,64 @@ void PeSimProcess(ProcessingElement* pe_current)
 						{
 							pe_current->outbuffer1_in = pe_current->loc_reg;
 							pe_current->outbuffer1_in_v = pe_current->loc_reg_v;
-							//´¦ÀíÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+							//å¤„ç†å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 							pe_current->bin_v = 0;
 							pe_current->bin = 0;
 						}
 					}
 				}
 			}
-			//outbufferÈëÊı
+			//outbufferå…¥æ•°
 			if (pe_current->outbuffer1_in_v)
 			{
 				pe_current->outBuffer1.dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v);
 				if (pe_current->outBuffer1.isOutBufferFull())
 				{
 					pe_current->ack_outbuffer12alu = 0;
-					pe_current->ack2in3port = 0;   //ÖĞ×ª½Úµã²»¹ıinbuffer£¬inbufferµÄbp¼´ÎªoutbufferµÄbp£¬×¢ÒâÏÂÒ»¸öPEµÄstep3ÊÇĞèÒªÍ¬Ê±¸üĞÂÁ½¸öbpĞÅºÅ£¡
-					//pe_current->ack2in1port = 0;   ÓÉÓÚin1²»½öbuffer¶øÊÇ½ølocreg£¬Ğè²»ĞèÒª¶Â×¡ÄØ
+					pe_current->ack2in3port = 0;   //ä¸­è½¬èŠ‚ç‚¹ä¸è¿‡inbufferï¼Œinbufferçš„bpå³ä¸ºoutbufferçš„bpï¼Œæ³¨æ„ä¸‹ä¸€ä¸ªPEçš„step3æ˜¯éœ€è¦åŒæ—¶æ›´æ–°ä¸¤ä¸ªbpä¿¡å·ï¼
+					//pe_current->ack2in1port = 0;   ç”±äºin1ä¸ä»…bufferè€Œæ˜¯è¿›locregï¼Œéœ€ä¸éœ€è¦å µä½å‘¢
 				}
 				else
 				{
 					pe_current->ack_outbuffer12alu = 1;
-					pe_current->ack2in3port = 1;   //ÖĞ×ª½Úµã²»¹ıinbuffer£¬inbufferµÄbp¼´ÎªoutbufferµÄbp
-					//pe_current->ack2in1port = 0;   ÓÉÓÚin1²»½öbuffer¶øÊÇ½ølocreg£¬Ğè²»ĞèÒª¶Â×¡ÄØ
+					pe_current->ack2in3port = 1;   //ä¸­è½¬èŠ‚ç‚¹ä¸è¿‡inbufferï¼Œinbufferçš„bpå³ä¸ºoutbufferçš„bp
+					//pe_current->ack2in1port = 0;   ç”±äºin1ä¸ä»…bufferè€Œæ˜¯è¿›locregï¼Œéœ€ä¸éœ€è¦å µä½å‘¢
 				}
 
 			}
 
-			//ob´òÓ¡
-			//ÖĞ¼ä±äÁ¿
+			//è¾“å…¥
+			if (pe_current->din1_v)
+			{
+				pe_current->loc_reg = pe_current->din1;
+				pe_current->loc_reg_v = pe_current->din1_v;
+				//å¤„ç†å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
+				pe_current->din1_v = 0;
+			}
+
+			//obæ‰“å°
+			//ä¸­é—´å˜é‡
 			queue<OutBuffer_no_tag> ob1_tmp = pe_current->outBuffer1.outputBuffer;
 			queue<OutBuffer_no_tag> ob2_tmp = pe_current->outBuffer2.outputBuffer;
 			if (!ob1_tmp.empty())
 			{
-				outfile << "outbuffer1Öµ´òÓ¡" << endl;
+				outfile << "outbuffer1å€¼æ‰“å°" << endl;
 				outfile << setw(15) << "outbuffer1_v" << setw(15) << "outbuffer1" << endl;
 				outfile << setw(15) << (ob1_tmp.front()).valid << setw(15) << (ob1_tmp.front()).data << endl;
 			}
 
 			if (!ob2_tmp.empty())
 			{
-				outfile << "outbuffer2Öµ´òÓ¡" << endl;
+				outfile << "outbuffer2å€¼æ‰“å°" << endl;
 				outfile << setw(15) << "outbuffer2_v" << setw(15) << "outbuffer2" << endl;
 				outfile << setw(15) << (ob2_tmp.front()).valid << setw(15) << (ob2_tmp.front()).data << endl;
 			}
 
-			//´òÓ¡outbufferÖĞµÄÄÚÈİ
-			//outfile << "outbufferÖµ´òÓ¡" << endl;
+			//æ‰“å°outbufferä¸­çš„å†…å®¹
+			//outfile << "outbufferå€¼æ‰“å°" << endl;
 			if (pe_current->outbuffer3_v)
 			{
-				outfile << "outbuffer3Öµ´òÓ¡" << endl;
+				outfile << "outbuffer3å€¼æ‰“å°" << endl;
 				outfile << setw(15) << "outbuffer3_v" << setw(15) << "outbuffer3" << endl;
 				outfile << setw(15) << pe_current->outbuffer3_v << setw(15) << pe_current->outbuffer3 << endl;
 			}
@@ -518,21 +520,21 @@ void PeSimProcess(ProcessingElement* pe_current)
 			/*
 			if (pe_current->bin_v)
 			{
-				if (pe_current->bin & pe_current->loc_reg_v)//boolÖµÓĞĞ§²ÅÊä³ö
+				if (pe_current->bin & pe_current->loc_reg_v)//boolå€¼æœ‰æ•ˆæ‰è¾“å‡º
 				{
 					pe_current->dout1 = pe_current->loc_reg;
 					pe_current->dout1_v = pe_current->loc_reg_v;
 					//pe_current->outBuffer1.isOutBufferFull();
 					//pe_current->outBuffer1In();
 					//pe_current->peExportCtr1();
-					//´¦ÀíÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//å¤„ç†å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->bin_v = 0;
 					pe_current->bin = 0;
 				}
 			}	
 			*/
 			
-			outfile2 << "PE[" << pe_index_current << "]Êä³öÖµ" << endl;
+			outfile2 << "PE[" << pe_index_current << "]è¾“å‡ºå€¼" << endl;
 			outfile2 << setw(15) << "dout1_v" << setw(15) << "dout1" << endl;
 			outfile2 << setw(15) << pe_current->dout1_v << setw(15) << pe_current->dout1 << endl;
 
@@ -540,7 +542,7 @@ void PeSimProcess(ProcessingElement* pe_current)
 		else if (mode == 2)//calculate
 		{
 
-			//if (pe_current->config_reg.front()[24] == 1)//Ë³Ğò·ÂÕæ¸÷¸östage
+			//if (pe_current->config_reg.front()[24] == 1)//é¡ºåºä»¿çœŸå„ä¸ªstage
 			//{				
 			//	pe_sim_step3_no_tag(pe_current);
 			//	pe_sim_step_connect(pe_current);
@@ -549,9 +551,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 			//	pe_sim_step2_no_tag(pe_current);
 
 			//}
-			if (pe_current->config_reg.front()[1] == 5)//pe5¿ªÊ¼µÄ×éºÏÂ·¾¶£¬Áª·ÂÍêPE5 PE4 PE3
+			if (pe_current->config_reg.front()[1] == 5)//pe5å¼€å§‹çš„ç»„åˆè·¯å¾„ï¼Œè”ä»¿å®ŒPE5 PE4 PE3
 			{
-				//PE5µÄout_vÔÚPESIMÖĞÇå¹ıÁË£¬µ«PE4ºÍ3Ã»ÓĞ
+				
+				//PE5çš„out_våœ¨PESIMä¸­æ¸…è¿‡äº†ï¼Œä½†PE4å’Œ3æ²¡æœ‰
 				pe[5]->dout1_v = 0;
 				pe[5]->dout2_v = 0;
 				pe[5]->bout_v = 0;
@@ -563,7 +566,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 				pe_sim_step1_no_tag(pe[5]);
 				pe_sim_step2_no_tag(pe[5]);
 
-				//pe4,×¢ÒâÍ¬ÑùÒªÓĞÇåout_vµÄ²½Öè
+				//JoinBpSimProcess(joinbp[2]);
+				LbeginSimProcess(lbegin[1]);
+
+				//pe4,æ³¨æ„åŒæ ·è¦æœ‰æ¸…out_vçš„æ­¥éª¤
 				pe[4]->dout1_v = 0;
 				pe[4]->dout2_v = 0;
 				pe[4]->bout_v = 0;
@@ -574,8 +580,6 @@ void PeSimProcess(ProcessingElement* pe_current)
 				pe_sim_step_connect(pe[4]);
 				pe_sim_step1_no_tag(pe[4]);
 				pe_sim_step2_no_tag(pe[4]);
-
-				LbeginSimProcess(lbegin[1]);
 
 				pe[3]->dout1_v = 0;
 				pe[3]->dout2_v = 0;
@@ -605,36 +609,36 @@ void PeSimProcess(ProcessingElement* pe_current)
 		{
 
 		}
-		else if (mode == 5)//tag °ó¶¨Ä£Ê½
+		else if (mode == 5)//tag ç»‘å®šæ¨¡å¼
 		{
-			//tag°ó¶¨Ä£Ê½Ä¬ÈÏÊäÈë1ÊÇtagÖµ£¬ÊäÈë2ÊÇdataÖµ
-			outfile << "pe[" << pe_index_current << "]´¦ÓÚtag°ó¶¨Ä£Ê½...." << endl;
+			//tagç»‘å®šæ¨¡å¼é»˜è®¤è¾“å…¥1æ˜¯tagå€¼ï¼Œè¾“å…¥2æ˜¯dataå€¼
+			outfile << "pe[" << pe_index_current << "]å¤„äºtagç»‘å®šæ¨¡å¼...." << endl;
 			outfile2 << "Tag Bing Mode" << endl;
-			//¿ªÊ¼·ÂÕæÇ°Êä³ö¶Ë¿ÚÇåÁã
+			//å¼€å§‹ä»¿çœŸå‰è¾“å‡ºç«¯å£æ¸…é›¶
 			pe_current->dout1_v = 0; pe_current->dout2_v = 0; pe_current->bout_v = 0;
 			pe_current->dout1_tag = 0; pe_current->dout2_tag = 0; pe_current->bout_tag = 0;
 			//s3->sc
 
-			//fifoÊä³ö
-			outfile << "PE[" << pe_index_current << "]infifo1µÄ´óĞ¡" << endl;
+			//fifoè¾“å‡º
+			outfile << "PE[" << pe_index_current << "]infifo1çš„å¤§å°" << endl;
 			outfile << pe_current->tableBuffer_fifo1.size() << endl;
-			outfile << "PE[" << pe_index_current << "]infifo2µÄ´óĞ¡" << endl;
+			outfile << "PE[" << pe_index_current << "]infifo2çš„å¤§å°" << endl;
 			outfile << pe_current->tableBuffer_fifo2.size() << endl;
 
-			pe_sim_step3_no_tag(pe_current);
-			pe_sim_step_connect(pe_current);
+			pe_sim_step3_no_tag(pe_current);//æ²¡æœ‰è¢«ä½¿ç”¨
+			pe_sim_step_connect(pe_current);//tiçš„å€¼å¯ä»¥ç›´æ¥è·å–
 
 			if (pe_current->din1 == pe_current->last_t4bind)
-			{	//½ÓÊÕÍ¬Ò»¸öti½ÚµãµÄÊı¾İ
+			{	//æ¥æ”¶åŒä¸€ä¸ªtièŠ‚ç‚¹çš„æ•°æ®
 				pe_current->din1_v = 0;
 			}
-			//ackÇåÁã
+			//ackæ¸…é›¶
 			//pe_current->ack2in1port = 0;
 			//pe_current->ack2in2port = 0;
-			//³ö¿ÚÊı¾İÇåÁã
+			//å‡ºå£æ•°æ®æ¸…é›¶
 			pe_current->dout1_v = 0;
 			pe_current->dout2_v = 0;
-			//Êı¾İÈëFIFO			
+			//æ•°æ®å…¥FIFO			
 			if (pe_current->din1_v)
 			{
 				TableLine4Fifo tmp1;
@@ -647,9 +651,9 @@ void PeSimProcess(ProcessingElement* pe_current)
 						pe_current->ack2in1port = 0;
 					else
 						pe_current->ack2in1port = 1;
-					//fifo1ÈëÊıÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//fifo1å…¥æ•°å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->din1_v = 0;
-					//last_t4bindÉèÖÃ
+					//last_t4bindè®¾ç½®
 					pe_current->last_t4bind = pe_current->din1;
 				}
 			}
@@ -665,37 +669,46 @@ void PeSimProcess(ProcessingElement* pe_current)
 						pe_current->ack2in2port = 0;
 					else
 						pe_current->ack2in2port = 1;
-					//fifo2ÈëÊıÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//fifo2å…¥æ•°å®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->din2_v = 0;
 
 				}
 			}
 
-			//Æ¥ÅäºóµÄÊı¾İ-Êä³ö
-			if (!pe_current->tableBuffer_fifo1.empty() && !pe_current->tableBuffer_fifo2.empty())
+
+			pe_current->outbuffer1_in_v = 0;
+			//åŒ¹é…åçš„æ•°æ®-è¾“å‡º
+			if(!pe_current->tableBuffer_fifo1.empty() && !pe_current->tableBuffer_fifo2.empty()&& pe_current->ack_outbuffer12alu)
 			{
 				pe_current->outbuffer1_in = pe_current->tableBuffer_fifo2.front().data;
 				pe_current->outbuffer1_in_tag = pe_current->tableBuffer_fifo1.front().data;
-				pe_current->outbuffer1_in_v = pe_current->tableBuffer_fifo1.front().valid;				
-				//Êı¾İµ¼Èëµ½outTableBufferÀàÖĞÈ¥
+				pe_current->outbuffer1_in_v = pe_current->tableBuffer_fifo1.front().valid;
+				//æ•°æ®å¯¼å…¥åˆ°outTableBufferç±»ä¸­å»
 				pe_current->outTableBuffer1.in = pe_current->outbuffer1_in;
 				pe_current->outTableBuffer1.in_v = pe_current->outbuffer1_in_v;
 				pe_current->outTableBuffer1.in_tag = pe_current->outbuffer1_in_tag;
 
 				pe_current->outTableBuffer1.dataIn();
-				//Êä³ö½áÊø£¬FIFOµ¯³öÒ»¸öÊı¾İ
+				//è¾“å‡ºç»“æŸï¼ŒFIFOå¼¹å‡ºä¸€ä¸ªæ•°æ®
 				pe_current->tableBuffer_fifo1.pop();
 				pe_current->tableBuffer_fifo2.pop();
-				//³öÊıºófifo²»Âú
+				//å‡ºæ•°åfifoä¸æ»¡
 				pe_current->ack2in1port = 1;
 				pe_current->ack2in2port = 1;
+				//æ£€æµ‹Outtablebufferæ˜¯å¦æ»¡ï¼Œè‹¥æ»¡åˆ™ç½®èµ·æ¥ack_outbuffer
+				if (pe_current->outTableBuffer1.isOutBufferFull())
+				{
+					pe_current->ack_outbuffer22alu = 0;
+				}
+				else
+					pe_current->ack_outbuffer22alu = 1;
 			}
 
-			outfile2 << "PE[" << pe_index_current << "]FIFOÊä³öÖµ" << endl;
+			outfile2 << "PE[" << pe_index_current << "]FIFOè¾“å‡ºå€¼" << endl;
 			outfile2 << setw(15) << "ob1_in_t" << setw(15) << "ob1_in_v" << setw(15) << "ob1_in" << endl;
 			outfile2 << setw(15) << pe_current->outbuffer1_in_tag << setw(15) << pe_current->outbuffer1_in_v
 				<< setw(15) << pe_current->outbuffer1_in << endl;
-			/*outfile2 << "tag bind modeÏÂÊä³ö" << endl;
+			/*outfile2 << "tag bind modeä¸‹è¾“å‡º" << endl;
 			outfile2 << setw(15) << "dout1_t" << setw(15) << "dout1_v" << setw(15) << "dout1" << endl;
 			outfile2 << setw(15) << pe_current->dout1_tag << setw(15) << pe_current->dout1_v << setw(15) << pe_current->dout1 << endl;*/
 		}
@@ -706,10 +719,10 @@ void PeSimProcess(ProcessingElement* pe_current)
 
 void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 
-	//step3---output buffer³öÊı·ÂÕæ
-	//¿ªÊ¼¼ÆËãÖ®Ç°³ö¿Ú´¦µÄÊı¾İÇåÁã
+	//step3---output bufferå‡ºæ•°ä»¿çœŸ
+	//å¼€å§‹è®¡ç®—ä¹‹å‰å‡ºå£å¤„çš„æ•°æ®æ¸…é›¶
 	/*
 	pe_current->dout1_v = 0;
 	pe_current->dout1 = 0;
@@ -719,20 +732,20 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 	pe_current->bout = 0;
 	*/
 
-	if (ob_index == 0)//ob1ĞèÒª³öÊı
+	if (ob_index == 0)//ob1éœ€è¦å‡ºæ•°
 	{
-		//ob1³öÊı
+		//ob1å‡ºæ•°
 		if (pe_current->outBuffer1.outputBuffer.size() != 0)
 		{		
-			if (port_fanout[pe_index_current][2] <= 1)   //Ò»ÍÏÒ»
+			if (port_fanout[pe_index_current][2] <= 1)   //ä¸€æ‹–ä¸€
 			{
 				pe_current->outBuffer1.dataOut(pe_current->dout1, pe_current->dout1_v);
 				//pe_current->outBuffer1.outputBuffer.pop();
 				pe_current->ack_outbuffer12alu = 1;
 
-				//ÈôÎªÖĞ×ªÄ£Ê½£¬inbufferµÄbpÒ²¸ú×ÅobufferµÄbp¸Ä±ä
+				//è‹¥ä¸ºä¸­è½¬æ¨¡å¼ï¼Œinbufferçš„bpä¹Ÿè·Ÿç€obufferçš„bpæ”¹å˜
 				uint mode = pe_current->config_reg.front()[18];
-				if (mode == 1)    //ÖĞ×ªÄ£Ê½£¬no_tag
+				if (mode == 1)    //ä¸­è½¬æ¨¡å¼ï¼Œno_tag
 				{
 					//pe_current->ack2in1port = 1;   
 					pe_current->ack2in3port = 1;    
@@ -740,19 +753,19 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 			}
 		}
 	}	
-	else if (ob_index == 1)//ob2ĞèÒª³öÊı
+	else if (ob_index == 1)//ob2éœ€è¦å‡ºæ•°
 	{
-		//ob2³öÊı
+		//ob2å‡ºæ•°
 		if (pe_current->outBuffer2.outputBuffer.size() != 0)
 		{			
-			if (port_fanout[pe_index_current][3] <= 1)   //Ò»ÍÏÒ»
+			if (port_fanout[pe_index_current][3] <= 1)   //ä¸€æ‹–ä¸€
 			{
 				pe_current->outBuffer2.dataOut(pe_current->dout2, pe_current->dout2_v);
 				//pe_current->outBuffer2.outputBuffer.pop();
 				pe_current->ack_outbuffer22alu = 1;
-				//ÈôÎªÖĞ×ªÄ£Ê½£¬inbufferµÄbpÒ²¸ú×ÅobufferµÄbp¸Ä±ä
+				//è‹¥ä¸ºä¸­è½¬æ¨¡å¼ï¼Œinbufferçš„bpä¹Ÿè·Ÿç€obufferçš„bpæ”¹å˜
 				uint mode = pe_current->config_reg.front()[18];
-				if (mode == 1)    //ÖĞ×ªÄ£Ê½£¬no_tag
+				if (mode == 1)    //ä¸­è½¬æ¨¡å¼ï¼Œno_tag
 				{
 					//pe_current->ack2in2port = 1;
 					pe_current->ack2in3port = 1;
@@ -761,12 +774,12 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 		}
 	}
 	
-	else if (ob_index == 2)//ob3ĞèÒª³öÊı
+	else if (ob_index == 2)//ob3éœ€è¦å‡ºæ•°
 	{
-		//ob3³öÊı
+		//ob3å‡ºæ•°
 		if (pe_current->outbuffer3_v)
 		{
-			if (port_fanout[pe_index_current][4] <= 1)   //Ò»ÍÏÒ»
+			if (port_fanout[pe_index_current][4] <= 1)   //ä¸€æ‹–ä¸€
 			{
 				pe_current->bout = pe_current->outbuffer3;
 				pe_current->bout_v = pe_current->outbuffer3_v;
@@ -777,13 +790,13 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 	}
 	
 
-	//¼ì²âÊÇ·ñÊÇend½Úµã
+	//æ£€æµ‹æ˜¯å¦æ˜¯endèŠ‚ç‚¹
 	if (pe_current->config_reg.front()[17])
 	{
 		if (pe_current->dout1_v | pe_current->dout2_v)
 		{
 			pe_current->bout = 1;
-			pe_current->bout_v = 1;//Ê¹ÓÃout3_v³ö¿Ú×÷Îªend½ÚµãĞÅºÅµÄ³ö¿Ú£¨ÒªÔÚout3¿ÚÃ»ÓĞ±»Ê¹ÓÃµÄÇé¿öÏÂ²ÅÄÜ³ÉÁ¢£©
+			pe_current->bout_v = 1;//ä½¿ç”¨out3_vå‡ºå£ä½œä¸ºendèŠ‚ç‚¹ä¿¡å·çš„å‡ºå£ï¼ˆè¦åœ¨out3å£æ²¡æœ‰è¢«ä½¿ç”¨çš„æƒ…å†µä¸‹æ‰èƒ½æˆç«‹ï¼‰
 		}
 
 	}
@@ -791,7 +804,7 @@ void pe_outbuffer_out_no_tag(ProcessingElement* pe_current,uint32_t ob_index)
 
 void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -803,33 +816,33 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
-	//ÅĞ¶Ïµ±Ç°PE¸÷¸öÊäÈëµÄÀ´Ô´Çé¿ö
+	//åˆ¤æ–­å½“å‰PEå„ä¸ªè¾“å…¥çš„æ¥æºæƒ…å†µ
 	//in1port
 	if (din1_from_flag == 2)//PE
 	{
-		if (pe_current->ack2in1port == 1)        //µ±Ç°PE inbufferÎ´ÂúÊ±£¬ÉÏÒ»PE¿ÉÒÔ³öÊı
+		if (pe_current->ack2in1port == 1)        //å½“å‰PE inbufferæœªæ»¡æ—¶ï¼Œä¸Šä¸€PEå¯ä»¥å‡ºæ•°
 		{
 			if (pe[din1_from_index]->config_reg.front()[18] == 0)
 			{
-				//ÉÏÒ»¸öPE´¦ÓÚÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâµÄob³öÊı,ÖĞ×ªÄ£Ê½ÈÔĞèÒªÕı³£³öÊı
+				//ä¸Šä¸€ä¸ªPEå¤„äºæ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–çš„obå‡ºæ•°,ä¸­è½¬ æ¨¡å¼ä»éœ€è¦æ­£å¸¸å‡ºæ•°
 			}
 			else
 			{
 				pe_outbuffer_out_no_tag(pe[din1_from_index], din1_from_port);
 				/*
-				if (din1_from_port == 0)         //¸ù¾İÀ´Ô´µÄPEºÍÆä¶Ë¿ÚÎ¬»¤ÏàÓ¦µÄobufferµÄbp£¬×¢ÒâPEµÄ¶Ë¿Ú½âÎöÊ±¼õ¹ı1
+				if (din1_from_port == 0)         //æ ¹æ®æ¥æºçš„PEå’Œå…¶ç«¯å£ç»´æŠ¤ç›¸åº”çš„obufferçš„bpï¼Œæ³¨æ„PEçš„ç«¯å£è§£ææ—¶å‡è¿‡1
 				{
-					pe[din1_from_index]->ack_outbuffer12alu = 1;    //³öÊıºó²»Âú
+					pe[din1_from_index]->ack_outbuffer12alu = 1;    //å‡ºæ•°åä¸æ»¡
 				}
 				else if (din1_from_port == 1)
 				{
 					pe[din1_from_index]->ack_outbuffer22alu = 1;
 				}
-				else if (din1_from_port == 2)                 //ÕâÖÖÇé¿öÓ¦¸Ã²»»á·¢Éú
+				else if (din1_from_port == 2)                 //è¿™ç§æƒ…å†µåº”è¯¥ä¸ä¼šå‘ç”Ÿ
 				{
 					pe[din1_from_index]->ack_outbuffer32alu = 1;
 				}
@@ -840,7 +853,7 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	}
 	else if (din1_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (din1_from_flag == 3)//lbegin
 	{
@@ -856,25 +869,25 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	//in2port
 	if (din2_from_flag == 2)//PE
 	{
-		if (pe_current->ack2in2port == 1)   //²é±¾¼¶PEµÄinbufferÊÇ·ñÂúÁË
+		if (pe_current->ack2in2port == 1)   //æŸ¥æœ¬çº§PEçš„inbufferæ˜¯å¦æ»¡äº†
 		{
 			if (pe[din2_from_index]->config_reg.front()[18] == 0)
 			{
-				//ÉÏÒ»¸öPE´¦ÓÚÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâµÄob³öÊı,ÖĞ×ªÄ£Ê½ÈÔĞèÒªÕı³£³öÊı
+				//ä¸Šä¸€ä¸ªPEå¤„äºæ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–çš„obå‡ºæ•°,ä¸­è½¬æ¨¡å¼ä»éœ€è¦æ­£å¸¸å‡ºæ•°
 			}
 			else
 			{
 				pe_outbuffer_out_no_tag(pe[din2_from_index], din2_from_port);
 				/*
-				if (din2_from_port == 0)         //¸ù¾İÀ´Ô´µÄPEºÍÆä¶Ë¿ÚÎ¬»¤ÏàÓ¦µÄobufferµÄbp£¬×¢ÒâPEµÄ¶Ë¿Ú½âÎöÊ±¼õ¹ı1
+				if (din2_from_port == 0)         //æ ¹æ®æ¥æºçš„PEå’Œå…¶ç«¯å£ç»´æŠ¤ç›¸åº”çš„obufferçš„bpï¼Œæ³¨æ„PEçš„ç«¯å£è§£ææ—¶å‡è¿‡1
 				{
-					pe[din2_from_index]->ack_outbuffer12alu = 1;    //³öÊıºó²»Âú
+					pe[din2_from_index]->ack_outbuffer12alu = 1;    //å‡ºæ•°åä¸æ»¡
 				}
 				else if (din2_from_port == 1)
 				{
 					pe[din2_from_index]->ack_outbuffer22alu = 1;
 				}
-				else if (din2_from_port == 2)                 //ÕâÖÖÇé¿öÓ¦¸Ã²»»á·¢Éú
+				else if (din2_from_port == 2)                 //è¿™ç§æƒ…å†µåº”è¯¥ä¸ä¼šå‘ç”Ÿ
 				{
 					pe[din2_from_index]->ack_outbuffer32alu = 1;
 				}
@@ -885,7 +898,7 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	}
 	else if (din2_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (din2_from_flag == 3)//lbegin
 	{
@@ -899,19 +912,19 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	//in3port
 	if (bin_from_flag == 2)//PE
 	{
-		if (pe_current->ack2in3port == 1)   //ÖĞ×ªÄ£Ê½ÖĞÓ¦¸ÃºÍobufferµÄbpÏàÍ¬
+		if (pe_current->ack2in3port == 1)   //ä¸­è½¬æ¨¡å¼ä¸­åº”è¯¥å’Œobufferçš„bpç›¸åŒ
 		{
 			if (pe[bin_from_index]->config_reg.front()[18] == 0 | pe[bin_from_index]->config_reg.front()[18] == 1)
 			{
-				//ÉÏÒ»¸öPE´¦ÓÚÖĞ×ªºÍÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâµÄob³öÊı
+				//ä¸Šä¸€ä¸ªPEå¤„äºä¸­è½¬å’Œæ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–çš„obå‡ºæ•°
 			}
 			else
 			{
 				pe_outbuffer_out_no_tag(pe[bin_from_index], bin_from_port);
 				/*
-				if (bin_from_port == 0)         //¸ù¾İÀ´Ô´µÄPEºÍÆä¶Ë¿ÚÎ¬»¤ÏàÓ¦µÄobufferµÄbp£¬×¢ÒâPEµÄ¶Ë¿Ú½âÎöÊ±¼õ¹ı1
+				if (bin_from_port == 0)         //æ ¹æ®æ¥æºçš„PEå’Œå…¶ç«¯å£ç»´æŠ¤ç›¸åº”çš„obufferçš„bpï¼Œæ³¨æ„PEçš„ç«¯å£è§£ææ—¶å‡è¿‡1
 				{
-					pe[bin_from_index]->ack_outbuffer12alu = 1;    //³öÊıºó²»Âú
+					pe[bin_from_index]->ack_outbuffer12alu = 1;    //å‡ºæ•°åä¸æ»¡
 				}
 				else if (bin_from_port == 1)
 				{
@@ -928,7 +941,7 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	}
 	else if (bin_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (bin_from_flag == 3)//lbegin
 	{
@@ -943,30 +956,30 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 
 void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 {
-	//step2---ib³öÊı->ALU·ÂÕæ->obÈëÊı
-	//¿ªÊ¼¼ÆËãÇ°¸÷×ÓÄ£¿é³ö¿ÚÊı¾İÇåÁã
+	//step2---ibå‡ºæ•°->ALUä»¿çœŸ->obå…¥æ•°
+	//å¼€å§‹è®¡ç®—å‰å„å­æ¨¡å—å‡ºå£æ•°æ®æ¸…é›¶
 	pe_current->alu_out_v = 0;pe_current->alu_out_b_v = 0;
 	pe_current->inbuffer1_out_v = 0; pe_current->inbuffer2_out_v = 0; pe_current->inbuffer3_out_v = 0;
 	pe_current->outbuffer1_in_v = 0; pe_current->outbuffer2_in_v = 0; pe_current->outbuffer3_in_v = 0;
-	//¿ªÊ¼Ç°obÖĞµÄÄÚÈİÇåÁã£¬Ö»ÈÃobÖĞµÄ°ÑÄÚÈİ±£³ÖÒ»¸öÖÜÆÚµÄÉú´æÖÜÆÚ
+	//å¼€å§‹å‰obä¸­çš„å†…å®¹æ¸…é›¶ï¼Œåªè®©obä¸­çš„æŠŠå†…å®¹ä¿æŒä¸€ä¸ªå‘¨æœŸçš„ç”Ÿå­˜å‘¨æœŸ
 	//pe_current->outbuffer1_v = 0; pe_current->outbuffer2_v = 0; pe_current->outbuffer3_v = 0;
 
 	//ib1 out 
-	//Ê×ÏÈ²éÑ¯obufferµÄbpÊÇ·ñÎª0£¨0±íÊ¾obufferÂú£©
-	//inbuffer³öÊıºóÒ²ĞèÒªÎ¬»¤inbufferµÄbp
-	if (pe_current->ack_outbuffer12alu == 1)     //²éÑ¯obufferÊÇ·ñÒÑÂú
+	//é¦–å…ˆæŸ¥è¯¢obufferçš„bpæ˜¯å¦ä¸º0ï¼ˆ0è¡¨ç¤ºobufferæ»¡ï¼‰
+	//inbufferå‡ºæ•°åä¹Ÿéœ€è¦ç»´æŠ¤inbufferçš„bp
+	if (pe_current->ack_outbuffer12alu == 1)     //æŸ¥è¯¢obufferæ˜¯å¦å·²æ»¡
 	{
 		if (pe_current->inBuffer1.inputBuffer.size() != 0)
 		{
 			pe_current->inBuffer1.dataOut(pe_current->inbuffer1_out, pe_current->inbuffer1_out_v);
 			//pe_current->inbuffer1_out = pe_current->inBuffer1.inputBuffer.front().data;
 			//pe_current->inbuffer1_out_v = pe_current->inBuffer1.inputBuffer.front().valid;
-			pe_current->ack2in1port = 1;                                                  //inbuffer³öÊıºóÓÉÓÚinbufferÎ´Âú£¬bp=1
+			pe_current->ack2in1port = 1;                                                  //inbufferå‡ºæ•°åç”±äºinbufferæœªæ»¡ï¼Œbp=1
 		}
-		//pe_current->inBuffer1.dataIn(pe_current->inbuffer1_out, pe_current->inbuffer1_out_v);   ¸üºÃµÄ±í´ï·½Ê½£¡
+		//pe_current->inBuffer1.dataIn(pe_current->inbuffer1_out, pe_current->inbuffer1_out_v);   æ›´å¥½çš„è¡¨è¾¾æ–¹å¼ï¼
 	}
 		//ib2 out
-	if (pe_current->ack_outbuffer22alu == 1)     //Î´Âú
+	if (pe_current->ack_outbuffer22alu == 1)     //æœªæ»¡
 	{
 		if (pe_current->inBuffer2.inputBuffer.size() != 0)
 		{
@@ -977,19 +990,19 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 		}
 	}
 		//ib3 out
-	if (pe_current->ack_outbuffer32alu == 1)     //Î´Âú
+	if (pe_current->ack_outbuffer32alu == 1)     //æœªæ»¡
 	{
 		if (pe_current->inbuffer3_v)
 		{
 			pe_current->inbuffer3_out = pe_current->inbuffer3;
 			pe_current->inbuffer3_out_v = pe_current->inbuffer3_v;
 			pe_current->ack2in3port = 1;
-			pe_current->inbuffer3_v = 0;     //Çåinbuffer3
+			pe_current->inbuffer3_v = 0;     //æ¸…inbuffer3
 		}
 	}
 	
-	//´òÓ¡ÖĞ¼äÖµ1
-	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ÖĞ¼äÖµ1" << endl;
+	//æ‰“å°ä¸­é—´å€¼1
+	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ä¸­é—´å€¼1" << endl;
 	outfile2 << setw(15) << "ib1_out_t" << setw(15) << "ib1_out_v" << setw(15) << "ib1_out" << setw(15) << "ib2_out_t" << setw(15) << "ib2_out_v"
 		<< setw(15) << "ib2_out" << setw(15) << "ib3_out_t" << setw(15) << "ib3_out_v" << setw(15) << "ib3_out" << endl;
 	outfile2 << setw(15) << 0 << setw(15) << pe_current->inbuffer1_out_v
@@ -999,8 +1012,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 		<< setw(15) << pe_current->inbuffer3_out << endl;
 	
 
-	//ALU¼ÆËã
-	//È¡Êıµ½¶Ë¿Ú
+	//ALUè®¡ç®—
+	//å–æ•°åˆ°ç«¯å£
 	if (pe_current->config_reg.front()[13] == 0)//alu_in1_from ib1
 	{
 		if (pe_current->inbuffer1_out_v)
@@ -1038,40 +1051,40 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 		}
 
 	}
-	//aluÔËËã
-	//alu·ÂÕæ½áÊøºó¸Ã×ÓÄ£¿éÈë¿ÚÊı¾İ²»ÄÜÇåÁã£¬ÓĞÒ»¸öÊı¾İÌáÇ°µ½À´Ã»ÓĞ¼¤»î¼ÆËã£¬ÒªÔÚ³ö¿Ú´¦keep×¡
-	if (pe_current->config_reg.front()[2] == 8)//mux²Ù×÷¡£ÌØÊâ¶Ô´ı
+	//aluè¿ç®—
+	//aluä»¿çœŸç»“æŸåè¯¥å­æ¨¡å—å…¥å£æ•°æ®ä¸èƒ½æ¸…é›¶ï¼Œæœ‰ä¸€ä¸ªæ•°æ®æå‰åˆ°æ¥æ²¡æœ‰æ¿€æ´»è®¡ç®—ï¼Œè¦åœ¨å‡ºå£å¤„keepä½
+	if (pe_current->config_reg.front()[2] == 8)//muxæ“ä½œã€‚ç‰¹æ®Šå¯¹å¾…
 	{
 		if (pe_current->inbuffer3_out_v)
 		{
-			if (pe_current->inbuffer3_out == 0)//Ñ¡Ôñin2
+			if (pe_current->inbuffer3_out == 0)//é€‰æ‹©in2
 			{
-				if (pe_current->alu_in2_v)//din2µÄÊä³ö½á¹ûÓĞĞ§¾Í¿ÉÒÔ½øĞĞmux²Ù×÷
+				if (pe_current->alu_in2_v)//din2çš„è¾“å‡ºç»“æœæœ‰æ•ˆå°±å¯ä»¥è¿›è¡Œmuxæ“ä½œ
 				{
 					pe_current->ALU(pe_current->config_reg.front()[2], pe_current->alu_in1, pe_current->alu_in2, pe_current->inbuffer3_out);					
-					//alu·ÂÕæÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//aluä»¿çœŸå®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->alu_in1_v = 0;
 					pe_current->alu_in2_v = 0;
 					pe_current->inbuffer1_out_v = 0;
 					pe_current->inbuffer2_out_v = 0;
 					pe_current->inbuffer3_out_v = 0;
-					//inBufferÊı¾İµ¯³ö£¬Çë²¹³ä
+					//inBufferæ•°æ®å¼¹å‡ºï¼Œè¯·è¡¥å……
 					//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
 				}
 
 			}
-			else if (pe_current->inbuffer3_out == 1)//Ñ¡Ôñin1
+			else if (pe_current->inbuffer3_out == 1)//é€‰æ‹©in1
 			{
-				if (pe_current->alu_in1_v)//din1ÓĞĞ§¾Í¿ÉÒÔ½øĞĞmux²Ù×÷
+				if (pe_current->alu_in1_v)//din1æœ‰æ•ˆå°±å¯ä»¥è¿›è¡Œmuxæ“ä½œ
 				{
 					pe_current->ALU(pe_current->config_reg.front()[2], pe_current->alu_in1, pe_current->alu_in2, pe_current->inbuffer3_out);
-					//·ÂÕæÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+					//ä»¿çœŸå®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 					pe_current->alu_in1_v = 0;
 					pe_current->alu_in2_v = 0;
 					pe_current->inbuffer1_out_v = 0;
 					pe_current->inbuffer2_out_v = 0;
 					pe_current->inbuffer3_out_v = 0;
-					//inBufferÊı¾İµ¯³ö£¬Çë²¹³ä
+					//inBufferæ•°æ®å¼¹å‡ºï¼Œè¯·è¡¥å……
 					//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;					
 				}				
 			}
@@ -1080,29 +1093,50 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 	}
 	else
 	{
-		//·Çmux²Ù×÷
-		if (pe_current->alu_in1_v & pe_current->alu_in2_v)//Á½¸ö²Ù×÷Êı¶¼ÓĞĞ§²Å¿ªÊ¼¼ÆËã
+		//émuxæ“ä½œ
+		if (pe_current->alu_in1_v & pe_current->alu_in2_v)//ä¸¤ä¸ªæ“ä½œæ•°éƒ½æœ‰æ•ˆæ‰å¼€å§‹è®¡ç®—
 		{
-			//alu ²Ù×÷
+			//alu æ“ä½œ
 			pe_current->ALU(pe_current->config_reg.front()[2], pe_current->alu_in1, pe_current->alu_in2, pe_current->inbuffer3_out);
-			//·ÂÕæÍê³É£¬Èë¿ÚÊı¾İÇåÁã
+			//ä»¿çœŸå®Œæˆï¼Œå…¥å£æ•°æ®æ¸…é›¶
 			pe_current->alu_in1_v = 0;
 			pe_current->alu_in2_v = 0;
-			pe_current->inbuffer1_out_v = 0;             //alu¿ªÊ¼¼ÆËãºóÇåinbufferµÄvalid
+			pe_current->inbuffer1_out_v = 0;             //aluå¼€å§‹è®¡ç®—åæ¸…inbufferçš„valid
 			pe_current->inbuffer2_out_v = 0;
 			pe_current->inbuffer3_out_v = 0;
-			//inBufferÊı¾İµ¯³ö£¬Çë²¹³ä
+			//inBufferæ•°æ®å¼¹å‡ºï¼Œè¯·è¡¥å……
 			//pe_current->inbuffer1_v = 0; pe_current->inbuffer2_v = 0; pe_current->inbuffer3_v = 0;			
 		}
 	}
 
-	//obÈëÊı
-	//ÈëÊıºó¼ì²éÊÇ·ñÒª¸Ä±äbp
+	//æ‰“å°ä¸­é—´å€¼2
+	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ä¸­é—´å€¼2" << endl;
+	outfile2 << setw(15) << "alu_out_v" << setw(15) << "alu_out" << setw(15) << "alu_out_b_v" << setw(15) << "alu_out_b" << endl;
+	outfile2 << setw(15) << pe_current->alu_out_v << setw(15) << pe_current->alu_out
+		<< setw(15) << pe_current->alu_out_b_v << setw(15) << pe_current->alu_out_b << endl;
+
+	//lr ä»¿çœŸ,è¦æ”¾åœ¨ä¹‹å‰obè®¿é—®ä¹‹å‰ï¼Œå› ä¸ºpe_current->alu_out_vä¼šè¢«æ¸…é›¶ã€‚
+	if (pe_current->config_reg.front()[12] == 1)	//lr from alu
+	{
+		if (pe_current->alu_out_v)
+		{
+			pe_current->loc_reg = pe_current->alu_out;
+			pe_current->loc_reg_v = 1;
+		}
+		//é¢å¤–å¢åŠ çš„loc reg æ¸…é›¶çš„åŠŸèƒ½
+		if (pe_current->loc_reg == THRESHOLD)
+		{
+			pe_current->loc_reg = 0;
+		}
+
+	}
+	//obå…¥æ•°
+	//å…¥æ•°åæ£€æŸ¥æ˜¯å¦è¦æ”¹å˜bp
 	if (1)
 	{
-		if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+		if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 		{
-			//Êı¾İfetchµ½¶Ë¿Ú
+			//æ•°æ®fetchåˆ°ç«¯å£
 			if (pe_current->config_reg.front()[15] == 1)//ob1 from alu
 			{
 				if (pe_current->alu_out_v)
@@ -1125,7 +1159,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 				}
 
 			}
-			//ÈëÊı
+			//å…¥æ•°
 			if (pe_current->outbuffer1_in_v)
 			{
 				pe_current->outBuffer1.dataIn(pe_current->outbuffer1_in, pe_current->outbuffer1_in_v);
@@ -1139,7 +1173,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 
 		}
 
-		if (pe_current->config_reg.front()[16])//ob2·ÇĞü¿Õ
+		if (pe_current->config_reg.front()[16])//ob2éæ‚¬ç©º
 		{
 			if (pe_current->config_reg.front()[16] == 1)//ob2 from alu
 			{
@@ -1163,7 +1197,7 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 				}
 
 			}
-			//ÈëÊı
+			//å…¥æ•°
 			if (pe_current->outbuffer2_in_v)
 			{
 				pe_current->outBuffer2.dataIn(pe_current->outbuffer2_in, pe_current->outbuffer2_in_v);
@@ -1177,11 +1211,11 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 
 		}
 
-		if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3·ÇĞü¿Õ£¬À´×ÔÓÚalu
+		if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3éæ‚¬ç©ºï¼Œæ¥è‡ªäºalu
 		{
 			if (pe_current->alu_out_b_v)
 			{
-				pe_current->outbuffer3 = pe_current->alu_out_b;//ob3ÈëÊı		
+				pe_current->outbuffer3 = pe_current->alu_out_b;//ob3å…¥æ•°		
 				pe_current->outbuffer3_v = pe_current->alu_out_b_v;
 				pe_current->ack_outbuffer32alu = 0;
 				pe_current->alu_out_b_v = 0;
@@ -1189,15 +1223,8 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 		}
 	}
 	
-	
 
-	//´òÓ¡ÖĞ¼äÖµ2
-	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ÖĞ¼äÖµ2" << endl;
-	outfile2 << setw(15) << "alu_out_v" << setw(15) << "alu_out" << setw(15) << "alu_out_b_v" << setw(15) << "alu_out_b" << endl;
-	outfile2 << setw(15) << pe_current->alu_out_v << setw(15) << pe_current->alu_out
-		<< setw(15) << pe_current->alu_out_b_v << setw(15) << pe_current->alu_out_b << endl;
-
-	//ÖĞ¼ä±äÁ¿
+	//ä¸­é—´å˜é‡
 	queue<OutBuffer_no_tag> ob1_tmp = pe_current->outBuffer1.outputBuffer;
 	queue<OutBuffer_no_tag> ob2_tmp = pe_current->outBuffer2.outputBuffer;
 
@@ -1205,67 +1232,53 @@ void pe_sim_step2_no_tag(ProcessingElement* pe_current)
 
 	if (!ob1_tmp.empty())
 	{
-		outfile << "outbuffer1Öµ´òÓ¡" << endl;
+		outfile << "outbuffer1å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "outbuffer1_v" << setw(15) << "outbuffer1" << endl;
 		outfile << setw(15) << (ob1_tmp.front()).valid << setw(15) << (ob1_tmp.front()).data << endl;
 	}
 
 	if (!ob2_tmp.empty())
 	{
-		outfile << "outbuffer2Öµ´òÓ¡" << endl;
+		outfile << "outbuffer2å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "outbuffer2_v" << setw(15) << "outbuffer2" << endl;
 		outfile << setw(15) << (ob2_tmp.front()).valid << setw(15) << (ob2_tmp.front()).data << endl;
 	}
 
-	//´òÓ¡outbufferÖĞµÄÄÚÈİ
-	//outfile << "outbufferÖµ´òÓ¡" << endl;
+	//æ‰“å°outbufferä¸­çš„å†…å®¹
+	//outfile << "outbufferå€¼æ‰“å°" << endl;
 	if (pe_current->outbuffer3_v)
 	{
-		outfile << "outbuffer3Öµ´òÓ¡" << endl;
+		outfile << "outbuffer3å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "outbuffer3_v" << setw(15) << "outbuffer3" << endl;
 		outfile << setw(15) << pe_current->outbuffer3_v << setw(15) << pe_current->outbuffer3 << endl;
 	}
 	
-	//lr ·ÂÕæ
-	if (pe_current->config_reg.front()[12] == 1)	//lr from alu
-	{
-		if (pe_current->alu_out_v)
-		{
-			pe_current->loc_reg = pe_current->alu_out;
-			pe_current->loc_reg_v = 1;
-		}
-		//¶îÍâÔö¼ÓµÄloc reg ÇåÁãµÄ¹¦ÄÜ
-		if (pe_current->loc_reg == THRESHOLD)
-		{
-			pe_current->loc_reg = 0;
-		}
 
-	}
-	else if (pe_current->config_reg.front()[12] == 2)	//lr from in1 for ÖĞ×ª
+	else if (pe_current->config_reg.front()[12] == 2)	//lr from in1 for ä¸­è½¬
 	{
 	}
-	else if (pe_current->config_reg.front()[12] == 3)	//lr from in2 forÖĞ×ª
+	else if (pe_current->config_reg.front()[12] == 3)	//lr from in2 forä¸­è½¬
 	{
 	}			
 }
 
 void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 {		
-	//step1---inbufferÈëÊı·ÂÕæ
-	//¿ªÊ¼·ÂÕæÇ°¸Ã×ÓÄ£¿é³ö¿ÚÊı¾İ²»ÄÜÇåÁã£¬ÓĞÒ»¸öÊı¾İÌáÇ°µ½À´ÒªÔÚ³ö¿Ú´¦keep×¡
-	//ÓÉÓÚ¾²Ì¬Ê±bpÊÇÒ»¸ö³ÖĞøĞÔµÄĞÅºÅ£¬²»ĞèÒª½øĞĞbpµÄ³õÊ¼»¯
+	//step1---inbufferå…¥æ•°ä»¿çœŸ
+	//å¼€å§‹ä»¿çœŸå‰è¯¥å­æ¨¡å—å‡ºå£æ•°æ®ä¸èƒ½æ¸…é›¶ï¼Œæœ‰ä¸€ä¸ªæ•°æ®æå‰åˆ°æ¥è¦åœ¨å‡ºå£å¤„keepä½
+	//ç”±äºé™æ€æ—¶bpæ˜¯ä¸€ä¸ªæŒç»­æ€§çš„ä¿¡å·ï¼Œä¸éœ€è¦è¿›è¡Œbpçš„åˆå§‹åŒ–
 	//pe_current->ack2in1port = 0; pe_current->ack2in2port = 0; pe_current->ack2in3port = 0;
 
 	//inbuffer1
-	if (pe_current->config_reg.front()[20] == 1)//ÊäÈëÁ¬½Óµ½ÁËinbufferÉÏ
+	if (pe_current->config_reg.front()[20] == 1)//è¾“å…¥è¿æ¥åˆ°äº†inbufferä¸Š
 	{
-		//ÈëÊı
+		//å…¥æ•°
 		if (pe_current->din1_v)
 		{
 			if (pe_current->inBuffer1.dataIn(pe_current->din1, pe_current->din1_v))
-				pe_current->din1_v = 0;                   //ÈëÊı³É¹¦£¬Çåvalid
-			//Èëbuffer³É¹¦£¬ÈôÂúÁËÔòÖÃbpĞÅºÅ
-			if (pe_current->inBuffer1.isInBufferFull())   //ÈëÊıºóÈôbufferÂúÁËÔò½«bpĞÅºÅÀ­µÍ
+				pe_current->din1_v = 0;                   //å…¥æ•°æˆåŠŸï¼Œæ¸…valid
+			//å…¥bufferæˆåŠŸï¼Œè‹¥æ»¡äº†åˆ™ç½®bpä¿¡å·
+			if (pe_current->inBuffer1.isInBufferFull())   //å…¥æ•°åè‹¥bufferæ»¡äº†åˆ™å°†bpä¿¡å·æ‹‰ä½
 			{
 				pe_current->ack2in1port = 0;
 			}
@@ -1286,27 +1299,27 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 	}
 	else
 	{
-		cout << "ÊäÈëÊı¾İÃ»ÓĞ½øÈëµ½inbufferÖĞ" << endl;
+		//cout << "è¾“å…¥æ•°æ®æ²¡æœ‰è¿›å…¥åˆ°inbufferä¸­" << endl;
 	}
 		
 	//inbuffer2
-	if(pe_current->config_reg.front()[21] == 1)//ÊäÈëÁ¬½Óµ½ÁËinbufferÉÏ
+	if(pe_current->config_reg.front()[21] == 1)//è¾“å…¥è¿æ¥åˆ°äº†inbufferä¸Š
 	{
-		//ÈëÊı
+		//å…¥æ•°
 		if (pe_current->din2_v)
 		{
 			if (pe_current->inBuffer2.dataIn(pe_current->din2, pe_current->din2_v))
 				pe_current->din2_v = 0;
 
-			//Èëbuffer³É¹¦£¬¸Ä±äbpĞÅºÅ
-			if (pe_current->inBuffer2.isInBufferFull())   //ÈëÊıºóÈôbufferÂúÁËÔò½«bpĞÅºÅÀ­µÍ
+			//å…¥bufferæˆåŠŸï¼Œæ”¹å˜bpä¿¡å·
+			if (pe_current->inBuffer2.isInBufferFull())   //å…¥æ•°åè‹¥bufferæ»¡äº†åˆ™å°†bpä¿¡å·æ‹‰ä½
 			{
 				pe_current->ack2in2port = 0;
 			}
 			else
 				pe_current->ack2in2port = 1;
 			
-			/*    ¾²Ì¬PEÓÉ×ÔÉíÇåÊı¾İ
+			/*    é™æ€PEç”±è‡ªèº«æ¸…æ•°æ®
 			if (pe_current->config_reg.front()[8] == 2)//from pe
 			{
 				pe[pe_current->config_reg.front()[6]]->dout1_v = 0;
@@ -1320,19 +1333,19 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 		
 	}
 	else
-		cout << "ÊäÈëÊı¾İÃ»ÓĞ½øÈëµ½inbufferÖĞ" << endl;
+		//cout << "è¾“å…¥æ•°æ®æ²¡æœ‰è¿›å…¥åˆ°inbufferä¸­" << endl;
 
 	//inbuffer3
-	if (pe_current->config_reg.front()[22] == 1)//ÊäÈëÁ¬½Óµ½ÁËinbufferÉÏ
+	if (pe_current->config_reg.front()[22] == 1)//è¾“å…¥è¿æ¥åˆ°äº†inbufferä¸Š
 	{
-		//ÈëÊı
+		//å…¥æ•°
 		if (pe_current->bin_v)
 		{
 			pe_current->inbuffer3 = pe_current->bin;
 			pe_current->inbuffer3_v = pe_current->bin_v;
-			//Èëbuffer³É¹¦£¬ÖÃbpĞÅºÅ
+			//å…¥bufferæˆåŠŸï¼Œç½®bpä¿¡å·
 			pe_current->ack2in3port = 0;
-			//Çå³ıÈë¿Ú
+			//æ¸…é™¤å…¥å£
 			pe_current->bin_v = 0;
 
 			/*
@@ -1349,33 +1362,33 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 		
 	}
 	else
-		cout << "ÊäÈëÊı¾İÃ»ÓĞ½øÈëµ½inbufferÖĞ" << endl;
-	//inbufferÈëÊı³öÊıÍê³É£¬Çå¿Õµ±Ç°PEÈë¿ÚÊı¾İ
+		//cout << "è¾“å…¥æ•°æ®æ²¡æœ‰è¿›å…¥åˆ°inbufferä¸­" << endl;
+	//inbufferå…¥æ•°å‡ºæ•°å®Œæˆï¼Œæ¸…ç©ºå½“å‰PEå…¥å£æ•°æ®
 	pe_current->din1_v = 0; pe_current->din2_v = 0; pe_current->bin_v = 0;
-	//Çå¿Õlast PEµÄ³ö¿ÚÊı¾İ
+	//æ¸…ç©ºlast PEçš„å‡ºå£æ•°æ®
 
-	//ÖĞ¼ä±äÁ¿
+	//ä¸­é—´å˜é‡
 	queue<OutBuffer_no_tag> ib1_tmp, ib2_tmp;
 	ib1_tmp = pe_current->inBuffer1.inputBuffer;
 	ib2_tmp = pe_current->inBuffer2.inputBuffer;
 
 	if (!ib1_tmp.empty())
 	{
-		//´òÓ¡inbuffer1ÖĞµÄÄÚÈİ
-		outfile << "inbuffer1Öµ´òÓ¡" << endl;
+		//æ‰“å°inbuffer1ä¸­çš„å†…å®¹
+		outfile << "inbuffer1å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "inbuffer1_v" << setw(15) << "inbuffer1"  << endl;
 		outfile << setw(15) << (ib1_tmp.front()).valid << setw(15) << (ib1_tmp.front()).data  << endl;
 	}
 	if (!ib2_tmp.empty())
 	{
-		//´òÓ¡inbuffer2ÖĞµÄÄÚÈİ
-		outfile << "inbuffer2Öµ´òÓ¡" << endl;
+		//æ‰“å°inbuffer2ä¸­çš„å†…å®¹
+		outfile << "inbuffer2å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "inbuffer2_v" << setw(15) << "inbuffer2" << endl;
 		outfile << setw(15) << (ib2_tmp.front()).valid << setw(15) << (ib2_tmp.front()).data << endl;
 	}
 	if (pe_current->inbuffer3_v)
 	{
-		outfile << "inbuffer3Öµ´òÓ¡" << endl;
+		outfile << "inbuffer3å€¼æ‰“å°" << endl;
 		outfile << setw(15) << "inbuffer3_v" << setw(15) << "inbuffer3" << endl;
 		outfile << setw(15) << pe_current->inbuffer3_v << setw(15) << pe_current->inbuffer3 << endl;
 	}
@@ -1385,7 +1398,7 @@ void pe_sim_step1_no_tag(ProcessingElement* pe_current)
 
 void pe_sim_step_connect(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -1397,19 +1410,19 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
 	
-	//din1 ·ÇĞü¿Õ
-	if (is_din1_float) //din1 ·ÇĞü¿Õ
+	//din1 éæ‚¬ç©º
+	if (is_din1_float) //din1 éæ‚¬ç©º
 	{
 		if (din1_from_flag == 2) //from PE
 		{
-			if (din1_from_port == 0)//PEµÄport1
+			if (din1_from_port == 0)//PEçš„port1
 			{
-				if (pe[din1_from_index]->dout1_v)//Êı¾İÓĞĞ§£¬È¡Êı
+				if (pe[din1_from_index]->dout1_v)//æ•°æ®æœ‰æ•ˆï¼Œå–æ•°
 				{
 					pe_current->din1 = pe[din1_from_index]->dout1;
 					pe_current->din1_v = pe[din1_from_index]->dout1_v;
@@ -1417,11 +1430,11 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 				}
 				else
 				{
-					cout << "ÉÏÒ»¸öPEÊä³öµÄÊıÃ»ÓĞvalid." << endl;
+					//cout << "ä¸Šä¸€ä¸ªPEè¾“å‡ºçš„æ•°æ²¡æœ‰valid." << endl;
 					//pe_current->in1_v = 0;
 				}
 			}
-			else if (din1_from_port == 1)//ÉÏÒ»¸öPEµÄport2
+			else if (din1_from_port == 1)//ä¸Šä¸€ä¸ªPEçš„port2
 			{
 				if (pe[din1_from_index]->dout2_v)//data valid,fetch
 				{
@@ -1431,13 +1444,13 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 				}
 				else
 				{
-					cout << "ÉÏÒ»¸öPEÊä³öµÄÊıÃ»ÓĞvalid." << endl;
+					//cout << "ä¸Šä¸€ä¸ªPEè¾“å‡ºçš„æ•°æ²¡æœ‰valid." << endl;
 					//pe_current->in1_v = 0;
 				}
 
 			}
 		}
-		else if (din1_from_flag == 1) //ÊäÈëÀ´×ÔÓÚLE
+		else if (din1_from_flag == 1) //è¾“å…¥æ¥è‡ªäºLE
 		{
 			if (le[din1_from_index]->data_out_v)//data valid,fetch
 			{
@@ -1447,23 +1460,23 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 			}
 			else
 			{
-				cout << "ÉÏÒ»¸öLEÊä³öµÄÊı¾İÃ»ÓĞvalid" << endl;
+				//cout << "ä¸Šä¸€ä¸ªLEè¾“å‡ºçš„æ•°æ®æ²¡æœ‰valid" << endl;
 				//pe_current->in1_v = 0;
 
 			}
 		}
-		else if (din1_from_flag == 3) //ÊäÈëÀ´×ÔÓÚlbegin
+		else if (din1_from_flag == 3) //è¾“å…¥æ¥è‡ªäºlbegin
 		{
-			if (lbegin[din1_from_index]->out_v)//Êı¾İÓĞĞ§£¬È¡Êı
+			if (lbegin[din1_from_index]->out_v)//æ•°æ®æœ‰æ•ˆï¼Œå–æ•°
 			{
 				pe_current->din1 = lbegin[din1_from_index]->out;
 				pe_current->din1_v = lbegin[din1_from_index]->out_v;
 				pe_current->din1_tag = 0;
 			}
 		}
-		else if (din1_from_flag == 9) //ÊäÈëÀ´×ÔÓÚti
+		else if (din1_from_flag == 9) //è¾“å…¥æ¥è‡ªäºti
 		{
-			if (ti->out_v)//Êı¾İ×¼±¸ºÃ£¬È¡Êı
+			if (ti->out_v)//æ•°æ®å‡†å¤‡å¥½ï¼Œå–æ•°
 			{
 				pe_current->din1 = ti->out;
 				pe_current->din1_v = ti->out_v;
@@ -1473,18 +1486,18 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 	}
 	else
 	{
-		cout << "PE[" << pe_index_current << "]µÄÊäÈë1Ğü¿Õ" << endl;
+		//cout << "PE[" << pe_index_current << "]çš„è¾“å…¥1æ‚¬ç©º" << endl;
 		pe_current->din1 = 0;
 		pe_current->din1_v = 0;
 		pe_current->din1_tag = 0;
 
 	}
-	//din2·ÇĞü¿Õ
-	if (is_din2_float)//in2·ÇĞü¿Õ
+	//din2éæ‚¬ç©º
+	if (is_din2_float)//in2éæ‚¬ç©º
 	{
-		if (din2_from_flag == 2) //ÊäÈë2À´×ÔÓÚPE
+		if (din2_from_flag == 2) //è¾“å…¥2æ¥è‡ªäºPE
 		{
-			if (din2_from_port == 0)//ÉÏÒ»¸öPEµÄport1
+			if (din2_from_port == 0)//ä¸Šä¸€ä¸ªPEçš„port1
 			{
 				if (pe[din2_from_index]->dout1_v)//data valid,fetch
 				{
@@ -1494,12 +1507,12 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 				}
 				else
 				{
-					cout << "ÉÏÒ»¸öPEÊä³öµÄÊıÃ»ÓĞvalid." << endl;
+					//cout << "ä¸Šä¸€ä¸ªPEè¾“å‡ºçš„æ•°æ²¡æœ‰valid." << endl;
 					//pe_current->in2_v = 0;
 				}
 
 			}
-			else if (din1_from_port == 1)//ÉÏÒ»¸öPEµÄport2
+			else if (din1_from_port == 1)//ä¸Šä¸€ä¸ªPEçš„port2
 			{
 				if (pe[din2_from_index]->dout2_v)//data valid,fetch
 				{
@@ -1509,12 +1522,12 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 				}
 				else
 				{
-					cout << "ÉÏÒ»¸öPEÊä³öµÄÊıÃ»ÓĞvalid." << endl;
+					//cout << "ä¸Šä¸€ä¸ªPEè¾“å‡ºçš„æ•°æ²¡æœ‰valid." << endl;
 					//pe_current->in2_v = 0;
 				}
 			}
 		}
-		else if (din2_from_flag == 1) //ÊäÈë2À´×ÔÓÚLE
+		else if (din2_from_flag == 1) //è¾“å…¥2æ¥è‡ªäºLE
 		{
 			if (le[din2_from_index]->data_out_v)
 			{
@@ -1525,12 +1538,12 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 			else
 			{
 				//pe_current->in2_v = 0;
-				cout << "ÉÏÒ»¸öLEÊä³öµÄÊı¾İÃ»ÓĞvalid" << endl;
+				//cout << "ä¸Šä¸€ä¸ªLEè¾“å‡ºçš„æ•°æ®æ²¡æœ‰valid" << endl;
 			}
 		}
-		else if (din2_from_flag == 3) //ÊäÈëÀ´×ÔÓÚlbegin
+		else if (din2_from_flag == 3) //è¾“å…¥æ¥è‡ªäºlbegin
 		{
-			if (lbegin[din2_from_index]->out_v)//Êı¾İÓĞĞ§£¬È¡Êı
+			if (lbegin[din2_from_index]->out_v)//æ•°æ®æœ‰æ•ˆï¼Œå–æ•°
 			{
 				pe_current->din2 = lbegin[din2_from_index]->out;
 				pe_current->din2_v = lbegin[din2_from_index]->out_v;
@@ -1540,14 +1553,14 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 	}
 	else
 	{
-		cout << "PEµÄÊäÈë2Ğü¿Õ" << endl;
+		//cout << "PEçš„è¾“å…¥2æ‚¬ç©º" << endl;
 		pe_current->din2 = 0;
 		pe_current->din2_v = 0;
 	}
-	//bin·ÇĞü¿Õ
-	if (is_bin_float)//in3·ÇĞü¿Õ
+	//binéæ‚¬ç©º
+	if (is_bin_float)//in3éæ‚¬ç©º
 	{
-		if (bin_from_flag == 2)//ÊäÈë3À´×ÔÓÚPE
+		if (bin_from_flag == 2)//è¾“å…¥3æ¥è‡ªäºPE
 		{
 			if (bin_from_port == 2)//port3
 			{
@@ -1556,18 +1569,18 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 					pe_current->bin = pe[bin_from_index]->bout;
 					pe_current->bin_v = pe[bin_from_index]->bout_v;
 				}
-				else
+				/*else
 				{
-					cout << "ÉÏÒ»¸öPEµÄÊä³öÊı¾İÃ»ÓĞvalid" << endl;
+					cout << "ä¸Šä¸€ä¸ªPEçš„è¾“å‡ºæ•°æ®æ²¡æœ‰valid" << endl;
 					//pe_current->in3_v = 0;
-				}
+				}*/
 
 			}
 			else if (bin_from_port == 0)//port1
 			{
 				if (pe[bin_from_index]->dout1_v)
 				{
-					pe_current->bin_v = pe[bin_from_index]->dout1_v;//Ä¬ÈÏÖ»°ÑvalidĞÅºÅ´«Êä¸øbin_vºÍbin
+					pe_current->bin_v = pe[bin_from_index]->dout1_v;//é»˜è®¤åªæŠŠvalidä¿¡å·ä¼ è¾“ç»™bin_vå’Œbin
 					pe_current->bin = pe[bin_from_index]->dout1_v;
 				}
 			}
@@ -1575,66 +1588,66 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 			{
 				if (pe[bin_from_index]->dout2_v)
 				{
-					pe_current->bin_v = pe[bin_from_index]->dout2_v;//Ä¬ÈÏÖ»°ÑvalidĞÅºÅ´«Êä¸øbin_vºÍbin
+					pe_current->bin_v = pe[bin_from_index]->dout2_v;//é»˜è®¤åªæŠŠvalidä¿¡å·ä¼ è¾“ç»™bin_vå’Œbin
 					pe_current->bin = pe[bin_from_index]->dout2_v;
 				}
 			}
 			else
 				cout << "error" << endl;
 		}
-		else if (bin_from_flag == 1)//ÊäÈë3À´Ô´×ÔLE
+		else if (bin_from_flag == 1)//è¾“å…¥3æ¥æºè‡ªLE
 		{
-			cout << "PEµÄÊäÈë3²»¿ÉÄÜÀ´×ÔÓÚLE£¬ÅäÖÃ±àĞ´´íÎó£¬Çë¸ü¸Ä." << endl;
+			cout << "PEçš„è¾“å…¥3ä¸å¯èƒ½æ¥è‡ªäºLEï¼Œé…ç½®ç¼–å†™é”™è¯¯ï¼Œè¯·æ›´æ”¹." << endl;
 		}
 		else if (bin_from_flag == 10)//from SE
 		{
 			pe_current->bin_v = se[bin_from_index]->se_extra_out_for_end_v;
 			pe_current->bin = se[bin_from_index]->se_extra_out_for_end;
 		}
-		else if (bin_from_flag == 3)//ÊäÈë3À´Ô´×Ôlbegin
+		else if (bin_from_flag == 3)//è¾“å…¥3æ¥æºè‡ªlbegin
 		{
 			pe_current->bin_v = lbegin[bin_from_index]->out_v;
 			pe_current->bin = lbegin[bin_from_index]->out;
 
 		}
-		else if (bin_from_flag == 4)//ÊäÈë3À´Ô´×Ôlend
+		else if (bin_from_flag == 4)//è¾“å…¥3æ¥æºè‡ªlend
 		{
-			if (bin_from_port == 0)//lendµÄport2back
+			if (bin_from_port == 0)//lendçš„port2back
 			{
 
-				pe_current->bin_v = lend[bin_from_index]->out2back;//Ê¹ÄÜĞÅºÅ´Óvalid¿Ú½øÈë																					   											
+				pe_current->bin_v = lend[bin_from_index]->out2back;//ä½¿èƒ½ä¿¡å·ä»validå£è¿›å…¥																					   											
 			}
-			else if (bin_from_port == 1)//FG2µÄport2end
+			else if (bin_from_port == 1)//FG2çš„port2end
 			{
-				pe_current->bin_v = lend[bin_from_index]->out2end;//Ê¹ÄÜĞÅºÅ´Óvalid¿Ú½øÈë																					  												
+				pe_current->bin_v = lend[bin_from_index]->out2end;//ä½¿èƒ½ä¿¡å·ä»validå£è¿›å…¥																					  												
 			}
 			else
-				cout << "port ³¬³öÁË·¶Î§" << endl;
+				cout << "port è¶…å‡ºäº†èŒƒå›´" << endl;
 		}
 
-		else if (bin_from_flag == 5)//ÊäÈë3À´Ô´×Ôjoin
+		else if (bin_from_flag == 5)//è¾“å…¥3æ¥æºè‡ªjoin
 		{
 			//
 		}
-		else if (bin_from_flag == 10)//ÊäÈë3À´Ô´ÓÚbegin
+		else if (bin_from_flag == 10)//è¾“å…¥3æ¥æºäºbegin
 		{
 			//pe_current->bin_v = begin_signal;
 		}
-		else if (bin_from_flag == 6)//ÊäÈë3À´Ô´ÓÚswitch
+		else if (bin_from_flag == 6)//è¾“å…¥3æ¥æºäºswitch
 		{
-			if (bin_from_port == 0)//switchµÄport1(left)
+			if (bin_from_port == 0)//switchçš„port1(left)
 			{
 
 				pe_current->bin_v = switch_[bin_from_index]->out1;
 			}
-			else if (bin_from_port == 1)//switchµÄport2(right)
+			else if (bin_from_port == 1)//switchçš„port2(right)
 			{
 				pe_current->bin_v = switch_[bin_from_index]->out2;
 			}
 			else
-				cout << "port ³¬³öÁË·¶Î§" << endl;
+				cout << "port è¶…å‡ºäº†èŒƒå›´" << endl;
 		}
-		else if (bin_from_flag == 7)//ÊäÈë3À´Ô´ÓÚbreak
+		else if (bin_from_flag == 7)//è¾“å…¥3æ¥æºäºbreak
 		{
 			//
 		}
@@ -1642,7 +1655,7 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 		//......
 		else
 		{
-			cout << "³¬³öÁË²¿¼ş·¶Î§" << endl;
+			cout << "è¶…å‡ºäº†éƒ¨ä»¶èŒƒå›´" << endl;
 		}
 	}
 	else
@@ -1653,17 +1666,17 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 	//cycle count
 	//pe_current->cycle_entryLogic();
 
-	////Èë¿Ú´¦Êı¾İ´òÓ¡
-	//outfile << "PE[" << pe_index_current << "]µÄÊäÈëÊÇ£º din1: " << pe_current->din1 << "  din1_v: " << pe_current->din1_v << "  din1_tag: " << pe_current->din1_tag << endl;
+	////å…¥å£å¤„æ•°æ®æ‰“å°
+	//outfile << "PE[" << pe_index_current << "]çš„è¾“å…¥æ˜¯ï¼š din1: " << pe_current->din1 << "  din1_v: " << pe_current->din1_v << "  din1_tag: " << pe_current->din1_tag << endl;
 	//outfile << "                    din2: " << pe_current->din2 << "  din2_v: " << pe_current->din2_v << "  din2_tag: " << pe_current->din2_tag << endl;
 	//outfile << "                    bin: " << pe_current->bin << "  bin_v: " << pe_current->bin_v << "  bin_tag: " << pe_current->bin_tag << endl;
 	//for debug
-	if (1)//´òÓ¡Êı¾İ
+	if (1)//æ‰“å°æ•°æ®
 	{
 		outfile2 << endl;
 		//outfile2 << "PE[ " << pe_index_current << " ]" << endl;
 		
-		outfile2 << "PE[" << pe_index_current << "]ÊäÈëÖµ" << endl;
+		outfile2 << "PE[" << pe_index_current << "]è¾“å…¥å€¼" << endl;
 		outfile2 << setw(15) << "din1_t" << setw(15) << "din1_v" << setw(15) << "din1" << setw(15) << "din2_t" << setw(15) << "din2_v" << setw(15)
 			<< "din2" << setw(15) << "bin_t" << setw(15) << "bin_v" << setw(15) << "bin" << endl;		
 		outfile2 << setw(15) << pe_current->din1_tag << setw(15) << pe_current->din1_v << setw(15) << pe_current->din1 << setw(15) << pe_current->din2_tag << setw(15)
@@ -1674,7 +1687,7 @@ void pe_sim_step_connect(ProcessingElement* pe_current)
 
 void pe_sim_step1(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -1686,15 +1699,15 @@ void pe_sim_step1(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
 
-	//inTableBufferÈëÊı
+	//inTableBufferå…¥æ•°
 	//data in
 	pe_current->inTableBuffer.dataIn(pe_current);
-	//ack==1£¬Êı¾İÈë±í³É¹¦£¬Çå¿ÕÈë¿ÚµÄÊı¾İ
+	//ack==1ï¼Œæ•°æ®å…¥è¡¨æˆåŠŸï¼Œæ¸…ç©ºå…¥å£çš„æ•°æ®
 	if (pe_current->ack2in1port)
 		pe_current->din1_v = 0;
 	if (pe_current->ack2in2port)
@@ -1704,14 +1717,14 @@ void pe_sim_step1(ProcessingElement* pe_current)
 
 
 	
-	//ÔÚ¶¯Ì¬Êı¾İÁ÷ÏÂ£¬PEµÄÊä³ö¶Ë¿ÚµÄÖÃ0²Ù×÷Òª·ÖÁ½ÖÖÇé¿ö¡£1£¬¸ÃPEÄ³Ò»Êä³ö¶Ë¿ÚµÄÉÈ³öÎª1£¬ÄÇÃ´ÔÚÊı¾İ´æÈëÏÂÒ»¸öPEµÄtableBufferÖ®ºó¾Í¿ÉÒÔÖ´ĞĞÉÏÒ»¸öPEÊä³ö¶Ë¿ÚµÄÖÃ0²Ù×÷
-												//  2£¬¸ÃPEÄ³Ò»Êä³ö¶Ë¿ÚµÄÉÈ³ö>1£¬ÄÇÃ´ÔÚÊı¾İ´æÈëtableBufferÖ®ºóÓÉÏàÓ¦µÄjoinbpÖ´ĞĞÖÃ0²Ù×÷
-	//»ñÈ¡À´Ô´PE 1,2,3¶Ë¿ÚµÄÉÈ³ö,²¢½øĞĞÇå¿ÕÏàÓ¦¶Ë¿ÚµÄÊı¾İ
-	if (1)                                        //ÇåÇ°¼¶ÊäÈë
+	//åœ¨åŠ¨æ€æ•°æ®æµä¸‹ï¼ŒPEçš„è¾“å‡ºç«¯å£çš„ç½®0æ“ä½œè¦åˆ†ä¸¤ç§æƒ…å†µã€‚1ï¼Œè¯¥PEæŸä¸€è¾“å‡ºç«¯å£çš„æ‰‡å‡ºä¸º1ï¼Œé‚£ä¹ˆåœ¨æ•°æ®å­˜å…¥ä¸‹ä¸€ä¸ªPEçš„tableBufferä¹‹åå°±å¯ä»¥æ‰§è¡Œä¸Šä¸€ä¸ªPEè¾“å‡ºç«¯å£çš„ç½®0æ“ä½œ
+												//  2ï¼Œè¯¥PEæŸä¸€è¾“å‡ºç«¯å£çš„æ‰‡å‡º>1ï¼Œé‚£ä¹ˆåœ¨æ•°æ®å­˜å…¥tableBufferä¹‹åç”±ç›¸åº”çš„joinbpæ‰§è¡Œç½®0æ“ä½œ
+	//è·å–æ¥æºPE 1,2,3ç«¯å£çš„æ‰‡å‡º,å¹¶è¿›è¡Œæ¸…ç©ºç›¸åº”ç«¯å£çš„æ•°æ®
+	if (1)                                        //æ¸…å‰çº§è¾“å…¥
 	{
-		int port1_fanout_num = 0, port2_fanout_num = 0, port3_fanout_num = 0;//--ÕâÈı¸ö±äÁ¿ÊÇ¸ÃPEµÄÉÏÒ»¼¶PEÊä³ö¶Ë¿ÚµÄÉÈ³ö
+		int port1_fanout_num = 0, port2_fanout_num = 0, port3_fanout_num = 0;//--è¿™ä¸‰ä¸ªå˜é‡æ˜¯è¯¥PEçš„ä¸Šä¸€çº§PEè¾“å‡ºç«¯å£çš„æ‰‡å‡º
 
-		if (is_din1_float)   //µ±din1ÓĞÊäÈëÊ±Í³¼ÆÆäÉÈ³ö
+		if (is_din1_float)   //å½“din1æœ‰è¾“å…¥æ—¶ç»Ÿè®¡å…¶æ‰‡å‡º
 		{
 			for (int i = 0; i < (int)port_fanout.size(); i++)
 			{
@@ -1732,18 +1745,19 @@ void pe_sim_step1(ProcessingElement* pe_current)
 
 				}
 			}
-			//¿ªÊ¼Çå¿ÕÏàÓ¦µÄ¶Ë¿ÚÊı¾İ
-			//Êı¾İ½øÈëtableBufferÖ®ºó²Å¿ªÊ¼ÇåÊı¾İ
+			//å¼€å§‹æ¸…ç©ºç›¸åº”çš„ç«¯å£æ•°æ®
+			//æ•°æ®è¿›å…¥tableBufferä¹‹åæ‰å¼€å§‹æ¸…æ•°æ®
 			if (din1_from_port == 0)//port1
 			{
-				if (port1_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+				if (port1_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 				{
 					if (pe_current->ack2in1port)
 					{
 						if (din1_from_flag == 2)//from PE
 						{
 							pe[din1_from_index]->outTableBuffer1.buffer_clear();
-							pe[din1_from_index]->dout1_v = 0;
+							pe[din1_from_index]->ack_outbuffer12alu = 1;
+							//pe[din1_from_index]->dout1_v = 0;åº”åœ¨è®¿é—®pe[din1_from_index]çš„æ—¶å€™æ¸…é™¤
 						}
 						else if (din1_from_flag == 1)//from LE
 						{
@@ -1761,7 +1775,8 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din1_from_index]->outTableBuffer2.buffer_clear();
-							pe[din1_from_index]->dout2_v = 0;
+							pe[din1_from_index]->ack_outbuffer22alu = 1;
+							//pe[din1_from_index]->dout2_v = 0;
 						}
 						else if (din2_from_flag == 1)//from LE
 						{
@@ -1790,7 +1805,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 				}
 			}
 		}
-		//in2 fromµÄ¶Ë¿ÚÇåÁã
+		//in2 fromçš„ç«¯å£æ¸…é›¶
 		//
 		if (is_din2_float)
 		{
@@ -1822,7 +1837,8 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din2_from_index]->outTableBuffer1.buffer_clear();
-							pe[din2_from_index]->dout1_v = 0;
+							pe[din2_from_index]->ack_outbuffer12alu = 1;
+							//pe[din2_from_index]->dout1_v = 0;
 						}
 						else if (din2_from_flag == 1)//from LE
 						{
@@ -1841,7 +1857,8 @@ void pe_sim_step1(ProcessingElement* pe_current)
 						if (din2_from_flag == 2)//from PE
 						{
 							pe[din2_from_index]->outTableBuffer2.buffer_clear();
-							pe[din2_from_index]->dout2_v = 0;
+							pe[din2_from_index]->ack_outbuffer22alu = 1;
+							//pe[din2_from_index]->dout2_v = 0;
 						}
 
 					}
@@ -1862,8 +1879,8 @@ void pe_sim_step1(ProcessingElement* pe_current)
 				}
 			}
 		}
-		//in3 fromµÄ¶Ë¿ÚÇåÁã
-		//in3 from¸÷¶Ë¿ÚµÄÉÈ³ö
+		//in3 fromçš„ç«¯å£æ¸…é›¶
+		//in3 fromå„ç«¯å£çš„æ‰‡å‡º
 		if (is_bin_float)
 		{
 			for (int i = 0; i < (int)port_fanout.size(); i++)
@@ -1885,7 +1902,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 
 				}
 			}
-			//in3 from¸÷¶Ë¿ÚÇåÁã
+			//in3 fromå„ç«¯å£æ¸…é›¶
 			if (bin_from_port == 0)//port1
 			{
 				if (port1_fanout_num <= 1)
@@ -1937,10 +1954,10 @@ void pe_sim_step1(ProcessingElement* pe_current)
 		}
 	}
 
-	//PE inTableBufferÖĞµÄÄÚÈİ´òÓ¡
+	//PE inTableBufferä¸­çš„å†…å®¹æ‰“å°
 	if (1)
 	{
-		outfile << "inTableBufferÖĞµÄÄÚÈİ" << endl;
+		outfile << "inTableBufferä¸­çš„å†…å®¹" << endl;
 		outfile.width(10);
 		outfile << "tag";
 		outfile.width(10);
@@ -1984,7 +2001,7 @@ void pe_sim_step1(ProcessingElement* pe_current)
 void pe_sim_step2(ProcessingElement* pe_current)
 {
 	int opcode = pe_current->config_reg.front()[2];
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 															 //in_from index
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
@@ -1997,11 +2014,11 @@ void pe_sim_step2(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	//bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	//bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	//bool is_din2_float = din2_from_flag;
 	//bool is_bin_float = bin_from_flag;
-	//¿ªÊ¼·ÂÕæÖ®Ç°×ÓÄ£¿éÊä³ö¶Ë¿ÚÊı¾İÇåÁã
+	//å¼€å§‹ä»¿çœŸä¹‹å‰å­æ¨¡å—è¾“å‡ºç«¯å£æ•°æ®æ¸…é›¶
 	pe_current->alu_out_v = 0;
 	pe_current->alu_out = 0;
 	pe_current->alu_out_b_v = 0;
@@ -2012,10 +2029,14 @@ void pe_sim_step2(ProcessingElement* pe_current)
 	pe_current->ack_alu2ib1 = 0;
 	pe_current->ack_alu2ib2 = 0;
 
-	//inTableBufferÊä³ö
+	//inTableBufferè¾“å‡º
 	//data out
-	pe_current->inTableBuffer.dataOut(pe_current);
-	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ÖĞ¼äÖµ1" << endl;
+	if (pe_current->ack_outbuffer12alu == 1)     //æŸ¥è¯¢obufferæ˜¯å¦å·²æ»¡
+	{
+		pe_current->inTableBuffer.dataOut(pe_current);
+	}
+	
+	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ä¸­é—´å€¼1" << endl;
 	outfile2 << setw(15) << "ib1_out_t" << setw(15) << "ib1_out_v" << setw(15) << "ib1_out" << setw(15) << "ib2_out_t" << setw(15) << "ib2_out_v"
 		<< setw(15) << "ib2_out" << setw(15) << "ib3_out_t" << setw(15) << "ib3_out_v" << setw(15) << "ib3_out" << endl;
 	outfile2 << setw(15) << pe_current->inbuffer1_out_tag << setw(15) << pe_current->inbuffer1_out_v
@@ -2025,19 +2046,19 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		<< setw(15) << pe_current->inbuffer3_out << endl;
 	outfile2 << endl;
 	
-	//tagÄ¬ÈÏÌáÇ°´«Êäµ½obÈë¿Ú´¦
-	if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+	//tagé»˜è®¤æå‰ä¼ è¾“åˆ°obå…¥å£å¤„
+	if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 	{
 		pe_current->outbuffer1_in_tag = pe_current->inbuffer1_out_tag;
 	}
-	if (pe_current->config_reg.front()[16])//ob2_from ·ÇĞü¿Õ
+	if (pe_current->config_reg.front()[16])//ob2_from éæ‚¬ç©º
 	{
 		pe_current->outbuffer2_in_tag = pe_current->inbuffer2_out_tag;
 	}
 
 	pe_current->outbuffer3_tag = pe_current->inbuffer3_out_tag;
 
-	//ALU¶Ë¿ÚÈ¡Êı
+	//ALUç«¯å£å–æ•°
 	//alu_in1
 	if (pe_current->config_reg.front()[13] == 0)//alu_in1_from ib1
 	{
@@ -2045,7 +2066,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->alu_in1 = pe_current->inbuffer1_out;
 			pe_current->alu_in1_v = pe_current->inbuffer1_out_v;
-			//ÖÃackĞÅºÅ
+			//ç½®ackä¿¡å·
 			pe_current->ack_alu2ib1 = 1;
 		}
 
@@ -2056,7 +2077,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->alu_in1 = pe_current->loc_reg;
 			pe_current->alu_in1_v = pe_current->loc_reg_v;
-			//ÖÃackĞÅºÅ
+			//ç½®ackä¿¡å·
 			pe_current->ack_alu2ib1 = 1;
 		}
 
@@ -2068,7 +2089,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->alu_in2 = pe_current->inbuffer2_out;
 			pe_current->alu_in2_v = pe_current->inbuffer2_out_v;
-			//ÖÃackĞÅºÅ
+			//ç½®ackä¿¡å·
 			pe_current->ack_alu2ib2 = 1;
 		}
 
@@ -2079,17 +2100,17 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->alu_in2 = pe_current->loc_reg;
 			pe_current->alu_in2_v = pe_current->loc_reg_v;
-			//ÖÃackĞÅºÅ
+			//ç½®ackä¿¡å·
 			pe_current->ack_alu2ib2 = 1;
 		}
 
 	}	
-	/*outfile << "PE[" << pe_current->config_reg.front()[1] << "] ALUµÄÊäÈëÊÇ£ºin1: " << pe_current->alu_in1 << " in2: " << pe_current->alu_in2 << endl;*/
-	//Ö´ĞĞ¼ÆËã
+	/*outfile << "PE[" << pe_current->config_reg.front()[1] << "] ALUçš„è¾“å…¥æ˜¯ï¼šin1: " << pe_current->alu_in1 << " in2: " << pe_current->alu_in2 << endl;*/
+	//æ‰§è¡Œè®¡ç®—
 	if (pe_current->alu_in1_v & pe_current->alu_in2_v)
 	{
 		pe_current->ALU(pe_current->config_reg.front()[2], pe_current->alu_in1, pe_current->alu_in2, pe_current->inbuffer3_out);
-		//¼ÆËã½áÊøÖ®ºóÇå¿ÕinTableBufferµÄÄ³Ò»ĞĞ²¢ÇÒÇå³ırequestÇëÇó
+		//è®¡ç®—ç»“æŸä¹‹åæ¸…ç©ºinTableBufferçš„æŸä¸€è¡Œå¹¶ä¸”æ¸…é™¤requestè¯·æ±‚
 		pe_current->alu_in1_v = 0;
 		pe_current->alu_in2_v = 0;
 		pe_current->inbuffer1_out_v = 0;
@@ -2098,14 +2119,14 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		pe_current->inTableBuffer.buffer_clear();
 	}
 	
-	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ÖĞ¼äÖµ2" << endl;
+	outfile2 << "PE[" << pe_current->config_reg.front()[1] << "]ä¸­é—´å€¼2" << endl;
 	outfile2 << setw(15) << "alu_out_v" << setw(15) << "alu_out" << setw(15) << "alu_out_b_v" << setw(15) << "alu_out_b" << endl;
 	outfile2 << setw(15) << pe_current->alu_out_v << setw(15) << pe_current->alu_out
 		<< setw(15) << pe_current->alu_out_b_v << setw(15) << pe_current->alu_out_b << endl;
 
 	//alu_out get into outTableBuffer
-	//È¡Êıµ½¶Ë¿Ú
-	if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+	//å–æ•°åˆ°ç«¯å£
+	if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 	{
 		if (pe_current->config_reg.front()[15] == 1)//ob1 from alu
 		{
@@ -2113,12 +2134,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer1_in = pe_current->alu_out;
 				pe_current->outbuffer1_in_v = pe_current->alu_out_v;
-				if (pe_current->outBuffer1.isOutBufferFull())
-				{
-					pe_current->ack_outbuffer12alu = 0;
-				}
-				else
-					pe_current->ack_outbuffer12alu = 1;
+
 			}
 		}
 
@@ -2131,45 +2147,46 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			{
 				pe_current->outbuffer1_in = pe_current->loc_reg;
 				pe_current->outbuffer1_in_v = pe_current->loc_reg_v;
-				if (pe_current->outBuffer1.isOutBufferFull())
+				/*if (pe_current->outTableBuffer2.isOutBufferFull())
 				{
 					pe_current->ack_outbuffer12alu = 0;
 				}
 				else
-					pe_current->ack_outbuffer12alu = 1;
+					pe_current->ack_outbuffer12alu = 1;*/
 			}
 		}
 		//pe_current->outbuffer1_in_tag = pe_current->inbuffer1_out_tag;
 		//pe_current->outbuffer1_in_v = 1;
-		//ÓĞĞ§¿ªÊ¼ÈëÊı
+		//æœ‰æ•ˆå¼€å§‹å…¥æ•°
 		if (pe_current->outbuffer1_in_v)
 		{
-			//Êı¾İµ¼Èëµ½outTableBufferÀàÖĞÈ¥
+			//æ•°æ®å¯¼å…¥åˆ°outTableBufferç±»ä¸­å»
 			pe_current->outTableBuffer1.in = pe_current->outbuffer1_in;
 			pe_current->outTableBuffer1.in_v = pe_current->outbuffer1_in_v;
 			pe_current->outTableBuffer1.in_tag = pe_current->outbuffer1_in_tag;
-			//ÈëÊı
+			//å…¥æ•°
 			pe_current->outTableBuffer1.dataIn();		
-			//pe²Ù×÷Íê³É£¬×ÓÄ£¿éÈë¿Ú´¦µÄvalidÖµÇåÁã
+			//peæ“ä½œå®Œæˆï¼Œå­æ¨¡å—å…¥å£å¤„çš„validå€¼æ¸…é›¶
 			pe_current->outbuffer1_in_v = 0;
 			pe_current->alu_out_v = 0;
+			if (pe_current->outTableBuffer1.isOutBufferFull())
+			{
+				pe_current->ack_outbuffer12alu = 0;
+			}
+			else
+				pe_current->ack_outbuffer12alu = 1;
 		}
 
 	}
 
-	if (pe_current->config_reg.front()[16])//ob2·ÇĞü¿Õ
+	if (pe_current->config_reg.front()[16])//ob2éæ‚¬ç©º
 	{
 		pe_current->outbuffer2_in_tag = pe_current->inbuffer1_out_tag;
 		if (pe_current->config_reg.front()[16] == 1)//ob2 from alu
 		{
 			pe_current->outbuffer2_in = pe_current->alu_out;
 			pe_current->outbuffer2_in_v = pe_current->alu_out_v;
-			if (pe_current->outBuffer2.isOutBufferFull())
-			{
-				pe_current->ack_outbuffer22alu = 0;
-			}
-			else
-				pe_current->ack_outbuffer22alu = 1;
+
 		}
 
 		else if (pe_current->config_reg.front()[16] == 3)//ob2 from in2
@@ -2179,7 +2196,28 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		{
 			pe_current->outbuffer2_in = pe_current->loc_reg;
 			pe_current->outbuffer2_in_v = pe_current->loc_reg_v;
-			if (pe_current->outBuffer2.isOutBufferFull())
+			/*if (pe_current->outBuffer2.isOutBufferFull())
+			{
+				pe_current->ack_outbuffer22alu = 0;
+			}
+			else
+				pe_current->ack_outbuffer22alu = 1;*/
+		}
+
+
+		//pe_current->outbuffer2_in_v = 1;
+		//æœ‰æ•ˆå¼€å§‹å…¥æ•°
+		if (pe_current->outbuffer2_in_v)
+		{
+			//æ•°æ®å¯¼å…¥åˆ°outTableBufferç±»ä¸­å»
+			pe_current->outTableBuffer2.in = pe_current->outbuffer2_in;
+			pe_current->outTableBuffer2.in_v = pe_current->outbuffer2_in_v;
+			pe_current->outTableBuffer2.in_tag = pe_current->outbuffer2_in_tag;
+			//å…¥æ•°
+			pe_current->outTableBuffer2.dataIn();
+			//peæ“ä½œå®Œæˆï¼Œå­æ¨¡å—å…¥å£å¤„çš„validå€¼æ¸…é›¶
+			pe_current->outbuffer2_in_v = 0;
+			if (pe_current->outTableBuffer2.isOutBufferFull())
 			{
 				pe_current->ack_outbuffer22alu = 0;
 			}
@@ -2187,48 +2225,36 @@ void pe_sim_step2(ProcessingElement* pe_current)
 				pe_current->ack_outbuffer22alu = 1;
 		}
 
-
-		//pe_current->outbuffer2_in_v = 1;
-		//ÓĞĞ§¿ªÊ¼ÈëÊı
-		if (pe_current->outbuffer2_in_v)
-		{
-			//Êı¾İµ¼Èëµ½outTableBufferÀàÖĞÈ¥
-			pe_current->outTableBuffer2.in = pe_current->outbuffer2_in;
-			pe_current->outTableBuffer2.in_v = pe_current->outbuffer2_in_v;
-			pe_current->outTableBuffer2.in_tag = pe_current->outbuffer2_in_tag;
-			//ÈëÊı
-			pe_current->outTableBuffer2.dataIn();
-			//pe²Ù×÷Íê³É£¬×ÓÄ£¿éÈë¿Ú´¦µÄvalidÖµÇåÁã
-			pe_current->outbuffer2_in_v = 0;
-		}
-
 	}
 
-	if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3·ÇĞü¿Õ£¬À´×ÔÓÚalu_out_b
+	if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3éæ‚¬ç©ºï¼Œæ¥è‡ªäºalu_out_b
 	{
 		pe_current->outbuffer3_tag = pe_current->inbuffer1_out_tag;
 		if (pe_current->alu_out_b_v)
 		{
-			pe_current->outbuffer3 = pe_current->alu_out_b;//ob3ÈëÊı			
-			//pe²Ù×÷Íê³É£¬×ÓÄ£¿éÈë¿Ú´¦µÄvalidÖµÇåÁã
+			pe_current->outbuffer3 = pe_current->alu_out_b;//ob3å…¥æ•°			
+			//peæ“ä½œå®Œæˆï¼Œå­æ¨¡å—å…¥å£å¤„çš„validå€¼æ¸…é›¶
 			pe_current->outbuffer3_in_v = 0;
 			pe_current->ack_outbuffer32alu = 0;
 		}
 
 	}
-	//ob¶ÓÊ×ÔªËØ´òÓ¡
+	//obé˜Ÿé¦–å…ƒç´ æ‰“å°
 	if (1)
 	{
+
 		if (!pe_current->outTableBuffer1.outBuffer.empty())
 		{
-			outfile << "PE[" << pe_index_current << "]ob1¶ÓÊ×ÔªËØÖµ" << endl;
+			outfile << "outTableBuffer1çš„å¤§å°" << endl;
+			outfile << pe_current->outTableBuffer1.outBuffer.size()<<endl;
+			outfile << "PE[" << pe_index_current << "]ob1é˜Ÿé¦–å…ƒç´ å€¼" << endl;
 			outfile << setw(10) << "ob1_t" << setw(10) << "ob1_v" << setw(10) << "ob1_d" << endl;
 			outfile << setw(10) << pe_current->outTableBuffer1.outBuffer.front().tag << setw(10) << pe_current->outTableBuffer1.outBuffer.front().valid
 				<< setw(10) << pe_current->outTableBuffer1.outBuffer.front().data << endl;
 		}
 		if (!pe_current->outTableBuffer2.outBuffer.empty())
 		{	
-			outfile << "PE[" << pe_index_current << "]ob2¶ÓÊ×ÔªËØÖµ" << endl;
+			outfile << "PE[" << pe_index_current << "]ob2é˜Ÿé¦–å…ƒç´ å€¼" << endl;
 			outfile << setw(10) << "ob2_t" << setw(10) << "ob2_v" << setw(10) << "ob2_d" << endl;
 			outfile << setw(10) << pe_current->outTableBuffer2.outBuffer.front().tag << setw(10) << pe_current->outTableBuffer2.outBuffer.front().valid 
 				<< setw(10) << pe_current->outTableBuffer2.outBuffer.front().data << endl;
@@ -2236,7 +2262,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 		
 
 	}
-	//lr ·ÂÕæ
+	//lr ä»¿çœŸ
 	if (pe_current->config_reg.front()[12] == 1)//from ALU
 	{
 		if (pe_current->alu_out_v)
@@ -2244,7 +2270,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 			pe_current->loc_reg_v = pe_current->alu_out_v;
 			pe_current->loc_reg = pe_current->alu_out;
 		}
-		////¶îÍâÔö¼ÓµÄloc reg ÇåÁãµÄ¹¦ÄÜ
+		////é¢å¤–å¢åŠ çš„loc reg æ¸…é›¶çš„åŠŸèƒ½
 		//if (pe_current->loc_reg == THRESHOLD)
 		//{
 		//	pe_current->loc_reg = 0;
@@ -2254,7 +2280,7 @@ void pe_sim_step2(ProcessingElement* pe_current)
 
 void pe_sim_step3(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -2266,21 +2292,21 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
-	//ÅĞ¶Ïµ±Ç°PE¸÷¸öÊäÈëµÄÀ´Ô´Çé¿ö
+	//åˆ¤æ–­å½“å‰PEå„ä¸ªè¾“å…¥çš„æ¥æºæƒ…å†µ
 	//in1port
 	if (din1_from_flag == 2)//PE
 	{
 		if (pe_current->config_reg.front()[18] == 0 | pe_current->config_reg.front()[18] == 1)
 		{
-			//ÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâÖ´ĞĞob³öÊı²Ù×÷
+			//æ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–æ‰§è¡Œobå‡ºæ•°æ“ä½œ
 		}
 		else
 		{
-			//²»ĞèÒªÇø·ÖÉÏÒ»¸öPEÊÇ³öÓÚ¾²Ì¬»¹ÊÇ¶¯Ì¬£¬tag°ó¶¨µÄPEËäÈ»´¦ÓÚ¾²Ì¬Êı¾İÁ÷µ«ÊÇ°ó¶¨µÄÊı¾çÊÇÊäÈëµ½outTableBufferÖĞÈ¥µÄ
+			//ä¸éœ€è¦åŒºåˆ†ä¸Šä¸€ä¸ªPEæ˜¯å‡ºäºé™æ€è¿˜æ˜¯åŠ¨æ€ï¼Œtagç»‘å®šçš„PEè™½ç„¶å¤„äºé™æ€æ•°æ®æµä½†æ˜¯ç»‘å®šçš„æ•°å‰§æ˜¯è¾“å…¥åˆ°outTableBufferä¸­å»çš„
 			pe_outbuffer_out(pe[din1_from_index], din1_from_port);
 			/*
 			if (din1_from_port == 0)
@@ -2301,7 +2327,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	}
 	else if (din1_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (din1_from_flag == 3)//lbegin
 	{
@@ -2317,7 +2343,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	{
 		if (pe_current->config_reg.front()[18] == 0 | pe_current->config_reg.front()[18] == 1)
 		{
-			//ÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâµÄob³öÊı
+			//æ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–çš„obå‡ºæ•°
 		}
 		else
 		{
@@ -2341,7 +2367,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	}
 	else if (din2_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (din2_from_flag == 3)//lbegin
 	{
@@ -2357,7 +2383,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	{
 		if (pe_current->config_reg.front()[18] == 0 | pe_current->config_reg.front()[18] == 1)
 		{
-			//ÅÔÂ·Ä£Ê½²»ĞèÒªÔÙ¶îÍâµÄob³öÊı
+			//æ—è·¯æ¨¡å¼ä¸éœ€è¦å†é¢å¤–çš„obå‡ºæ•°
 		}
 		else
 		{
@@ -2381,7 +2407,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 	}
 	else if (bin_from_flag == 1)//LE
 	{
-		//²»ĞèÒª¶îÍâÔö¼ÓLEµÄoutbuffer³öÊı²½Öè
+		//ä¸éœ€è¦é¢å¤–å¢åŠ LEçš„outbufferå‡ºæ•°æ­¥éª¤
 	}
 	else if (bin_from_flag == 3)//lbegin
 	{
@@ -2397,7 +2423,7 @@ void pe_sim_step3(ProcessingElement* pe_current)
 void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 {
 	int opcode = pe_current->config_reg.front()[2];
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 															 //in_from index
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
@@ -2410,12 +2436,12 @@ void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	//bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	//bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	//bool is_din2_float = din2_from_flag;
 	//bool is_bin_float = bin_from_flag;
 
-	//×ÓÄ£¿é³ö¿Ú´¦µÄĞÅºÅÖµÇåÁã
+	//å­æ¨¡å—å‡ºå£å¤„çš„ä¿¡å·å€¼æ¸…é›¶
 	pe_current->dout1_v = 0;
 	pe_current->dout1 = 0;
 	pe_current->dout1_tag = 0;
@@ -2425,16 +2451,16 @@ void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 	pe_current->bout_v = 0;
 	pe_current->bout = 0;
 	pe_current->bout_tag = 0;
-	//step3µÄ³öÊı¹æÔòÊÇÖ»Òªob table²»ÊÇ¿Õ×´Ì¬£¬¾Í¿ÉÒÔ³öÊı
+	//step3çš„å‡ºæ•°è§„åˆ™æ˜¯åªè¦ob tableä¸æ˜¯ç©ºçŠ¶æ€ï¼Œå°±å¯ä»¥å‡ºæ•°
 	//ob1 out
-	if (ob_index == 0)//ob1ĞèÒª³öÊı
+	if (ob_index == 0)//ob1éœ€è¦å‡ºæ•°
 	{
 		if (!pe_current->outTableBuffer1.outBuffer.empty())
 		{
 			if (pe_current->outTableBuffer1.outBuffer.front().valid)
 			{
 				pe_current->outTableBuffer1.dataOut();
-				//Êı¾İ´ÓÀàÖĞµ¼³öµ½PE
+				//æ•°æ®ä»ç±»ä¸­å¯¼å‡ºåˆ°PE
 				pe_current->dout1 = pe_current->outTableBuffer1.out;
 				pe_current->dout1_v = pe_current->outTableBuffer1.out_v;
 				pe_current->dout1_tag = pe_current->outTableBuffer1.out_tag;
@@ -2443,7 +2469,7 @@ void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 		}
 	}
 	
-	else if (ob_index == 1)//ob2ĞèÒª³öÊı
+	else if (ob_index == 1)//ob2éœ€è¦å‡ºæ•°
 	{
 		//ob2 out
 		if (!pe_current->outTableBuffer2.outBuffer.empty())
@@ -2451,32 +2477,32 @@ void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 			if (pe_current->outTableBuffer2.outBuffer.front().valid)
 			{
 				pe_current->outTableBuffer2.dataOut();
-				//Êı¾İ´ÓÀàÖĞµ¼³öµ½PE
+				//æ•°æ®ä»ç±»ä¸­å¯¼å‡ºåˆ°PE
 				pe_current->dout2 = pe_current->outTableBuffer2.out;
 				pe_current->dout2_v = pe_current->outTableBuffer2.out_v;
 				pe_current->dout2_tag = pe_current->outTableBuffer2.out_tag;
 			}			
 		}
 	}
-	else if (ob_index == 2)//ob3ĞèÒª³öÊı
+	else if (ob_index == 2)//ob3éœ€è¦å‡ºæ•°
 	{
 		//ob3 out
 		if (pe_current->outbuffer3_v)
 		{
-			pe_current->bout = pe_current->outbuffer3;//ob3³öÊı
+			pe_current->bout = pe_current->outbuffer3;//ob3å‡ºæ•°
 			pe_current->bout_v = pe_current->outbuffer3_v;
 			pe_current->bout_tag = pe_current->inbuffer1_out_tag;
 		}
 	}						
 	
 
-	//¼ì²âÊÇ·ñÊÇend½Úµã
+	//æ£€æµ‹æ˜¯å¦æ˜¯endèŠ‚ç‚¹
 	if (pe_current->config_reg.front()[17])
 	{
 		if (pe_current->dout1_v | pe_current->dout2_v )
 		{
 			pe_current->bout = 1;
-			pe_current->bout_v = 1;//Ê¹ÓÃout3_v×÷ÎªendĞÅºÅµÄÊä³ö£¬Ö»ÓĞÔÚoutput3Ã»ÓĞ±»Ê¹ÓÃµÄÇé¿öÏÂ²Å¿ÉÒÔÊ¹ÓÃ
+			pe_current->bout_v = 1;//ä½¿ç”¨out3_vä½œä¸ºendä¿¡å·çš„è¾“å‡ºï¼Œåªæœ‰åœ¨output3æ²¡æœ‰è¢«ä½¿ç”¨çš„æƒ…å†µä¸‹æ‰å¯ä»¥ä½¿ç”¨
 		}
 		
 
@@ -2487,8 +2513,8 @@ void pe_outbuffer_out(ProcessingElement* pe_current,uint32_t ob_index)
 void pe_sim_step1_mux(ProcessingElement* pe_current)
 {
 	pe_current->inTableBuffer.dataIn(pe_current);
-	//PE inTableBufferÖĞµÄÄÚÈİ
-	outfile << "inTableBufferÖĞµÄÄÚÈİ" << endl;
+	//PE inTableBufferä¸­çš„å†…å®¹
+	outfile << "inTableBufferä¸­çš„å†…å®¹" << endl;
 	outfile << "--------------------------------" << endl;
 	outfile.width(10);
 	outfile << "tag";
@@ -2528,11 +2554,11 @@ void pe_sim_step1_mux(ProcessingElement* pe_current)
 	}
 	outfile << "--------------------------------" << endl;
 	pe_current->inTableBuffer.dataOut(pe_current);
-	if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+	if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 	{
 		pe_current->outbuffer1_in_tag = pe_current->inbuffer1_out_tag;
 	}
-	if (pe_current->config_reg.front()[16])//ob2_from ·ÇĞü¿Õ
+	if (pe_current->config_reg.front()[16])//ob2_from éæ‚¬ç©º
 	{
 		pe_current->outbuffer2_in_tag = pe_current->inbuffer2_out_tag;
 	}
@@ -2541,8 +2567,8 @@ void pe_sim_step1_mux(ProcessingElement* pe_current)
 
 void pe_sim_step2_mux(ProcessingElement* pe_current)
 {
-	//ALUÈ¡Êı
-	if (pe_current->inbuffer1_out_v | pe_current->inbuffer2_out_v | pe_current->inbuffer3_out_v) //ÓĞĞ§²ÅÈ¡Êı
+	//ALUå–æ•°
+	if (pe_current->inbuffer1_out_v | pe_current->inbuffer2_out_v | pe_current->inbuffer3_out_v) //æœ‰æ•ˆæ‰å–æ•°
 	{
 		if (pe_current->config_reg.front()[13] == 0)//alu_in1_from ib1
 		{
@@ -2565,11 +2591,11 @@ void pe_sim_step2_mux(ProcessingElement* pe_current)
 			pe_current->alu_in2 = pe_current->loc_reg;
 			pe_current->alu_in2_v = pe_current->loc_reg_v;
 		}
-		//È¡ÊıÖ®ºóÇå¿ÕinTableBufferµÄÄ³Ò»ĞĞ
+		//å–æ•°ä¹‹åæ¸…ç©ºinTableBufferçš„æŸä¸€è¡Œ
 		pe_current->inTableBuffer.buffer_clear();
 
 	}
-	outfile << "PE[" << pe_current->config_reg.front()[1] << "] ALUµÄÊäÈëÊÇ£ºin1: " << pe_current->alu_in1 << " in2: " << pe_current->alu_in2 << endl;
+	outfile << "PE[" << pe_current->config_reg.front()[1] << "] ALUçš„è¾“å…¥æ˜¯ï¼šin1: " << pe_current->alu_in1 << " in2: " << pe_current->alu_in2 << endl;
 	if (pe_current->alu_in1_v & pe_current->alu_in2_v)
 	{
 		pe_current->ALU(pe_current->config_reg.front()[2], pe_current->alu_in1, pe_current->alu_in2, pe_current->inbuffer3_out);
@@ -2580,7 +2606,7 @@ void pe_sim_step2_mux(ProcessingElement* pe_current)
 	pe_current->inbuffer2_out_v = 0;
 	pe_current->inbuffer3_out_v = 0;
 
-	//lr ·ÂÕæ
+	//lr ä»¿çœŸ
 	if (pe_current->config_reg.front()[12] == 1)//from ALU
 	{
 		if (pe_current->alu_out_v)
@@ -2594,7 +2620,7 @@ void pe_sim_step2_mux(ProcessingElement* pe_current)
 void pe_sim_step3_mux(ProcessingElement* pe_current)
 {
 
-	//×ÓÄ£¿é³ö¿Ú´¦µÄĞÅºÅÖµÇåÁã
+	//å­æ¨¡å—å‡ºå£å¤„çš„ä¿¡å·å€¼æ¸…é›¶
 	pe_current->dout1_v = 0;
 	pe_current->dout1 = 0;
 	pe_current->dout1_tag = 0;
@@ -2604,9 +2630,9 @@ void pe_sim_step3_mux(ProcessingElement* pe_current)
 	pe_current->bout_v = 0;
 	pe_current->bout = 0;
 	pe_current->bout_tag = 0;
-	//obÈëÊı¡¢³öÊı
-	//È¡µ½¶Ë¿Ú
-	if (pe_current->config_reg.front()[15])//ob1_from ·ÇĞü¿Õ
+	//obå…¥æ•°ã€å‡ºæ•°
+	//å–åˆ°ç«¯å£
+	if (pe_current->config_reg.front()[15])//ob1_from éæ‚¬ç©º
 	{
 		if (pe_current->config_reg.front()[15] == 1)//ob1 from alu
 		{
@@ -2624,17 +2650,17 @@ void pe_sim_step3_mux(ProcessingElement* pe_current)
 		}
 		
 		//pe_current->outbuffer1_in_v = 1;
-		//ÓĞĞ§¿ªÊ¼ÈëÊı¡¢È¡Êı
+		//æœ‰æ•ˆå¼€å§‹å…¥æ•°ã€å–æ•°
 		if (pe_current->outbuffer1_in_v)
 		{
-			//Êı¾İµ¼Èëµ½outTableBufferÀàÖĞÈ¥
+			//æ•°æ®å¯¼å…¥åˆ°outTableBufferç±»ä¸­å»
 			pe_current->outTableBuffer1.in = pe_current->outbuffer1_in;
 			pe_current->outTableBuffer1.in_v = pe_current->outbuffer1_in_v;
 			pe_current->outTableBuffer1.in_tag = pe_current->outbuffer1_in_tag;
-			//ÈëÊı¡¢³öÊı
+			//å…¥æ•°ã€å‡ºæ•°
 			pe_current->outTableBuffer1.dataIn();
 			pe_current->outTableBuffer1.dataOut();
-			//Êı¾İ´ÓÀàÖĞµ¼³öµ½PE
+			//æ•°æ®ä»ç±»ä¸­å¯¼å‡ºåˆ°PE
 			pe_current->dout1 = pe_current->outTableBuffer1.out;
 			pe_current->dout1_v = pe_current->outTableBuffer1.out_v;
 			pe_current->dout1_tag = pe_current->outTableBuffer1.out_tag;
@@ -2642,7 +2668,7 @@ void pe_sim_step3_mux(ProcessingElement* pe_current)
 		
 	}
 
-	if (pe_current->config_reg.front()[16])//ob2·ÇĞü¿Õ
+	if (pe_current->config_reg.front()[16])//ob2éæ‚¬ç©º
 	{
 		if (pe_current->config_reg.front()[16] == 1)//ob2 from alu
 		{
@@ -2663,44 +2689,44 @@ void pe_sim_step3_mux(ProcessingElement* pe_current)
 		//pe_current->outbuffer2_in_v = 1;
 		if (pe_current->outbuffer2_in_v)
 		{
-			//Êı¾İµ¼Èëµ½outTableBufferÀàÖĞÈ¥
+			//æ•°æ®å¯¼å…¥åˆ°outTableBufferç±»ä¸­å»
 			pe_current->outTableBuffer2.in = pe_current->outbuffer2_in;
 			pe_current->outTableBuffer2.in_v = pe_current->outbuffer2_in_v;
 			pe_current->outTableBuffer2.in_tag = pe_current->outbuffer2_in_tag;
-			//ÈëÊı¡¢³öÊı
+			//å…¥æ•°ã€å‡ºæ•°
 			pe_current->outTableBuffer2.dataIn();
 			pe_current->outTableBuffer2.dataOut();
-			//Êı¾İ´ÓÀàÖĞµ¼³öµ½PE
+			//æ•°æ®ä»ç±»ä¸­å¯¼å‡ºåˆ°PE
 			pe_current->dout2 = pe_current->outTableBuffer2.out;
 			pe_current->dout2_v = pe_current->outTableBuffer2.out_v;
 			pe_current->dout2_tag = pe_current->outTableBuffer2.out_tag;
 		}
 		
 	}
-	outfile << "PE[" << pe_current->config_reg.front()[1] << "]µÄÊä³öÊÇ£ºdout1: " << pe_current->dout1 << " dout1_v: " << pe_current->dout1_v << " dout1_tag: " << pe_current->dout1_tag << endl;
+	outfile << "PE[" << pe_current->config_reg.front()[1] << "]çš„è¾“å‡ºæ˜¯ï¼šdout1: " << pe_current->dout1 << " dout1_v: " << pe_current->dout1_v << " dout1_tag: " << pe_current->dout1_tag << endl;
 	outfile << "                                        " << "dout2: " << pe_current->dout2 << " dout2_v: " << pe_current->dout2_v << " dout2_tag: " << pe_current->dout2_tag << endl;
 
-	//if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3·ÇĞü¿Õ£¬À´×ÔÓÚalu
+	//if (pe_current->config_reg.front()[15] == 0 && pe_current->config_reg.front()[16] == 0)//ob3éæ‚¬ç©ºï¼Œæ¥è‡ªäºalu
 	//{
-	//	pe_current->outbuffer3 = pe_current->alu_out_b;//ob3ÈëÊı
-	//	pe_current->bout = pe_current->outbuffer3;//ob3³öÊı
+	//	pe_current->outbuffer3 = pe_current->alu_out_b;//ob3å…¥æ•°
+	//	pe_current->bout = pe_current->outbuffer3;//ob3å‡ºæ•°
 	//	pe_current->bout_v = 1;
 	//	pe_current->bout_tag = pe_current->inbuffer1_out_tag;
 	//}
 
-	//¼ì²âÊÇ·ñÊÇend½Úµã
+	//æ£€æµ‹æ˜¯å¦æ˜¯endèŠ‚ç‚¹
 	if (pe_current->config_reg.front()[17])
 	{
 		if (pe_current->dout1_v | pe_current->dout2_v)
 		{
 			pe_current->bout = 1;
-			pe_current->bout_v = 1;//Ê¹ÓÃout3_v×÷ÎªendĞÅºÅµÄÊä³ö£¬Ö»ÓĞÔÚoutput3Ã»ÓĞ±»Ê¹ÓÃµÄÇé¿öÏÂ²Å¿ÉÒÔÊ¹ÓÃ
+			pe_current->bout_v = 1;//ä½¿ç”¨out3_vä½œä¸ºendä¿¡å·çš„è¾“å‡ºï¼Œåªæœ‰åœ¨output3æ²¡æœ‰è¢«ä½¿ç”¨çš„æƒ…å†µä¸‹æ‰å¯ä»¥ä½¿ç”¨
 		}
 
 
 	}
 
-	//pe²Ù×÷Íê³É£¬Èë¿Ú´¦µÄvalidÖµÇåÁã
+	//peæ“ä½œå®Œæˆï¼Œå…¥å£å¤„çš„validå€¼æ¸…é›¶
 	pe_current->din1_v = 0;
 	pe_current->din2_v = 0;
 	pe_current->bin = 0;
@@ -2718,13 +2744,13 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 	int le_infrom_index = le_current->config_reg.front()[2];
 	int le_infrom_port = le_current->config_reg.front()[3];
 	bool tag_mode = le_current->config_reg.front()[4];
-	if (tag_mode)//½øĞĞtag´¦Àí
+	if (tag_mode)//è¿›è¡Œtagå¤„ç†
 	{
-		//leÊä³övalidĞÅºÅÖÃÁã
+		//leè¾“å‡ºvalidä¿¡å·ç½®é›¶
 		le_current->data_out_v = 0;
-		outfile << "LE[" << le_index_current << "]ĞèÒª½øĞĞtag´¦Àí" << endl;
+		outfile << "LE[" << le_index_current << "]éœ€è¦è¿›è¡Œtagå¤„ç†" << endl;
 		//addr fetch
-		if (le_infrom_port == 0)//µØÖ·½á¹ûÀ´Ô´ÓÚPEµÄport1
+		if (le_infrom_port == 0)//åœ°å€ç»“æœæ¥æºäºPEçš„port1
 		{
 			pe_outbuffer_out(pe[le_infrom_index], 0);
 			if (pe[le_infrom_index]->dout1_v)
@@ -2736,7 +2762,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 			else
 				le_current->addr_in_v = 0;
 		}
-		else if (le_infrom_port == 1)//µØÖ·ÊäÈëÀ´×ÔÓÚÉÏÒ»¸öPEµÄport2
+		else if (le_infrom_port == 1)//åœ°å€è¾“å…¥æ¥è‡ªäºä¸Šä¸€ä¸ªPEçš„port2
 		{
 			pe_outbuffer_out(pe[le_infrom_index], 1);
 			if (pe[le_infrom_index]->dout2_v)
@@ -2748,9 +2774,9 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 			else
 				le_current->addr_in_v = 0;
 		}
-		/*outfile << "LE[" << le_index_current << "]µÄµØÖ·ÊäÈëÊÇ£º" << " addr_in: " << le_current->addr_in << " addr_in_v: " << le_current->addr_in_v << " addr_in_tag: " << le_current->addr_in_tag << endl;*/
+		/*outfile << "LE[" << le_index_current << "]çš„åœ°å€è¾“å…¥æ˜¯ï¼š" << " addr_in: " << le_current->addr_in << " addr_in_v: " << le_current->addr_in_v << " addr_in_tag: " << le_current->addr_in_tag << endl;*/
 		//for debug		
-		outfile2 << "LE[" << le_index_current << "]ÊäÈëÖµ" << endl;
+		outfile2 << "LE[" << le_index_current << "]è¾“å…¥å€¼" << endl;
 		outfile2 << setw(15) << "addr_t" << setw(15) << "addr_v" << setw(15) << "addr" << endl;
 		outfile2 << setw(15) << le_current->addr_in_tag << setw(15) << le_current->addr_in_v << setw(15) << le_current->addr_in << endl;
 		
@@ -2759,13 +2785,13 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		
 		//addr in buffer
 		pair<unsigned int, int> addrANDdata;
-		if (le_current->addr_in_v)//ÏßÉÏÊı¾İÓĞĞ§£¬½øĞĞÈëtable²Ù×÷
+		if (le_current->addr_in_v)//çº¿ä¸Šæ•°æ®æœ‰æ•ˆï¼Œè¿›è¡Œå…¥tableæ“ä½œ
 		{
 			le_current->addrInTableBuffer();
-			//PE->LEÇé¿öÏÂLEÇå¿ÕPEµÄob£¬Ö»Õë¶ÔÒ»¶ÔÒ»Çé¿ö£¬Ò»¶Ô¶àjoinbp½Úµã¸ºÔğ
+			//PE->LEæƒ…å†µä¸‹LEæ¸…ç©ºPEçš„obï¼Œåªé’ˆå¯¹ä¸€å¯¹ä¸€æƒ…å†µï¼Œä¸€å¯¹å¤šjoinbpèŠ‚ç‚¹è´Ÿè´£
 			if (1)
 			{
-				int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--ÕâÈı¸ö±äÁ¿ÊÇ¸Ã½ÚµãµÄÉÏÒ»¼¶½ÚµãÊä³ö¶Ë¿ÚµÄÉÈ³ö
+				int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--è¿™ä¸‰ä¸ªå˜é‡æ˜¯è¯¥èŠ‚ç‚¹çš„ä¸Šä¸€çº§èŠ‚ç‚¹è¾“å‡ºç«¯å£çš„æ‰‡å‡º
 				for (int i = 0; i < (int)port_fanout.size(); i++)
 				{
 					if (le_infrom_index == port_fanout[i][1] && port_fanout[i][0] == 0)
@@ -2785,32 +2811,34 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 
 					}
 				}
-				//¿ªÊ¼Çå¿ÕÏàÓ¦µÄ¶Ë¿ÚÊı¾İ
+				//å¼€å§‹æ¸…ç©ºç›¸åº”çš„ç«¯å£æ•°æ®
 				if (le_infrom_port == 0)//port1
 				{
-					if (port1_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+					if (port1_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 					{
 						if (le_current->ack2addrgen)
 						{
 							pe[le_infrom_index]->outTableBuffer1.buffer_clear();
 							pe[le_infrom_index]->dout1_v = 0;
+							pe[le_infrom_index]->ack_outbuffer12alu = 1;
 						}
 					}
 				}
 				else if (le_infrom_port == 1)//port2
 				{
-					if (port2_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+					if (port2_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 					{
 						if (le_current->ack2addrgen)
 						{
 							pe[le_infrom_index]->outTableBuffer2.buffer_clear();
 							pe[le_infrom_index]->dout2_v = 0;
+							pe[le_infrom_index]->ack_outbuffer22alu = 1;
 						}
 					}
 				}
 				else if (le_infrom_port == 2)//port3
 				{
-					if (port3_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+					if (port3_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 					{
 						if (le_current->ack2addrgen)
 						{
@@ -2820,7 +2848,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				}
 			}
 		}	
-		//addr_out_vÖÃÎ»
+		//addr_out_vç½®ä½
 		if (!le_current->addr_out_v)
 		{
 			le_current->addr_out_buffer();
@@ -2836,7 +2864,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		//addr into memory
 		if (le_current->addr_out_v)
 		{
-			if (ATTACH_MEMORY == 0)//²»¸½¼Ómemory
+			if (ATTACH_MEMORY == 0)//ä¸é™„åŠ memory
 			{
 				addrANDdata = memory.read(le_current->addr_out);
 				le_current->data_in = addrANDdata.second;
@@ -2847,8 +2875,8 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				le_current->buffer_clear();
 			}
 			else
-			{	//¸½¼Ómemory
-				if (!le_current->ack)//ack==0,LSUnitÃ»ÓĞ½ÓÊÕÊı¾İ
+			{	//é™„åŠ memory
+				if (!le_current->ack)//ack==0,LSUnitæ²¡æœ‰æ¥æ”¶æ•°æ®
 				{
 					lsunit->AddTrans(le_current->addr_out, le_index_current, (int)le_current->addr_out_v);
 				}
@@ -2870,11 +2898,11 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				}
 			}						
 		}
-		/*outfile2 << "LE[" << le_index_current << "]Êä³öÖµ" << endl;
+		/*outfile2 << "LE[" << le_index_current << "]è¾“å‡ºå€¼" << endl;
 		outfile2 << setw(15) << "data_out_t" << setw(15) << "data_out_v" << setw(15) << "data_out" << endl;
 		outfile2 << setw(15) << le_current->data_out_tag << setw(15) << le_current->data_out_v << setw(15) << le_current->data_out << endl;*/
 		//
-	outfile << "inTableBufferÖĞµÄÄÚÈİ" << endl;
+	outfile << "inTableBufferä¸­çš„å†…å®¹" << endl;
 	outfile.width(8);
 	outfile << "tag";
 	outfile.width(8);
@@ -2896,16 +2924,16 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		outfile << endl;
 	}
 	outfile << "--------------------------------" << endl;
-	/*outfile << "LE[" << le_index_current << "]µÄÊä³öÊÇ£º" << " data_out: " << le_current->data_out << " data_out_v: " << le_current->data_out_v << " data_out_tag: " << le_current->data_out_tag << endl;*/
+	/*outfile << "LE[" << le_index_current << "]çš„è¾“å‡ºæ˜¯ï¼š" << " data_out: " << le_current->data_out << " data_out_v: " << le_current->data_out_v << " data_out_tag: " << le_current->data_out_tag << endl;*/
 	
 	}
 	else
 	{
-		//²»ĞèÒª½øĞĞtag´¦Àí
-		//leÊä³övalidĞÅºÅÖÃÁã
+		//ä¸éœ€è¦è¿›è¡Œtagå¤„ç†
+		//leè¾“å‡ºvalidä¿¡å·ç½®é›¶
 		le_current->data_out_v = 0;
 		//addr fetch
-		if (le_infrom_port == 0)//µØÖ·½á¹ûÀ´×ÔÓÚÉÏÒ»¸öPEµÄport1
+		if (le_infrom_port == 0)//åœ°å€ç»“æœæ¥è‡ªäºä¸Šä¸€ä¸ªPEçš„port1
 		{
 			pe_outbuffer_out_no_tag(pe[le_infrom_index], 0);
 			if (pe[le_infrom_index]->dout1_v)
@@ -2914,9 +2942,9 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				le_current->addr_in_v = pe[le_infrom_index]->dout1_v;
 			}
 			else
-				cout << "ÉÏÒ»¸ö¼ÆËãµØÖ·µÄPEÊı¾İÃ»ÓĞvalid." << endl;
+				cout << "ä¸Šä¸€ä¸ªè®¡ç®—åœ°å€çš„PEæ•°æ®æ²¡æœ‰valid." << endl;
 		}
-		else if (le_infrom_port == 1)//µØÖ·ÊäÈëÀ´×ÔÓÚÉÏÒ»¸öPEµÄport2
+		else if (le_infrom_port == 1)//åœ°å€è¾“å…¥æ¥è‡ªäºä¸Šä¸€ä¸ªPEçš„port2
 		{
 			pe_outbuffer_out_no_tag(pe[le_infrom_index], 1);
 			if (pe[le_infrom_index]->dout2_v)
@@ -2925,28 +2953,28 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				le_current->addr_in_v = pe[le_infrom_index]->dout2_v;
 			}
 			else
-				cout << "ÉÏÒ»¸ö¼ÆËãµØÖ·µÄPEÊı¾İÃ»ÓĞvalid." << endl;
+				cout << "ä¸Šä¸€ä¸ªè®¡ç®—åœ°å€çš„PEæ•°æ®æ²¡æœ‰valid." << endl;
 		}
 		else
 		{
 		}
-		/*outfile << "LE[" << le_index_current << "]µÄµØÖ·ÊäÈëÊÇ£º" << " addr_in: " << le_current->addr_in << " addr_in_v: " << le_current->addr_in_v <<  endl;*/
-		//Èë¿ÚÊı¾İ¼ì²éÊ±ÖÓ
+		/*outfile << "LE[" << le_index_current << "]çš„åœ°å€è¾“å…¥æ˜¯ï¼š" << " addr_in: " << le_current->addr_in << " addr_in_v: " << le_current->addr_in_v <<  endl;*/
+		//å…¥å£æ•°æ®æ£€æŸ¥æ—¶é’Ÿ
 		//le_current->entry_check();
 		//for debug
-		outfile2 << "LE[" << le_index_current << "]ÊäÈëÖµ" << endl;
+		outfile2 << "LE[" << le_index_current << "]è¾“å…¥å€¼" << endl;
 		outfile2 << setw(15) << "addr_t" << setw(15) << "addr_v" << setw(15) << "addr" << endl;
 		outfile2 << setw(15) << le_current->addr_in_tag << setw(15) << le_current->addr_in_v << setw(15) << le_current->addr_in << endl;
 
-		if (le_current->addr_in_v)//¼ì²âµØÖ·Êı¾İÊÇ²»ÊÇ×¼±¸ºÃÁË
+		if (le_current->addr_in_v)//æ£€æµ‹åœ°å€æ•°æ®æ˜¯ä¸æ˜¯å‡†å¤‡å¥½äº†
 		{			
 			le_current->addrInBuffer();
 		}
-		if (ATTACH_MEMORY == 1)//Íâ¹ÒÁËmemory
+		if (ATTACH_MEMORY == 1)//å¤–æŒ‚äº†memory
 		{
 			if (le_current->addr_out_v)
 			{
-				if (!le_current->ack)//LSUnitÃ»ÓĞ½ÓÊÕµØÖ·Êı¾İ£¬¼ÌĞø·¢
+				if (!le_current->ack)//LSUnitæ²¡æœ‰æ¥æ”¶åœ°å€æ•°æ®ï¼Œç»§ç»­å‘
 				{
 					lsunit->AddTrans(le_current->addr_out, le_index_current, (int)le_current->addr_out_v);
 				}
@@ -2976,7 +3004,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		}
 		else
 		{
-			//Ã»ÓĞÍâ¹Òmemory
+			//æ²¡æœ‰å¤–æŒ‚memory
 			if (le_current->addr_out_v)
 			{
 				pair<unsigned int, int> addrANDdata;
@@ -2993,12 +3021,12 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 			}
 			
 		}				
-		//le²Ù×÷Íê³É£¬Èë¿Ú´¦µÄvalidĞÅºÅÇåÁã
+		//leæ“ä½œå®Œæˆï¼Œå…¥å£å¤„çš„validä¿¡å·æ¸…é›¶
 		le_current->addr_in_v = 0;
 		
 		//outfile << "   " << endl;
 		////outfile << "clock[" << cnt << "] " << endl;
-		//outfile << "LE[" << le_index_current << "]µÄÊä³ö½á¹ûÊÇdata_out£º " << le_current->data_out << "; data_out_v: " << le_current->data_out_v << endl;
+		//outfile << "LE[" << le_index_current << "]çš„è¾“å‡ºç»“æœæ˜¯data_outï¼š " << le_current->data_out << "; data_out_v: " << le_current->data_out_v << endl;
 
 		
 	}
@@ -3018,7 +3046,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 	se_current->se_extra_out_for_end = 0;
 	se_current->se_extra_out_for_end_v = 0;
 	bool tag_mode = se_current->config_reg.front()[8];
-	if (tag_mode)//½øĞĞtag´¦Àí
+	if (tag_mode)//è¿›è¡Œtagå¤„ç†
 	{
 		//addr fetch
 		if (addr_in_flag == 0)//from pe
@@ -3069,8 +3097,8 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					se[se_index_current]->data_in_tag = pe[data_in_from]->dout1_tag;
 					//pe[data_in_from]->outTableBuffer1.buffer_clear();
 				}
-				else
-					cout << "SEĞèÒªµÄÊı¾İ»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+				//else
+					//cout << "SEéœ€è¦çš„æ•°æ®è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 			}
 			else if (data_in_port == 1)//port2
 			{
@@ -3082,8 +3110,8 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					se[se_index_current]->data_in_tag = pe[data_in_from]->dout1_tag;
 					//pe[data_in_from]->outTableBuffer2.buffer_clear();
 				}
-				else
-					cout << "SEĞèÒªµÄÊı¾İ»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+				//else
+					//cout << "SEéœ€è¦çš„æ•°æ®è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 			}
 		}
 		else if (data_in_flag == 1)//from le
@@ -3096,24 +3124,24 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 			}
 		}
 
-		outfile << "SE[" << se_current->config_reg.front()[1] << "]µÄÊäÈëÊÇ£ºaddr: " << se_current->addr << " addr_v: " << se_current->addr_v << " addr_tag: " << se_current->addr_tag << endl;
+		outfile << "SE[" << se_current->config_reg.front()[1] << "]çš„è¾“å…¥æ˜¯ï¼šaddr: " << se_current->addr << " addr_v: " << se_current->addr_v << " addr_tag: " << se_current->addr_tag << endl;
 		outfile << "                                        " << "data_in: " << se_current->data_in << " data_in_v: " << se_current->data_in_v << " data_in_tag: " << se_current->data_in_tag << endl;
 
 		//for debug
 		outfile2 << endl;
 		outfile2 << "SE[ " << se_index_current << " ]" << endl;
 		outfile2 << "--------------------------------------" << endl;
-		outfile2 << "SE[" << se_index_current << "]ÊäÈëÖµ" << endl;
+		outfile2 << "SE[" << se_index_current << "]è¾“å…¥å€¼" << endl;
 		outfile2 << setw(15) << "addr_t" << setw(15) << "addr_v" << setw(15) << "addr" << setw(15) << "data_t" << setw(15) << "data_v" << setw(15) << "data" << endl;
 		outfile2 << setw(15) << se_current->addr_tag << setw(15) << se_current->addr_v << setw(15) << se_current->addr << setw(15) << se_current->data_in_tag << setw(15)
 			<< se_current->data_in_v << setw(15) << se_current->data_in << endl;
 		//ack clear
 		se_current->ack2addr_source_node = 0;
 		se_current->ack2data_source_node = 0;
-		//ÈëÊı¡¢³öÊı
+		//å…¥æ•°ã€å‡ºæ•°
 		se_current->addr_in_table();
 		se_current->data_in_table();
-		outfile << "inTableBufferÖĞµÄÄÚÈİ" << endl;
+		outfile << "inTableBufferä¸­çš„å†…å®¹" << endl;
 		outfile << "--------------------------------" << endl;
 		outfile.width(10);
 		outfile << "tag";
@@ -3143,14 +3171,14 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 			outfile << se_current->se_table_buffer[i].lineOK;
 			outfile << endl;
 		}
-		//Êı¾İÈë±í³É¹¦£¬ÇåÁã
-		//Í³¼ÆÀ´Ô´µÄÉÈ³ö£¬ÈôÉÈ³ö´óÓÚ1Ôò²»È¥ÇåÉÏÒ»¼¶µÄÊı¾İ 
-		if (1)                     //SEµÄdin¿ÉÄÜÀ´×ÔÓÚLEºÍPE
+		//æ•°æ®å…¥è¡¨æˆåŠŸï¼Œæ¸…é›¶
+		//ç»Ÿè®¡æ¥æºçš„æ‰‡å‡ºï¼Œè‹¥æ‰‡å‡ºå¤§äº1åˆ™ä¸å»æ¸…ä¸Šä¸€çº§çš„æ•°æ® 
+		if (1)                     //SEçš„dinå¯èƒ½æ¥è‡ªäºLEå’ŒPE
 		{
-			int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--ÕâÈı¸ö±äÁ¿ÊÇ¸ÃPEµÄÉÏÒ»¼¶PEÊä³ö¶Ë¿ÚµÄÉÈ³ö
+			int port1_fanout_num, port2_fanout_num, port3_fanout_num;//--è¿™ä¸‰ä¸ªå˜é‡æ˜¯è¯¥PEçš„ä¸Šä¸€çº§PEè¾“å‡ºç«¯å£çš„æ‰‡å‡º
 			for (int i = 0; i < (int)port_fanout.size(); i++)
 			{
-				if (addr_in_from == port_fanout[i][1] && addr_in_flag == port_fanout[i][0])     //À´×ÔPE»òLE
+				if (addr_in_from == port_fanout[i][1] && addr_in_flag == port_fanout[i][0])     //æ¥è‡ªPEæˆ–LE
 				{
 					if (addr_in_port == 0)//port1
 					{
@@ -3166,35 +3194,37 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					}
 				}
 			}
-			//¿ªÊ¼Çå¿ÕÏàÓ¦µÄ¶Ë¿ÚÊı¾İ
+			//å¼€å§‹æ¸…ç©ºç›¸åº”çš„ç«¯å£æ•°æ®
 			if (addr_in_port == 0)//port1
 			{
-				if (port1_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+				if (port1_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 				{
 					if (se_current->ack2addr_source_node)
 					{
 						se_current->addr_v = 0;
 						pe[addr_in_from]->outTableBuffer1.buffer_clear();
 						pe[addr_in_from]->dout1_v = 0;
+						pe[addr_in_from]->ack_outbuffer12alu = 1;
 					}
 				}
 			}
 			else if (addr_in_port == 1)//port2
 			{
-				if (port2_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+				if (port2_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 				{
 					if (se_current->ack2addr_source_node)
 					{
 						se_current->addr_v = 0;
 						pe[addr_in_from]->outTableBuffer2.buffer_clear();
 						pe[addr_in_from]->dout2_v = 0;
+						pe[addr_in_from]->ack_outbuffer22alu = 1;
 					}
 				}
 			}
 
 			for (int i = 0; i < (int)port_fanout.size(); i++)
 			{
-				if (data_in_from == port_fanout[i][1] && data_in_flag == port_fanout[i][0])     //À´×ÔPE»òLE
+				if (data_in_from == port_fanout[i][1] && data_in_flag == port_fanout[i][0])     //æ¥è‡ªPEæˆ–LE
 				{
 					if (data_in_port == 0)//port1
 					{
@@ -3210,28 +3240,30 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					}
 				}
 			}
-			//¿ªÊ¼Çå¿ÕÏàÓ¦µÄ¶Ë¿ÚÊı¾İ
+			//å¼€å§‹æ¸…ç©ºç›¸åº”çš„ç«¯å£æ•°æ®
 			if (data_in_port == 0)//port1
 			{
-				if (port1_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+				if (port1_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 				{
 					if (se_current->ack2data_source_node)
 					{
 						se_current->data_in_v = 0;
 						pe[data_in_from]->outTableBuffer1.buffer_clear();
 						pe[data_in_from]->dout1_v = 0;
+						pe[data_in_from]->ack_outbuffer12alu = 1;
 					}
 				}
 			}
 			else if (data_in_port == 1)//port2
 			{
-				if (port2_fanout_num <= 1)//Ò»¶ÔÒ»µÄÇé¿ö
+				if (port2_fanout_num <= 1)//ä¸€å¯¹ä¸€çš„æƒ…å†µ
 				{
 					if (se_current->ack2data_source_node)
 					{
 						se_current->data_in_v = 0;
 						pe[data_in_from]->outTableBuffer2.buffer_clear();
 						pe[data_in_from]->dout2_v = 0;
+						pe[data_in_from]->ack_outbuffer22alu = 1;
 					}
 				}
 			}
@@ -3243,11 +3275,11 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 			se_current->addr_v = 0;
 
 		se_current->dataOut();
-		outfile2 << "SE[" << se_index_current << "]Êä³öÖµ" << endl;
+		outfile2 << "SE[" << se_index_current << "]è¾“å‡ºå€¼" << endl;
 		outfile2 << setw(15) << "ib1_out_t" << setw(15) << "ib1_out_v" << setw(15) << "ib1_out" << setw(15) << "ib2_out_t" << setw(15) << "ib2_out_v" << setw(15) << "ib2_out" << endl;
 		outfile2 << setw(15) << se_current->addr_out_tag << setw(15) << se_current->addr_out_v << setw(15) << se_current->addr_out << setw(15) << se_current->data_out_tag << setw(15) << se_current->data_out_v << setw(15)
 			<< se_current->data_out << endl;
-		//¿ªÊ¼write
+		//å¼€å§‹write
 		if (se_current->addr_out_v && se_current->data_out_v)
 		{
 			se_current->write2men(memory2, se_current->addr_out, se_current->data_out);
@@ -3255,7 +3287,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 			//se_current->write_latency();
 			se_current->se_extra_out_for_end = 1;
 			se_current->se_extra_out_for_end_v = 1;
-			//se²Ù×÷Íê³É£¬Èë¿Ú´¦µÄvalidÖµÇåÁã
+			//seæ“ä½œå®Œæˆï¼Œå…¥å£å¤„çš„validå€¼æ¸…é›¶
 			se_current->addr_out_v = 0;
 			se_current->data_out_v = 0;
 			//SE buffer clear
@@ -3264,7 +3296,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 	}
 	else
 	{
-		//²»½øĞĞtag´¦Àí
+		//ä¸è¿›è¡Œtagå¤„ç†
 		//addr fetch,default config is PE
 		if (addr_in_flag == 0)//from pe
 		{
@@ -3280,7 +3312,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 				}
 				else
 				{
-					cout << "SEĞèÒªµÄµØÖ·»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+					cout << "SEéœ€è¦çš„åœ°å€è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 				}
 			}
 			else if (addr_in_port == 1)//port2
@@ -3293,7 +3325,7 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 				}
 				else
 				{
-					cout << "SEĞèÒªµÄµØÖ·»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+					cout << "SEéœ€è¦çš„åœ°å€è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 				}
 			}
 			else
@@ -3321,8 +3353,8 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					se[se_index_current]->data_in = pe[data_in_from]->dout1;
 					se[se_index_current]->data_in_v = pe[data_in_from]->dout1_v;
 				}
-				else
-					cout << "SEĞèÒªµÄÊı¾İ»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+				//else
+					//cout << "SEéœ€è¦çš„æ•°æ®è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 			}
 			else if (data_in_port == 1)//port2
 			{
@@ -3332,11 +3364,11 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 					se[se_index_current]->data_in = pe[data_in_from]->dout2;
 					se[se_index_current]->data_in_v = pe[data_in_from]->dout2_v;
 				}
-				else
-					cout << "SEĞèÒªµÄÊı¾İ»¹Ã»ÓĞ×¼±¸ºÃ¡£" << endl;
+				//else
+					//cout << "SEéœ€è¦çš„æ•°æ®è¿˜æ²¡æœ‰å‡†å¤‡å¥½ã€‚" << endl;
 			}
-			else
-				cout << "se data_in_from_port is out of range." << endl;
+			//else
+				//cout << "se data_in_from_port is out of range." << endl;
 		}
 		else if (data_in_flag == 1)//from le
 		{
@@ -3352,16 +3384,16 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 		outfile2 << endl;
 		outfile2 << "SE[ " << se_index_current << " ]" << endl;
 		outfile2 << "--------------------------------------" << endl;
-		outfile2 << "SE[" << se_index_current << "]ÊäÈëÖµ" << endl;
+		outfile2 << "SE[" << se_index_current << "]è¾“å…¥å€¼" << endl;
 		outfile2 << setw(15) << "addr_t" << setw(15) << "addr_v" << setw(15) << "addr" << setw(15) << "data_t" << setw(15) << "data_v" << setw(15) << "data" << endl;
 		outfile2 << setw(15) << se_current->addr_tag << setw(15) << se_current->addr_v << setw(15) << se_current->addr << setw(15) << se_current->data_in_tag << setw(15)
 			<< se_current->data_in_v << setw(15) << se_current->data_in << endl;
 
 		//entry check cycle count
 		//se[se_index_current]->entry_check_cycle();
-		//SEÊı¾İ´òÓ¡
+		//SEæ•°æ®æ‰“å°
 		//outfile << "clock[" << cnt << "] " << endl;
-		outfile << "SE[" << se_index_current << "]µÄÊäÈëÊı¾İÊÇ£ºaddr_in: " << se[se_index_current]->addr << "  addr_in_v: " << se[se_index_current]->addr_v << endl;
+		outfile << "SE[" << se_index_current << "]çš„è¾“å…¥æ•°æ®æ˜¯ï¼šaddr_in: " << se[se_index_current]->addr << "  addr_in_v: " << se[se_index_current]->addr_v << endl;
 		outfile << "               " << "data_in: " << se[se_index_current]->data_in << "  data_in_v: " << se[se_index_current]->data_in_v << endl;
 
 		if (se[se_index_current]->addr_v && se[se_index_current]->data_in_v)
@@ -3370,16 +3402,16 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 			se_current->addr_out = se_current->addr;
 			se_current->data_out_v = se_current->data_in_v;
 			se_current->data_out = se_current->data_in;
-			//Èë¿ÚÊı¾İÇåÁã
+			//å…¥å£æ•°æ®æ¸…é›¶
 			se_current->addr_v = 0;
 			se_current->data_in_v = 0;
-			//¿ªÊ¼Ğ´Èë
+			//å¼€å§‹å†™å…¥
 			se[se_index_current]->write2men(memory2, se_current->addr_out, se_current->data_out);
 			//write cycle count
 			//se[se_index_current]->write_latency();
 			se[se_index_current]->se_extra_out_for_end = 1;
 			se_current->se_extra_out_for_end_v = 1;
-			//se²Ù×÷Íê³É£¬Èë¿Ú´¦µÄvalidÖµÇåÁã
+			//seæ“ä½œå®Œæˆï¼Œå…¥å£å¤„çš„validå€¼æ¸…é›¶
 			se[se_index_current]->addr_v = 0;
 			se[se_index_current]->data_in_v = 0;
 		}
@@ -3395,12 +3427,12 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 	int lb_in2_from_index = lbegin_current->config_reg.front()[5];
 	int lb_in2_from_port = lbegin_current->config_reg.front()[6];
 	int lb_in2_from_flag = lbegin_current->config_reg.front()[7];
-	//ÏßÉÏÊı¾İÇåÁã
+	//çº¿ä¸Šæ•°æ®æ¸…é›¶
 	lbegin_current->begin_in = 0;
 	lbegin_current->feedback_in = 0;
 	lbegin_current->out_v = 0;
 	lbegin_current->out = 0;
-	//loopbeginµÄÊäÈë1È¡Êı
+	//loopbeginçš„è¾“å…¥1å–æ•°
 	if (lb_in1_from_flag == 0)//begin
 	{
 		lbegin_current->begin_in = begin_signal;
@@ -3420,7 +3452,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 	{
 		if (lb_in1_from_port == 0)//port1
 		{
-			//pe ob1 ³öÊı
+			//pe ob1 å‡ºæ•°
 			if (pe[lb_in1_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in1_from_index], 0);
@@ -3433,7 +3465,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 		}
 		else if (lb_in1_from_port == 1)//port2
 		{
-			//pe ob2 ³öÊı
+			//pe ob2 å‡ºæ•°
 			if (pe[lb_in1_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in1_from_index], 1);
@@ -3446,7 +3478,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 		}
 		else if (lb_in1_from_port == 2)//port3
 		{
-			//pe ob3 ³öÊı
+			//pe ob3 å‡ºæ•°
 			if (pe[lb_in1_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in1_from_index], 2);
@@ -3455,13 +3487,13 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 			{
 				pe_outbuffer_out_no_tag(pe[lb_in1_from_index], 2);
 			}
-			lbegin_current->begin_in = pe[lb_in1_from_index]->bout;//³£¹æÁ¬½Ó£¬begin_in½Óbout²»ÊÇbout_v
+			lbegin_current->begin_in = pe[lb_in1_from_index]->bout;//å¸¸è§„è¿æ¥ï¼Œbegin_inæ¥boutä¸æ˜¯bout_v
 		}
 	}
 	else if (lb_in1_from_flag == 7)//loopend2
 	{
 	}
-	//in2È¡Êı
+	//in2å–æ•°
 	if (lb_in2_from_flag == 0)//begin
 	{
 		lbegin_current->feedback_in = begin_signal;
@@ -3481,7 +3513,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 	{
 		if (lb_in2_from_port == 0)//port1
 		{
-			//pe ob1 ³öÊı
+			//pe ob1 å‡ºæ•°
 			if (pe[lb_in2_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in2_from_index], 0);
@@ -3494,7 +3526,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 		}
 		else if (lb_in2_from_port == 1)//port2
 		{
-			//pe ob2 ³öÊı
+			//pe ob2 å‡ºæ•°
 			if (pe[lb_in2_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in2_from_index], 1);
@@ -3507,7 +3539,7 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 		}
 		else if (lb_in2_from_port == 2)//port3
 		{
-			//pe ob3 ³öÊı
+			//pe ob3 å‡ºæ•°
 			if (pe[lb_in2_from_index]->config_reg.front()[19] == 1)//tag mode
 			{
 				pe_outbuffer_out(pe[lb_in2_from_index], 2);
@@ -3516,21 +3548,21 @@ void LbeginSimProcess(LoopBegin* lbegin_current)
 			{
 				pe_outbuffer_out_no_tag(pe[lb_in2_from_index], 2);
 			}
-			lbegin_current->feedback_in = pe[lb_in2_from_index]->bout;//³£¹æÁ¬½Ó£¬begin_in½Óbout²»ÊÇbout_v
+			lbegin_current->feedback_in = pe[lb_in2_from_index]->bout;//å¸¸è§„è¿æ¥ï¼Œbegin_inæ¥boutä¸æ˜¯bout_v
 		}
 	}
 	else if (lb_in2_from_flag == 7)//loopend2
 	{
 	}
 	//for debug
-	outfile2 << "lbegin[" << lb_index_current << "]ÊäÈëÖµ" << endl;
+	outfile2 << "lbegin[" << lb_index_current << "]è¾“å…¥å€¼" << endl;
 	outfile2 << setw(15) << "begin_in" << setw(15) << "feedback_in" << endl;
 	outfile2 << setw(15) << lbegin_current->begin_in << setw(15) << lbegin_current->feedback_in << endl;
 
 
-	/*outfile << "Lbegin[" << lb_index_current << "]µÄÊäÈëÊÇ£º" << " begin_in: " << lbegin_current->begin_in << " feedback_in:" << lbegin_current->feedback_in << endl;*/
+	/*outfile << "Lbegin[" << lb_index_current << "]çš„è¾“å…¥æ˜¯ï¼š" << " begin_in: " << lbegin_current->begin_in << " feedback_in:" << lbegin_current->feedback_in << endl;*/
 	lbegin_current->lbegin();
-	//outfile << "Lbegin[" << lb_index_current << "]µÄÊä³öÊÇ£º" << " out_v: " << lbegin_current->out_v << " out:" << lbegin_current->out << endl;
+	//outfile << "Lbegin[" << lb_index_current << "]çš„è¾“å‡ºæ˜¯ï¼š" << " out_v: " << lbegin_current->out_v << " out:" << lbegin_current->out << endl;
 	
 }
 
@@ -3543,9 +3575,9 @@ void LendSimProcess(LoopEnd* lend_current)
 	int lend_in2_from_index = lend_current->config_reg.front()[5];
 	int lend_in2_from_port = lend_current->config_reg.front()[6];
 	int lend_in2_from_flag = lend_current->config_reg.front()[7];
-	//loop endµÄ 2bitÊäÈë¶Ë¿ÚÒªÓĞkeep and waitµÄ¹¦ÄÜ£¬ËùÒÔ¿ªÊ¼Ê±²»ÇåÁã£¬µ«ÊÇÁíÍâÒ»¸ö¶Ë¿ÚÊÇĞèÒªÇåÁãµÄ
+	//loop endçš„ 2bitè¾“å…¥ç«¯å£è¦æœ‰keep and waitçš„åŠŸèƒ½ï¼Œæ‰€ä»¥å¼€å§‹æ—¶ä¸æ¸…é›¶ï¼Œä½†æ˜¯å¦å¤–ä¸€ä¸ªç«¯å£æ˜¯éœ€è¦æ¸…é›¶çš„
 	lend_current->in2 = 0;
-	//in1È¡Êı
+	//in1å–æ•°
 	if (lend_in1_from_flag == 1)//pe
 	{
 		if (lend_in1_from_port == 0)//port1
@@ -3561,7 +3593,7 @@ void LendSimProcess(LoopEnd* lend_current)
 			pe_outbuffer_out_no_tag(pe[lend_in1_from_index], 2);
 			if (pe[lend_in1_from_index]->bout_v)
 			{
-				//ÓĞĞ§²ÅÈ¡Êı£¬±£Ö¤keep and waitµÄ¹¦ÄÜ
+				//æœ‰æ•ˆæ‰å–æ•°ï¼Œä¿è¯keep and waitçš„åŠŸèƒ½
 				lend_current->in1_v = pe[lend_in1_from_index]->bout_v;
 				lend_current->in1 = pe[lend_in1_from_index]->bout;
 			}
@@ -3574,7 +3606,7 @@ void LendSimProcess(LoopEnd* lend_current)
 	else if (lend_in1_from_flag == 4)//join
 	{
 	}
-	//in2È¡Êı
+	//in2å–æ•°
 	if (lend_in2_from_flag == 3)//loopend
 	{
 		if (lend_in2_from_port == 0)//port1
@@ -3606,18 +3638,18 @@ void LendSimProcess(LoopEnd* lend_current)
 	}
 	else if (lend_in2_from_flag == 9)//SE
 	{
-		lend_current->in2 = se[lend_in2_from_index]->se_extra_out_for_end_v;//Ê¹ÓÃSEµÄ¶îÍâÊä³öµÄvalidÎª×÷ÎªÓĞĞ§ĞÅºÅ
+		lend_current->in2 = se[lend_in2_from_index]->se_extra_out_for_end_v;//ä½¿ç”¨SEçš„é¢å¤–è¾“å‡ºçš„validä¸ºä½œä¸ºæœ‰æ•ˆä¿¡å·
 	}
 	//for debug	
-	outfile2 << "lend[" << lend_index_current << "]ÊäÈëÖµ" << endl;
+	outfile2 << "lend[" << lend_index_current << "]è¾“å…¥å€¼" << endl;
 	outfile2 << setw(15) << "in1_v" << setw(15) << "in1" << setw(15) << "in2" << endl;
 	outfile2 << setw(15) << lend_current->in1_v << setw(15) << lend_current->in1 << setw(15) <<lend_current->in2 << endl;
 
-	//outfile << "Lend[" << lend_index_current << "]µÄÊäÈëÊÇ£º" << " in1: " << lend_current->in1 << " in1_v:" << lend_current->in1_v << " in2: " << lend_current->in2 << endl;
+	//outfile << "Lend[" << lend_index_current << "]çš„è¾“å…¥æ˜¯ï¼š" << " in1: " << lend_current->in1 << " in1_v:" << lend_current->in1_v << " in2: " << lend_current->in2 << endl;
 	//
 	lend_current->lend();
 	//
-	//outfile << "Lend[" << lend_index_current << "]µÄÊä³öÊÇ£º" << " out2back: " << lend_current->out2back << " out2end:" << lend_current->out2end << endl;
+	//outfile << "Lend[" << lend_index_current << "]çš„è¾“å‡ºæ˜¯ï¼š" << " out2back: " << lend_current->out2back << " out2end:" << lend_current->out2end << endl;
 
 	
 }
@@ -3634,7 +3666,7 @@ void JoinSimProcess(Join* join_current)
 	{
 		if (join_current->config_reg.front()[4 + i * 3] == 1)//from PE
 		{
-			if (join_current->config_reg.front()[3 + i * 3] == 2)//PEµÄport3£¬Ò²ÊÇÄ¬ÈÏÖµ
+			if (join_current->config_reg.front()[3 + i * 3] == 2)//PEçš„port3ï¼Œä¹Ÿæ˜¯é»˜è®¤å€¼
 			{
 				auto in_from_index = join_current->config_reg.front()[2 + i * 3];
 				if (pe[in_from_index]->bout_v)
@@ -3652,8 +3684,8 @@ void JoinSimProcess(Join* join_current)
 	}
 	//join opration
 	join_current->join();
-	//outfile << "Join[" << join_index_current << "]µÄÊä³öÊÇ£º" << join_current->out << endl;
-	//¶¼ÊÇ1¼¤»îjoin²Ù×÷Ö®ºó£¬Çå¿Õ
+	//outfile << "Join[" << join_index_current << "]çš„è¾“å‡ºæ˜¯ï¼š" << join_current->out << endl;
+	//éƒ½æ˜¯1æ¿€æ´»joinæ“ä½œä¹‹åï¼Œæ¸…ç©º
 	if (join_current->out)
 	{
 		join_current->inputCollect.clear();
@@ -3666,7 +3698,7 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 	//resize
 	joinbp_current->inputCollect.resize(inport_num);
 	auto join_index_current = joinbp_current->config_reg.front()[1];
-	//¿ªÊ¼·ÂÕæÖ®Ç°³ö¿ÚÊı¾İÇåÁã
+	//å¼€å§‹ä»¿çœŸä¹‹å‰å‡ºå£æ•°æ®æ¸…é›¶
 	joinbp_current->out = 0;
 	//data fetch
 	for (int i = 0; i < (int)inport_num; i++)
@@ -3675,9 +3707,9 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 		if (joinbp_current->config_reg.front()[4 + i * 3] == 1)//from PE
 		{
 			auto in_from_index = joinbp_current->config_reg.front()[2 + i * 3];
-			if (joinbp_current->config_reg.front()[3 + i * 3] == 2)//PEµÄport3£¬Ò²ÊÇÄ¬ÈÏÖµ
+			if (joinbp_current->config_reg.front()[3 + i * 3] == 2)//PEçš„port3ï¼Œä¹Ÿæ˜¯é»˜è®¤å€¼
 			{
-				if (pe[in_from_index]->ack2in3port)//ackÖµÎª1£¬È¡Êı£»else ²»È¡
+				if (pe[in_from_index]->ack2in3port)//ackå€¼ä¸º1ï¼Œå–æ•°ï¼›else ä¸å–
 				{
 					joinbp_current->inputCollect[i] = pe[in_from_index]->ack2in3port;
 				}
@@ -3731,9 +3763,9 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 	}
 	//join opration
 	joinbp_current->join();
-	//Çå³ı·¢ËÍ¶ËÊı¾İ
-	//joinbpÊä³öĞÅºÅÎª1Ê±£¬Ê¹ÓÃbuffer_clear()Çå¿ÕÉÏÒ»¼¶µÄbuffer²¢ÇÒ½«³ö¿Ú´¦µÄÊı¾İÖÃ0
-	if (joinbp_current->out)                       //×¢ÒâjoinbpµÄÅäÖÃÊı×Ö¹æÔòÓëPE²»Í¬
+	//æ¸…é™¤å‘é€ç«¯æ•°æ®
+	//joinbpè¾“å‡ºä¿¡å·ä¸º1æ—¶ï¼Œä½¿ç”¨buffer_clear()æ¸…ç©ºä¸Šä¸€çº§çš„bufferå¹¶ä¸”å°†å‡ºå£å¤„çš„æ•°æ®ç½®0
+	if (joinbp_current->out)                       //æ³¨æ„joinbpçš„é…ç½®æ•°å­—è§„åˆ™ä¸PEä¸åŒ
 	{
 		auto joinbp_in_from = joinbp_current->config_reg.front()[2];//index
 		auto joinbp_in_port = joinbp_current->config_reg.front()[3];//port
@@ -3793,37 +3825,39 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 			{
 				joinbp_in_from_from_index = le[joinbp_in_from]->config_reg.front()[2];
 				joinbp_in_from_from_port = le[joinbp_in_from]->config_reg.front()[3];
-				joinbp_in_from_from_flag = 2;         //leµÄÀ´Ô´Ö»Îªpe
+				joinbp_in_from_from_flag = 2;         //leçš„æ¥æºåªä¸ºpe
 			}
 		}
 		//start clear
-		if (*(joinbp_current->config_reg.front().rbegin()))    //tagmode
+		if (*(joinbp_current->config_reg.front().rbegin()))    //tagmode,è´Ÿè´£æ¸…é™¤ooutbuffer
 		{
 			if (joinbp_in_from_from_flag == 2)//PE
 			{
 				if (joinbp_in_from_from_port == 0)//port1
 				{
 					pe[joinbp_in_from_from_index]->outTableBuffer1.buffer_clear();
-					pe[joinbp_in_from_from_index]->dout1_v = 0;
+					pe[joinbp_in_from_from_index]->ack_outbuffer12alu = 1;
+					//pe[joinbp_in_from_from_index]->dout1_v = 0;
 				}
 				else if (joinbp_in_from_from_port == 1)//port2
 				{
 					pe[joinbp_in_from_from_index]->outTableBuffer2.buffer_clear();
-					pe[joinbp_in_from_from_index]->dout2_v = 0;
+					pe[joinbp_in_from_from_index]->ack_outbuffer22alu = 1;
+					//pe[joinbp_in_from_from_index]->dout2_v = 0;
 				}
 				else if (joinbp_in_from_from_port == 2)//port3
 				{
 					pe[joinbp_in_from_from_index]->outbuffer3_v = 0;
 					pe[joinbp_in_from_from_index]->outbuffer3_tag = 0;
 					pe[joinbp_in_from_from_index]->outbuffer3 = 0;
-					pe[joinbp_in_from_from_index]->bout_v = 0;
+					//pe[joinbp_in_from_from_index]->bout_v = 0;
 				}
 			}
 			else if (joinbp_in_from_from_flag == 1)//LE
 			{
 				if (joinbp_in_from_from_port == 0)
 				{
-					//ÇåjoinbpÄ¿±êµÄLEµÄÊä³ö
+					//æ¸…joinbpç›®æ ‡çš„LEçš„è¾“å‡º
 				}
 				else
 					cout << "error occurs in JoinBpSimProcess for LE only have one port!" << endl;
@@ -3833,7 +3867,7 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 				ti->out_v = 0;
 			}	
 		}
-		else                                         //¾²Ì¬Ê±joinbp¸ºÔğ³öÊıºÍÇåob
+		else                                         //é™æ€æ—¶joinbpè´Ÿè´£å‡ºæ•°å’Œæ¸…ob
 		{
 			if (joinbp_in_from_from_flag == 2)//PE
 			{
@@ -3868,7 +3902,7 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 			{
 				if (joinbp_in_from_from_port == 0)
 				{
-					//ÇåjoinbpÄ¿±êµÄLEµÄÊä³ö
+					//æ¸…joinbpç›®æ ‡çš„LEçš„è¾“å‡º
 				}
 				else
 					cout << "error occurs in JoinBpSimProcess for LE only have one port!" << endl;
@@ -3879,7 +3913,7 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 			}
 		}
 
-		//¼¤»î²Ù×÷Ö®ºó£¬Çå¿Õvector
+		//æ¿€æ´»æ“ä½œä¹‹åï¼Œæ¸…ç©ºvector
 		joinbp_current->inputCollect.clear();
 	}
 }
@@ -3894,12 +3928,12 @@ void SwitchSimProcess(Switch* switch_current)
 
 	bool tag_mode = switch_current->config_reg.front()[5];
 	
-	if (tag_mode)//ĞèÒª½øĞĞtag´¦Àí
+	if (tag_mode)//éœ€è¦è¿›è¡Œtagå¤„ç†
 	{
-		outfile << "½øĞĞtag´¦Àí...." << endl;
+		outfile << "è¿›è¡Œtagå¤„ç†...." << endl;
 		if (switch_in_from_flag == 1)//pe
 		{
-			//Ä¬ÈÏÀ´Ô´¶Ë¿ÚÊÇinput3
+			//é»˜è®¤æ¥æºç«¯å£æ˜¯input3
 			if (pe[switch_in_from_index]->bout_v)
 			{
 				switch_current->in = pe[switch_in_from_index]->bout;
@@ -3910,7 +3944,7 @@ void SwitchSimProcess(Switch* switch_current)
 		else if (switch_in_from_flag == 2)//lbegin
 		{
 		}
-		//¿ªÊ¼switch
+		//å¼€å§‹switch
 		if (switch_current->in_v)
 		{
 			switch_current->path_select_tag();
@@ -3918,12 +3952,12 @@ void SwitchSimProcess(Switch* switch_current)
 	}
 	else
 	{
-		//²»ĞèÒª½øĞĞtag´¦Àí
+		//ä¸éœ€è¦è¿›è¡Œtagå¤„ç†
 		switch_current->out1 = 0;
 		switch_current->out2 = 0;
 		if (switch_in_from_flag == 1)//pe
 		{
-			//Ä¬ÈÏÀ´Ô´¶Ë¿ÚÊÇinput3
+			//é»˜è®¤æ¥æºç«¯å£æ˜¯input3
 			if (pe[switch_in_from_index]->bout_v)
 			{
 				switch_current->in = pe[switch_in_from_index]->bout;
@@ -3933,7 +3967,7 @@ void SwitchSimProcess(Switch* switch_current)
 		else if (switch_in_from_flag == 2)//lbegin
 		{
 		}
-		//¿ªÊ¼switch
+		//å¼€å§‹switch
 		if (switch_current->in_v)
 		{
 			switch_current->path_select();
@@ -3972,9 +4006,9 @@ void BreakSimProcess(Break* break_current)
 	}
 	else if (break_in2_from_flag == 1)//from PE
 	{
-		//³öÏÖµÄ¿ÉÄÜĞÔ²»¸ß
+		//å‡ºç°çš„å¯èƒ½æ€§ä¸é«˜
 	}
-	//¿ªÊ¼merge
+	//å¼€å§‹merge
 	break_current->mergeBreak();
 	//fire data
 	if (break_current->from_join_path == 1)
@@ -4003,7 +4037,7 @@ void LendsSimProcess(LoopEnds* lends_current)
 			lends_current->compare_in_v = pe[lends_in1_from_index]->bout_v;
 		}
 		else
-			cout << "²»Âú×ãÈ¡ÊıÌõ¼ş£¬²»È¡Êı" << endl;
+			cout << "ä¸æ»¡è¶³å–æ•°æ¡ä»¶ï¼Œä¸å–æ•°" << endl;
 	}
 	else if (lends_in1_from_flag == 2)//lbegin
 	{
@@ -4017,7 +4051,7 @@ void LendsSimProcess(LoopEnds* lends_current)
 	else if (lends_in2_from_flag == 1)//PE
 	{
 	}
-	//¿ªÊ¼merge
+	//å¼€å§‹merge
 	lends_current->loopends();
 	//data fire
 	if (lends_current->compare_in_v && lends_current->break_in_v)
@@ -4033,7 +4067,7 @@ void LendsSimProcess(LoopEnds* lends_current)
 //	int ta_in_from_index = ta_current->config_reg.front()[2];
 //	int ta_in_from_port = ta_current->config_reg.front()[3];
 //	int ta_in_from_flag = ta_current->config_reg.front()[4];
-//	//¿ªÊ¼·ÂÕæÖ®Ç°³ö¿ÚÊı¾İÇåÁã
+//	//å¼€å§‹ä»¿çœŸä¹‹å‰å‡ºå£æ•°æ®æ¸…é›¶
 //	ta_current->out_v = 0;
 //	ta_current->out_tag = 0;
 //	ta_current->out = 0;
@@ -4053,23 +4087,23 @@ void LendsSimProcess(LoopEnds* lends_current)
 //		}
 //		else if (ta_in_from_port == 2)//port3
 //		{
-//			//²»Ì«¿ÉÄÜ
+//			//ä¸å¤ªå¯èƒ½
 //		}
 //	}
 //	else if (ta_in_from_flag == 2)//from loopbegin
 //	{
 //	}
-//	outfile << "TA[" << ta_index_current << "]µÄÊäÈë½á¹ûÊÇ£ºin_v: " << ta_current->in_v << " in: " << ta_current->in << endl;
+//	outfile << "TA[" << ta_index_current << "]çš„è¾“å…¥ç»“æœæ˜¯ï¼šin_v: " << ta_current->in_v << " in: " << ta_current->in << endl;
 //	//for debug
 //	outfile2 << "TA[ " << ta_index_current << " ]" << endl;
 //	outfile2 << "--------------------------------------" << endl;
-//	outfile2 << "TA[" << ta_index_current << "]ÊäÈëÖµ" << endl;
+//	outfile2 << "TA[" << ta_index_current << "]è¾“å…¥å€¼" << endl;
 //	outfile2 << setw(15) << "in_v" << setw(15) << "in" << endl;
 //	outfile2 << setw(15) << ta_current->in_v << setw(15) << ta_current->in << endl;
 //
 //	//attach tag
 //	ta_current->tag_bind();
-//	outfile << "TA[" << ta_index_current << "]µÄÊä³ö½á¹ûÊÇ£ºout_v: " << ta_current->out_v << " out: " << ta_current->out << " out_tag: " << ta_current->out_tag << endl;
+//	outfile << "TA[" << ta_index_current << "]çš„è¾“å‡ºç»“æœæ˜¯ï¼šout_v: " << ta_current->out_v << " out: " << ta_current->out << " out_tag: " << ta_current->out_tag << endl;
 //
 //}
 
@@ -4078,7 +4112,7 @@ void TiSimProcess()
 	ti->tag_issue();
 }
 
-//ÉÈ³öÍ³¼Æº¯Êı
+//æ‰‡å‡ºç»Ÿè®¡å‡½æ•°
 void port_fanout_collect()
 {
 	vector<int> tmp;
@@ -4116,7 +4150,7 @@ void port_fanout_collect()
 
 	for (int i = 0; i < (int)config_size; i++)
 	{
-		if (vec_config_parsed_tmp[i][0] == 8)//¼ÇÂ¼ËùÓĞpe¡¢le¡¢seµÄindex
+		if (vec_config_parsed_tmp[i][0] == 8)//è®°å½•æ‰€æœ‰peã€leã€seçš„index
 		{
 			port_fanout[index][1] = vec_config_parsed_tmp[i][1];
 			port_fanout[index][0] = 0;                                       //0-pe 1-le
@@ -4130,7 +4164,7 @@ void port_fanout_collect()
 		}
 	}
 
-	for (int i = 0; i < (int)config_size; i++)                            //i±íÊ¾ÉÈÈë¶Ë£¬j±íÊ¾ÉÈ³ö¶Ë
+	for (int i = 0; i < (int)config_size; i++)                            //iè¡¨ç¤ºæ‰‡å…¥ç«¯ï¼Œjè¡¨ç¤ºæ‰‡å‡ºç«¯
 	{
 		if (vec_config_parsed_tmp[i][0] == 8)//pe
 		{
@@ -4272,7 +4306,7 @@ void port_fanout_collect()
 
 		}
 
-		else if (vec_config_parsed_tmp[i][0] == 9)                      //leµÄÉÈÈë
+		else if (vec_config_parsed_tmp[i][0] == 9)                      //leçš„æ‰‡å…¥
 		{
 			for (int j = 0; j < (int)port_fanout.size(); j++)
 			{
@@ -4297,7 +4331,7 @@ void port_fanout_collect()
 			}
 		}
 
-		else if (vec_config_parsed_tmp[i][0] == 0)                      //seÉÈÈë
+		else if (vec_config_parsed_tmp[i][0] == 0)                      //seæ‰‡å…¥
 		{
 			if (vec_config_parsed_tmp[i][4] == 0)                  //in1 from pe
 			{
@@ -4398,7 +4432,7 @@ void port_fanout_collect()
 			}
 		}
 	}
-
+	/*
 	for (int k = 0; k < pe_size + se_size; k++)
 	{
 		cout << "fanout[" << k << "] = ";
@@ -4407,13 +4441,13 @@ void port_fanout_collect()
 			cout << port_fanout[k][m];
 		}
 		cout << endl;
-	}
+	}*/
 }
 
 /*
 void pe_sim_step1_new(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -4425,25 +4459,25 @@ void pe_sim_step1_new(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
 	
-	//last PE³öÊı
-	if (is_din1_float)//din1·ÇĞü¿Õ
+	//last PEå‡ºæ•°
+	if (is_din1_float)//din1éæ‚¬ç©º
 	{
-		//din1 from PE ob³öÊı
+		//din1 from PE obå‡ºæ•°
 		pe_sim_step3(pe[din1_from_index], din1_from_port);
 	}
-	if (is_din2_float)//din2·ÇĞü¿Õ
+	if (is_din2_float)//din2éæ‚¬ç©º
 	{
-		//din2 from PE ob³öÊı
+		//din2 from PE obå‡ºæ•°
 		pe_sim_step3(pe[din2_from_index], din2_from_port);
 	}
-	if (is_bin_float)//bin·ÇĞü¿Õ
+	if (is_bin_float)//binéæ‚¬ç©º
 	{
-		//bin from PE ob³öÊı
+		//bin from PE obå‡ºæ•°
 		pe_sim_step3(pe[bin_from_index], bin_from_index);
 	}
 	//data trans
@@ -4455,7 +4489,7 @@ void pe_sim_step1_new(ProcessingElement* pe_current)
 
 void pe_sim_step1_new_no_tag(ProcessingElement* pe_current)
 {
-	int pe_index_current = pe_current->config_reg.front()[1];//µ±Ç°ÕıÔÚ´¦ÀíµÄPE±êºÅ
+	int pe_index_current = pe_current->config_reg.front()[1];//å½“å‰æ­£åœ¨å¤„ç†çš„PEæ ‡å·
 	int din1_from_index = pe_current->config_reg.front()[3];
 	int din2_from_index = pe_current->config_reg.front()[6];
 	int bin_from_index = pe_current->config_reg.front()[9];
@@ -4467,27 +4501,27 @@ void pe_sim_step1_new_no_tag(ProcessingElement* pe_current)
 	int din1_from_flag = pe_current->config_reg.front()[5];
 	int din2_from_flag = pe_current->config_reg.front()[8];
 	int bin_from_flag = pe_current->config_reg.front()[11];
-	//ÅĞ¶ÏÊÇ·ñĞü¿Õ
-	bool is_din1_float = din1_from_flag;//0--Ğü¿Õ£»·Ç0--·ÇĞü¿Õ
+	//åˆ¤æ–­æ˜¯å¦æ‚¬ç©º
+	bool is_din1_float = din1_from_flag;//0--æ‚¬ç©ºï¼›é0--éæ‚¬ç©º
 	bool is_din2_float = din2_from_flag;
 	bool is_bin_float = bin_from_flag;
-	//last PE ob³öÊı
-	//last PE³öÊı
-	if (is_din1_float)//din1·ÇĞü¿Õ
+	//last PE obå‡ºæ•°
+	//last PEå‡ºæ•°
+	if (is_din1_float)//din1éæ‚¬ç©º
 	{
-		//din1 from PE ob³öÊı
+		//din1 from PE obå‡ºæ•°
 		pe_sim_step3_no_tag(pe[din1_from_index], din1_from_port);
 	}
 
-	if (is_din2_float)//din2·ÇĞü¿Õ
+	if (is_din2_float)//din2éæ‚¬ç©º
 	{
-		//din2 from PE ob³öÊı
+		//din2 from PE obå‡ºæ•°
 		pe_sim_step3_no_tag(pe[din2_from_index], din2_from_port);
 	}
 
-	if (is_bin_float)//bin·ÇĞü¿Õ
+	if (is_bin_float)//binéæ‚¬ç©º
 	{
-		//bin from PE ob³öÊı
+		//bin from PE obå‡ºæ•°
 		pe_sim_step3_no_tag(pe[bin_from_index], bin_from_index);
 	}
 	//data transmit
