@@ -10,7 +10,7 @@
 #define intablebuffer_depth 2	//intablebuffer的深度
 //unit num
 #define peNums 15				//PE总数
-#define leNums 0				//LE总数
+#define leNums 1				//LE总数
 #define seNums 1				//SE总数
 
 #define lbeginNums 2			//loop begin总数

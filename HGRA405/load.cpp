@@ -27,6 +27,7 @@ void Load::dataInBuffer()
 	{
 		dataPair.second = data_in;
 		data_in_v = 0;
+		datapair_v = 1;
 	}
 	
 }
@@ -61,7 +62,7 @@ void Load::addrInTableBuffer()
 		else
 			cnt++;
 	}
-	if (cnt == 4)
+	if (cnt == le_table_buffer.size())
 	{
 		//table full
 		ack2addrgen = 0;

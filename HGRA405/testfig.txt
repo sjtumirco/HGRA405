@@ -13,7 +13,8 @@ pe7 dor ti pe6.1 fin3 flr ib1 ib2 alu fob2 nop bind nop inport inport nop ob nop
 pe8 dor ti pe3.1 fin3 flr ib1 ib2 alu fob2 nop bind nop inport inport nop ob nop
 joinbp2 pe4.1 pe5.1 pe6.3 pe8.2 nop
 pe9 mul pe7.1 fin2 fin3 flr ib1 lr alu fob2 nop cal tag inport nop nop ob nop
-pe10 add pe9.1 pe8.1 fin3 flr ib1 ib2 alu fob2 nop cal tag inport inport nop ob nop
+le0 pe9.1 tag
+pe10 add le0 pe8.1 fin3 flr ib1 ib2 alu fob2 nop cal tag inport inport nop ob nop
 se0 pe10.1 pe10.1 tag
 joinbp3 se0.1 se0.2 tag
 pe11 dor fin1 fin2 se0 flr fin fin lr fob2 nop trans nop nop nop inport ob nop

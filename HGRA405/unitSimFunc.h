@@ -42,6 +42,7 @@ extern ofstream outfile;
 extern ofstream outfile2;
 extern vector<vector<int>> vec_config_parsed_tmp;
 extern vector<vector<int>> port_fanout;
+//extern vector<vector<int>> le_port_fanout;
 
 void PeSimProcess(ProcessingElement* pe_current);//index 是vec_config_parsed的索引值，用来表示当前仿真的具体进度
 void LeSimProcess(Load* le_current,LSUnit* lsunit);

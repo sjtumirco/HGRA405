@@ -31,6 +31,7 @@ namespace HGRA
 		bool is_addr_out_buffer;
 		uint ack;//ack_from_lsunit
 		bool load_success;
+		bool datapair_v;
 
 		queue<vector<int>> config_reg;
 		vector<LeBuffer> le_table_buffer;		//buffer for tag operate

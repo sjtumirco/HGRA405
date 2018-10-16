@@ -51,7 +51,8 @@ MemoryInt memory(memoryDepth);//读和写
 MemoryInt memory2(memory2depth);//写结果的memory
 //配置文件
 vector<vector<int>> vec_config_parsed_tmp;
-vector<vector<int>> port_fanout;//port_fanout[i]的第一个元素表示PE或者LE，第2个元素表示编号，第3,4,5个元素分别是该PE的输出端口的扇出
+vector<vector<int>> port_fanout;//pe_port_fanout[i]的第一个元素表示PE或者LE，第2个元素表示编号，第3,4,5个元素分别是该PE的输出端口的扇出
+//vector<vector<int>> le_port_fanout;//le_port_fanout[i]的第一个元素表示PE或者LE，第2个元素表示编号，第3元素分别是该LE的输出端口的扇出
 bool begin_signal = 1;
 
 ofstream outfile("DEBUG.txt");
