@@ -1,4 +1,4 @@
-ï»¿/*********************************************************************************
+/*********************************************************************************
 *  Copyright (c) 2010-2011, Elliott Cooper-Balis
 *                             Paul Rosenfeld
 *                             Bruce Jacob
@@ -155,7 +155,7 @@ void MemoryController::update()
 {
 
 	//PRINT(" ------------------------- [" << currentClockCycle << "] -------------------------");
-	//std::cout << "update!" << endl;
+	std::cout << "update!" << endl;
 	//update bank states
 	for (size_t i=0;i<NUM_RANKS;i++)
 	{
@@ -261,7 +261,7 @@ void MemoryController::update()
 	}
 
 	//if its time for a refresh issue a refresh
-	// else pop from command queue if it's not empty  å¯¹æ‰€æœ‰rankè¿›è¡Œrefresh
+	// else pop from command queue if it's not empty  ¶ÔËùÓÐrank½øÐÐrefresh
 	if (refreshCountdown[refreshRank]==0)
 	{
 		commandQueue.needRefresh(refreshRank);
@@ -281,7 +281,7 @@ void MemoryController::update()
 
 	//pass a pointer to a poppedBusPacket
 
-	//function returns true if there is something valid in poppedBusPacketä»Žæ€»çº¿èŽ·å–packetå¹¶å°è£…ä¸ºwrite transcation
+	//function returns true if there is something valid in poppedBusPacket´Ó×ÜÏß»ñÈ¡packet²¢·â×°Îªwrite transcation
 	if (commandQueue.pop(&poppedBusPacket))
 	{
 		if (poppedBusPacket->busPacketType == WRITE || poppedBusPacket->busPacketType == WRITE_P)

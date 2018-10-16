@@ -176,11 +176,11 @@ void LSUnit::update()   //从后往前，并加入timing信息
 {
 	ClockCycle++;
 	mem->update();
-	/*std::cout << "update!" << " " << ClockCycle << std::endl;
+	std::cout << "update!" << " " << ClockCycle << std::endl;
 	for (uint32_t i = 0; i < TABLELINE_NUM; i++)
 		cout << "table " << i  << " addr "<< "=" << table[i]->ADDR_ << "  cachecycle and cachecount is "<< table[i]->cachecycle << " " << table[i]->cachecount << endl;
 	//cout << "still alive1" << endl;
-	*/
+
 	for (uint32_t i = 0; i < TABLELINE_NUM; i++)                              //第一步，将已完成的读写反馈
 	{
 		if (table[i]->complete == 1)

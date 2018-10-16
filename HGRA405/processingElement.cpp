@@ -42,10 +42,6 @@ void ProcessingElement::ALU(int opcode, int in1, int in2 ,bool for_mux)//ALU作为
 			alu_out_v = 1;
 			break;
 
-		case 4://div
-			alu_out = in1 / in2;
-			alu_out_v = 1;
-			break;
 		case 5://mod
 			alu_out = in1 % in2;
 			alu_out_v = 1;
@@ -69,31 +65,6 @@ void ProcessingElement::ALU(int opcode, int in1, int in2 ,bool for_mux)//ALU作为
 			break;
 		/*case 10:*/
 
-
-		case 12://leshift
-			alu_out = in1 << in2;
-			alu_out_v = 1;
-			break;
-		case 13://rishift
-			alu_out = in1 >> in2;
-			alu_out_v = 1;
-			break;
-		case 14:// and
-			alu_out = in1 & in2;
-			alu_out_v = 1;
-			break;
-		case 15: //or
-			alu_out = in1 | in2;
-			alu_out_v = 1;
-			break;
-		case 16: //cos
-			alu_out = cos(in1);
-			alu_out_v = 1;
-			break;
-		case 17: //sin
-			alu_out = sin(in1);
-			alu_out_v = 1;
-			break;
 
 		}
 	}

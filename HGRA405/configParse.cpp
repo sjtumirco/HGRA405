@@ -67,18 +67,8 @@ int ConfigParse::pefield2(string& str)		//[opcode]
 		return 100;				//虚拟操作，真实情况不存在
 	else if (str == "trans")
 		return 11;
-	else if (str == "leshift")
-		return 12;
-	else if (str == "rishift")
-		return 13;
-	else if (str == "and")
-		return 14;
-	else if (str == "or")
-		return 15;
-	else if (str == "cos")
-		return 16;
-	else if (str == "sin")
-		return 17;
+	/*else if (str == "shiftl")
+		return 10;*/
 	else
 	{
 		//cout << "no opcode matched!" << endl;
@@ -537,8 +527,6 @@ pair<int, int> ConfigParse::fgfield1(string& str)
 		category = 6;
 	else if (str_tmp1 == "joinbp")
 		category = 10;
-	else if (str_tmp1 == "shit")
-		category = 11;
 
 	out.first = category;
 	out.second = index;
@@ -618,10 +606,6 @@ vector<int> ConfigParse::fgfield2(string& str)
 			else if (categroy == "lends")
 			{
 				num3 = 7;
-			}
-			else if (categroy == "shit")
-			{
-				num3 = 11;
 			}
 			ss1 >> num1;
 			ss2 >> num2;
