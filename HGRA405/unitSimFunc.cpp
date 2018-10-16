@@ -840,32 +840,7 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	}
 	else if (din1_from_flag == 1)//LE
 	{
-		if (pe_current->ack2in1port == 1)
-		{
-			int fanout_index;
-			for (int i = 0; i < (int)port_fanout.size(); i++)     //找到该LE的扇出
-			{
-				if (din1_from_index == port_fanout[i][1] && port_fanout[i][0] == 1)
-				{
-					fanout_index = i;
-				}
-			}
-			if (din1_from_port == 0)
-			{
-				if (le[din1_from_index]->datapair_v == 1)
-				{
-					if (port_fanout[fanout_index][2] <= 1)
-					{
-						le[din1_from_index]->dataOutput();   //输出时需要先查询下一级的bp防止堵住！放到step3中
-						le[din1_from_index]->addr_out_v = 0;
-						le[din1_from_index]->dataPair.first = 0;
-						le[din1_from_index]->dataPair.second = 0;
-					}
-				}
-			}
-			else
-				cout << "error occurs!" << endl;
-		}
+		//不需要额外增加LE的outbuffer出数步骤
 	}
 	else if (din1_from_flag == 3)//lbegin
 	{
@@ -910,32 +885,7 @@ void pe_sim_step3_no_tag(ProcessingElement* pe_current)
 	}
 	else if (din2_from_flag == 1)//LE
 	{
-		if (pe_current->ack2in2port == 1)
-		{
-			int fanout_index;
-			for (int i = 0; i < (int)port_fanout.size(); i++)     //找到该LE的扇出
-			{
-				if (din2_from_index == port_fanout[i][1] && port_fanout[i][0] == 1)
-				{
-					fanout_index = i;
-				}
-			}
-			if (din2_from_port == 0)
-			{
-				if (le[din2_from_index]->datapair_v == 1)
-				{
-					if (port_fanout[fanout_index][2] <= 1)
-					{
-						le[din2_from_index]->dataOutput();   //输出时需要先查询下一级的bp防止堵住！放到step3中
-						le[din2_from_index]->addr_out_v = 0;
-						le[din2_from_index]->dataPair.first = 0;
-						le[din2_from_index]->dataPair.second = 0;
-					}
-				}
-			}
-			else
-				cout << "error occurs!" << endl;
-		}
+		//不需要额外增加LE的outbuffer出数步骤
 	}
 	else if (din2_from_flag == 3)//lbegin
 	{
@@ -2891,10 +2841,10 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				addrANDdata = memory.read(le_current->addr_out);
 				le_current->data_in = addrANDdata.second;
 				le_current->data_in_v = 1;
-				le_current->data_in_buffer();      //data入表
-				le_current->data_output_tag();     //把table中的数放到dout上
+				le_current->data_in_buffer();
+				le_current->data_output_tag();
 				//load succeed,clear valid and fetch another new addr				
-				le_current->buffer_clear();   //清table
+				le_current->buffer_clear();
 			}
 			else
 			{	//附加memory
@@ -2957,35 +2907,27 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 		//addr fetch
 		if (le_infrom_port == 0)//地址结果来自于上一个PE的port1
 		{
-			//查询LE的table是否满了，静态只有一层buffer,所以值需查询addr_out_v
-			if (le_current->addr_out_v == 0)
+			pe_outbuffer_out_no_tag(pe[le_infrom_index], 0);
+			if (pe[le_infrom_index]->dout1_v)
 			{
-				pe_outbuffer_out_no_tag(pe[le_infrom_index], 0);
-				if (pe[le_infrom_index]->dout1_v)
-				{
-					le_current->addr_in = pe[le_infrom_index]->dout1;
-					le_current->addr_in_v = pe[le_infrom_index]->dout1_v;
-				}
-				else
-					cout << "上一个计算地址的PE数据没有valid." << endl;
+				le_current->addr_in = pe[le_infrom_index]->dout1;
+				le_current->addr_in_v = pe[le_infrom_index]->dout1_v;
 			}
+			else
+				cout << "上一个计算地址的PE数据没有valid." << endl;
 		}
 		else if (le_infrom_port == 1)//地址输入来自于上一个PE的port2
 		{
-			//查询LE的table是否满了
-			if (le_current->addr_out_v == 0)
+			pe_outbuffer_out_no_tag(pe[le_infrom_index], 1);
+			if (pe[le_infrom_index]->dout2_v)
 			{
-				pe_outbuffer_out_no_tag(pe[le_infrom_index], 1);
-				if (pe[le_infrom_index]->dout2_v)
-				{
-					le_current->addr_in = pe[le_infrom_index]->dout2;
-					le_current->addr_in_v = pe[le_infrom_index]->dout2_v;
-				}
-				else
-					cout << "上一个计算地址的PE数据没有valid." << endl;
+				le_current->addr_in = pe[le_infrom_index]->dout2;
+				le_current->addr_in_v = pe[le_infrom_index]->dout2_v;
 			}
+			else
+				cout << "上一个计算地址的PE数据没有valid." << endl;
 		}
-		else   //暂时不支持LE来源于除PE外的节点
+		else
 		{
 		}
 		/*outfile << "LE[" << le_index_current << "]的地址输入是：" << " addr_in: " << le_current->addr_in << " addr_in_v: " << le_current->addr_in_v <<  endl;*/
@@ -3009,7 +2951,7 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 					lsunit->AddTrans(le_current->addr_out, le_index_current, (int)le_current->addr_out_v);
 				}
 			}
-			//lsunit->update();
+			lsunit->update();
 			//
 			if (le_current->load_success)
 			{
@@ -3024,14 +2966,12 @@ void LeSimProcess(Load* le_current,LSUnit* lsunit)
 				le_current->data_in = addrANDdata.second;
 				le_current->data_in_v = 1;
 				le_current->dataInBuffer();
-				le_current->ack = 0;
-				le_current->load_success = 0;
-				/*
-				le_current->dataOutput();   //输出时需要先查询下一级的bp防止堵住！放到step3中
+				le_current->dataOutput();
 				le_current->addr_out_v = 0;
+				le_current->ack = 0;
 				le_current->dataPair.first = 0;
 				le_current->dataPair.second = 0;
-				*/
+				le_current->load_success = 0;
 			}			
 		}
 		else
@@ -3333,8 +3273,10 @@ void SeSimProcess(Store* se_current, LSUnit* lsunit)
 				pe_outbuffer_out_no_tag(pe[addr_in_from], 0);
 				if (pe[addr_in_from]->dout1_v)
 				{
+
 					se[se_index_current]->addr = pe[addr_in_from]->dout1;
 					se[se_index_current]->addr_v = pe[addr_in_from]->dout1_v;
+
 				}
 				else
 				{
@@ -3926,13 +3868,7 @@ void JoinBpSimProcess(JoinBp* joinbp_current)
 			{
 				if (joinbp_in_from_from_port == 0)
 				{
-					if (le[joinbp_in_from_from_index]->datapair_v == 1)
-					{
-						le[joinbp_in_from_from_index]->dataOutput();   //出数
-						le[joinbp_in_from_from_index]->addr_out_v = 0;  //清数
-						le[joinbp_in_from_from_index]->dataPair.first = 0;
-						le[joinbp_in_from_from_index]->dataPair.second = 0;
-					}
+					//清joinbp目标的LE的输出
 				}
 				else
 					cout << "error occurs in JoinBpSimProcess for LE only have one port!" << endl;
@@ -4182,17 +4118,15 @@ void port_fanout_collect()
 	{
 		if (vec_config_parsed_tmp[i][0] == 8)//记录所有pe、le、se的index
 		{
-			int pe_index = vec_config_parsed_tmp[i][1];
-			port_fanout[pe_index][1] = vec_config_parsed_tmp[i][1];
-			port_fanout[pe_index][0] = 0;                                       //0-pe 1-le
-			//index++;
+			port_fanout[index][1] = vec_config_parsed_tmp[i][1];
+			port_fanout[index][0] = 0;                                       //0-pe 1-le
+			index++;
 		}
 		else if (vec_config_parsed_tmp[i][0] == 9)
 		{
-			int le_index = vec_config_parsed_tmp[i][1];
-			port_fanout[le_index + pe_size][1] = vec_config_parsed_tmp[i][1];
-			port_fanout[le_index + pe_size][0] = 1;                                       //0-pe 1-le
-			//index++;
+			port_fanout[index][1] = vec_config_parsed_tmp[i][1];
+			port_fanout[index][0] = 1;                                       //0-pe 1-le
+			index++;
 		}
 	}
 
@@ -4465,7 +4399,7 @@ void port_fanout_collect()
 		}
 	}
 
-	for (int k = 0; k < pe_size + le_size; k++)
+	for (int k = 0; k < pe_size + se_size; k++)
 	{
 		cout << "fanout[" << k << "] = ";
 		for (int m = 0; m < 5; m++)
