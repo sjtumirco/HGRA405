@@ -3,8 +3,8 @@
 using namespace HGRA;
 //using DRAMSim::LSUnit;
 
-Load::Load() :data_out_v(0), ack2addrgen(0), load_success(0),
-ack(0), ack_from_data_demand_side(0) {le_table_buffer.resize(intablebuffer_depth);
+Load::Load() :data_out_v(0),ack2addrgen(0),load_success(0),
+ack(0),ack_from_data_demand_side(0){ le_table_buffer.resize(intablebuffer_depth);
 }
 Load::~Load() {}
 void Load::addrInBuffer()
@@ -27,9 +27,8 @@ void Load::dataInBuffer()
 	{
 		dataPair.second = data_in;
 		data_in_v = 0;
-		datapair_v = 1;
 	}
-
+	
 }
 
 void Load::dataOutput()
@@ -62,7 +61,7 @@ void Load::addrInTableBuffer()
 		else
 			cnt++;
 	}
-	if (cnt == le_table_buffer.size())
+	if (cnt == 4)
 	{
 		//table full
 		ack2addrgen = 0;
@@ -86,8 +85,8 @@ void Load::addr_out_buffer()
 		else
 			is_addr_out_buffer = 0;
 	}
-
-
+	
+	
 }
 
 void Load::data_in_buffer()
@@ -106,7 +105,7 @@ void Load::data_output_tag()
 	//从table中拿出一行数据送到输出端口上
 	data_out_tag = le_table_buffer[le_lineOK_order.front()].tag;
 	data_out_v = 1;
-	data_out = le_table_buffer[le_lineOK_order.front()].data;
+	data_out = le_table_buffer[le_lineOK_order.front()].data;	
 }
 
 void Load::buffer_clear()
